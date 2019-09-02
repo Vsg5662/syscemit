@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %} {{ error }} {% endblock %}
+
+{% block body %}
+{% include "navbar.html" %}
+<div class="container-fluid">
+  <div class="jumbotron jumbotron-fluid bg-danger">
+    <div class="container">
+      <h1 class="text-bold text-white">
+        <i class="fas fa-exclamation-triangle"></i>
+        {{ error | upper }}
+      </h1>
+    </div>
+  </div>
+</div>
+{% endblock %}

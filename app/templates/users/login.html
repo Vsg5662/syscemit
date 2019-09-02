@@ -1,0 +1,35 @@
+{% from '_macros.html' import render_field %}
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/splash.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="row justify-content-lg-center">
+    <form action="" method="post">
+      <div class="card">
+        <div class="card-header bg-dark text-center">
+          <h3>
+            <i class="fas fa-tombstone fa-5x text-warning"></i>
+          </h3>
+          <h4 class="text-light">SYSCEMIT</h4>
+        </div>
+
+        <div class="card-body">
+          {{ form.csrf_token }}
+          {{ render_field(form.login, autofocus=True, required=True) }}
+          {{ render_field(form.password, required=True) }}
+        </div>
+
+        <div class="card-footer bg-dark">
+          <button id="{{ form.submit.id }}" name="{{ form.submit.name }}" class="btn btn-lg btn-warning btn-raised btn-block active" role="button" type="submit">{{ form.submit.label.text }}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
