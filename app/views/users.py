@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from flask import Blueprint, flash, redirect, request, render_template, url_for
-from flask_login import login_user, logout_user, login_required
+from flask import (Blueprint, current_app, flash, redirect, render_template,
+                   request, url_for)
+from flask_login import login_required, login_user, logout_user
+
 from ..decorators import permission_required
 from ..forms.users import UserLoginForm
 from ..models import User
@@ -34,9 +36,23 @@ def logout():
     return redirect(url_for('main.index'))
 
 
+@bp.route('/')
+@login_required
+@permission_required('admin')
+def index():
+    page = request.args.get('pagina', 1, type=int)
+    pagination = User.query.paginate(page,
+                                     per_page=current_app.config['PER_PAGE'],
+                                     error_out=False)
+    users = pagination.items
+    return render_template('users/index.html',
+                           pagination=pagination,
+                           users=users)
+
+
 @bp.route('/adicionar', methods=['GET', 'POST'])
 @login_required
-@permission_required('Administrador')
+@permission_required('admin')
 def create():
     return 'Tá OK'
 

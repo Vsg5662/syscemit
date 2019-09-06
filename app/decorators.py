@@ -11,8 +11,10 @@ def permission_required(*roles):
         @wraps(f)
         def wrapped(*args, **kwargs):
             if (current_user.is_authenticated
-                and current_user.has_permissions(*roles)):
+                    and current_user.has_permissions(*roles)):
                 return f(*args, **kwargs)
             return abort(403)
+
         return wrapped
+
     return decorator

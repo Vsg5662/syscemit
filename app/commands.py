@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from .models import (Address, Children, City, CivilStatus, Deceased, District,
-                     Doctor, Ethnicity, Grave, Registry, State,
-                     Street, User, UserType, Zone, db)
+                     Doctor, Ethnicity, Grave, Registry, State, Street, User,
+                     UserType, Zone, db)
 from .utils.helpers import shell_context
 
 

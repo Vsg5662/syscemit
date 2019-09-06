@@ -37,41 +37,43 @@
 
 
 {% macro render_pagination(pagination, endpoint) %}
-<ul class="pagination">
-  {% if pagination.has_prev %}
-  <li>
-    <a href="{{ url_for(endpoint, page=pagination.prev_num, **kwargs) }}" aria-label="Previous">
-      <span aria-hidden="true">&laquo;</span>
-    </a>
-  </li>
-  {% endif %}
-
-  {% for p in pagination.iter_pages(left_edge=1, left_current=2, right_current=3, right_edge=1) %}
-    {% if p %}
-      {% if p != pagination.page %}
-      <li>
-        <a href="{{ url_for(endpoint, page=p, **kwargs) }}">{{ p }}</a>
-      </li>
-      {% else %}
-      <li class="active">
-        <a href="{{ url_for(endpoint, page=p, **kwargs) }}">{{ p }}</a>
-      </li>
-      {% endif %}
-    {% else %}
-    <li class="disabled">
-      <span class="ellipsis">&hellip;</span>
+<nav>
+  <ul class="pagination justify-content-center">
+    {% if pagination.has_prev %}
+    <li class="page-item">
+      <a class="page-link" href="{{ url_for(endpoint, pagina=pagination.prev_num, **kwargs) }}" aria-label="Anterior">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
     </li>
     {% endif %}
-  {% endfor %}
-
-  {% if pagination.has_next %}
-  <li>
-    <a href="{{ url_for(endpoint, page=pagination.next_num, **kwargs) }}" aria-label="Next">
-      <span aria-hidden="true">&raquo;</span>
-    </a>
-  </li>
-  {% endif %}
-</ul>
+  
+    {% for p in pagination.iter_pages(left_edge=1, left_current=2, right_current=3, right_edge=1) %}
+      {% if p %}
+        {% if p != pagination.page %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for(endpoint, pagina=p, **kwargs) }}">{{ p }}</a>
+        </li>
+        {% else %}
+        <li class="page-item active">
+          <a class="page-link" href="{{ url_for(endpoint, pagina=p, **kwargs) }}">{{ p }}</a>
+        </li>
+        {% endif %}
+      {% else %}
+      <li class="page-item disabled">
+        <span class="ellipsis">&hellip;</span>
+      </li>
+      {% endif %}
+    {% endfor %}
+  
+    {% if pagination.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="{{ url_for(endpoint, pagina=pagination.next_num, **kwargs) }}" aria-label="Próximo">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
 {% endmacro %}
 
 {% macro render_modal(name, title, yes_text='Salvar', yes_icon='save', yes_color='success', no_text='Cancelar', no_icon='ban', no_color='info') -%}

@@ -1,0 +1,81 @@
+{% from '_macros.html' import render_pagination %}
+{% extends "base.html" %}
+
+{% block title %}Usuários{% endblock %}
+
+{% block body %}
+{% include "navbar.html" %}
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-header">
+      <h3>
+        <i class="fas fa-users text-primary"></i> Usuários
+      </h3>
+      <form class="form">
+        <div class="input-group">
+          <input class="form-control" type="search" name="search" placeholder="Buscar usuários...">
+          <div class="input-group-append">
+            <div class="dropdown">
+              <a id="filter" href="#" class="btn btn-info dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Filtros">
+                <i class="fas fa-filter"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="filter">
+                <h6 class="dropdown-header">Filtrar em:</h6>
+                <div role="separator" class="dropdown-divider"></div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="login" value="login">
+                  <label class="form-check-label" for="login">Login</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="name" value="name">
+                  <label class="form-check-label" for="name">Nome</label>
+                </div>
+              </div>
+            </div>
+            <a class="btn btn-primary btn-raised" href="#" title="Buscar">
+              <i class="fas fa-search"></i>
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-borderless table-striped">
+        <thead>
+          <tr class="thead-dark">
+            <th scope="col">Login</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td>{{ u.login }}</td>
+            <td>{{ u.name }}</td>
+            <td>{{ u.user_type.description }}</td>
+            <td>
+              <button class="btn btn-raised btn-warning" title="Editar">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-raised btn-danger" title="Remover">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="card-body">
+      {{ render_pagination(pagination, 'users.index') }}
+    </div>
+    <div class="card-footer bg-dark">
+      <a class="btn btn-raised btn-success" href="{{ url_for('users.create') }}">
+        <i class="fas fa-plus"></i> Adicionar
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

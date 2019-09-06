@@ -47,12 +47,13 @@ class CRUDMixin():
 class UserType(CRUDMixin, db.Model):
     __tablename__ = 'user_types'
     description = db.Column(db.String(25), nullable=False)
+    role = db.Column(db.String(10), nullable=False)
     users = db.relationship('User', backref='user_type', lazy='dynamic')
 
     @classmethod
     def populate(cls):
-        user_types = ['Administrador', 'Funcionário']
-        user_types = [cls(description=d) for d in user_types]
+        user_types = [('Administrador', 'admin'), ('Funcionário', 'employee')]
+        user_types = [cls(description=d, role=r) for d, r in user_types]
         db.session.bulk_save_objects(user_types)
         db.session.commit()
 
@@ -79,7 +80,7 @@ class User(CRUDMixin, UserMixin, db.Model):
         return check_password_hash(self._pwd_hash, password)
 
     def has_permissions(self, *roles):
-        return self.user_type.description in roles
+        return self.user_type.role in roles
 
     def is_active(self):
         return True
@@ -168,9 +169,9 @@ class Address(CRUDMixin, db.Model):
                                    backref='address_home',
                                    lazy='dynamic')
     death_address = db.relationship('Deceased',
-                                   foreign_keys='Deceased.death_address_id',
-                                   backref='address_death',
-                                   lazy='dynamic')
+                                    foreign_keys='Deceased.death_address_id',
+                                    backref='address_death',
+                                    lazy='dynamic')
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.number)

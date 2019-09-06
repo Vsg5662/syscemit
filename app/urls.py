@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from .views import main, users
 from .utils.helpers import HandleError
+from .views import main, users
 
 
 def init_app(app):
