@@ -16,10 +16,9 @@
 
 
 {% macro render_checkbox_field(field) -%}
-<div class="checkbox {{ kwargs.pop('class_', '') }}">
-  <label>
-    {{ field(type='checkbox', **kwargs) }} {{ field.label.text }}
-  </label>
+<div class="form-checkbox {{ kwargs.pop('class_', '') }}">
+  {{ field(type='checkbox', class_="form-check-input", **kwargs) }}
+  {{ field.label(class_="form-check-label") }}
 </div>
 {%- endmacro %}
 

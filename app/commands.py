@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import subprocess
+
 from .models import (Address, Children, City, CivilStatus, Deceased, District,
                      Doctor, Ethnicity, Grave, Registry, State, Street, User,
                      UserType, Zone, db)
@@ -21,3 +23,10 @@ def init_app(app):
         City.populate()
         CivilStatus.populate()
         Ethnicity.populate()
+
+    @app.cli.command()
+    def format():
+        formaters = ['isort -vb -rc *.py app/', 'yapf -vv -r -i *.py app/']
+        for f in formaters:
+            print('Running {}'.format(f.split()[0]))
+            subprocess.call(f, shell=True)

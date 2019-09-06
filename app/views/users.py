@@ -5,7 +5,7 @@ from flask import (Blueprint, current_app, flash, redirect, render_template,
 from flask_login import login_required, login_user, logout_user
 
 from ..decorators import permission_required
-from ..forms.users import UserLoginForm
+from ..forms.users import UserForm, UserLoginForm
 from ..models import User
 
 bp = Blueprint('users', __name__, url_prefix='/usuarios')
@@ -54,22 +54,28 @@ def index():
 @login_required
 @permission_required('admin')
 def create():
-    return 'Tá OK'
+    form = UserForm()
+    return render_template('users/view.html',
+                           form=form,
+                           label='Adicionar Usuário',
+                           color='success')
 
 
-@bp.route('/<int:id>', methods=['GET'])
+@bp.route('/<int:id>', methods=['GET', 'UPDATE'])
 @login_required
-def get():
-    pass
-
-
-@bp.route('/<int:id>', methods=['UPDATE'])
-@login_required
-def update():
-    pass
+@permission_required('admin')
+def edit(id):
+    user = User.get_or_404(id)
+    form = UserForm(request.form, obj=user)
+    return render_template('users/view.html',
+                           form=form,
+                           label='Editar Usuário',
+                           color='warning')
 
 
 @bp.route('/<int:id>', methods=['DELETE'])
 @login_required
-def delete():
-    pass
+@permission_required('admin')
+def delete(id):
+    User.get_or_404(id).delete()
+    return '', 204
