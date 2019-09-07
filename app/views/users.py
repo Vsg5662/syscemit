@@ -55,6 +55,11 @@ def index():
 @permission_required('admin')
 def create():
     form = UserForm()
+    if form.validate_on_submit():
+        user = User()
+        form.populate_obj(user)
+        user.save()
+        return redirect(url_for('users.index'))
     return render_template('users/view.html',
                            form=form,
                            label='Adicionar Usuário',
