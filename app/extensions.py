@@ -10,7 +10,7 @@ login_manager = LoginManager()
 def init_app(app):
     db.init_app(app)
     login_manager.session_protection = 'strong'
-    login_manager.login_view = 'users.login'
+    login_manager.login_view = 'auth.login'
     login_manager.login_message = u'Autentique-se para acessar esta página'
     login_manager.init_app(app)
 

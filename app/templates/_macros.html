@@ -14,14 +14,25 @@
 </div>
 {%- endmacro %}
 
-
 {% macro render_checkbox_field(field) -%}
-<div class="form-checkbox {{ kwargs.pop('class_', '') }}">
-  {{ field(type='checkbox', class_="form-check-input", **kwargs) }}
-  {{ field.label(class_="form-check-label") }}
+<div class="form-group {{ kwargs.pop('class', '') }}">
+  <div class="form-checkbox {{ kwargs.pop('class_', '') }}">
+    {{ field(type='checkbox', class_="form-check-input", **kwargs) }}
+    {{ field.label(class_="form-check-label") }}
+  </div>
 </div>
 {%- endmacro %}
 
+{% macro render_multicheckbox_field(field) -%}
+<div class="form-group {{ kwargs.pop('class_', '') }}">
+{% for value, label, checked in field.iter_choices() %}
+  <div class="form-checkbox {{ kwargs.pop('class', '') }}">
+    <input id="{{ field.id }}-{{ loop0 }}" class="form-check-input" type="checkbox" name="{{ field.name }}" value="{{ value }}" {% if checked %}checked{% endif %}>
+    <label class="form-check-label" for="{{ value }}">{{ label }}</label>
+  </div>
+{% endfor %}
+</div>
+{%- endmacro %}
 
 {% macro render_radio_field(field) -%}
 {% set args = kwargs.pop('class_', '') %}
@@ -40,21 +51,21 @@
   <ul class="pagination justify-content-center">
     {% if pagination.has_prev %}
     <li class="page-item">
-      <a class="page-link" href="{{ url_for(endpoint, pagina=pagination.prev_num, **kwargs) }}" aria-label="Anterior">
+      <a class="page-link" href="{{ url_for(endpoint, page=pagination.prev_num, **kwargs) }}" aria-label="previous">
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
     {% endif %}
-  
+
     {% for p in pagination.iter_pages(left_edge=1, left_current=2, right_current=3, right_edge=1) %}
       {% if p %}
         {% if p != pagination.page %}
         <li class="page-item">
-          <a class="page-link" href="{{ url_for(endpoint, pagina=p, **kwargs) }}">{{ p }}</a>
+          <a class="page-link" href="{{ url_for(endpoint, page=p, **kwargs) }}">{{ p }}</a>
         </li>
         {% else %}
         <li class="page-item active">
-          <a class="page-link" href="{{ url_for(endpoint, pagina=p, **kwargs) }}">{{ p }}</a>
+          <a class="page-link" href="{{ url_for(endpoint, page=p, **kwargs) }}">{{ p }}</a>
         </li>
         {% endif %}
       {% else %}
@@ -63,10 +74,10 @@
       </li>
       {% endif %}
     {% endfor %}
-  
+
     {% if pagination.has_next %}
     <li class="page-item">
-      <a class="page-link" href="{{ url_for(endpoint, pagina=pagination.next_num, **kwargs) }}" aria-label="Próximo">
+      <a class="page-link" href="{{ url_for(endpoint, page=pagination.next_num, **kwargs) }}" aria-label="next">
         <span aria-hidden="true">&raquo;</span>
       </a>
     </li>

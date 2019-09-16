@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, SelectField, StringField, SubmitField
+from wtforms import (IntegerField, PasswordField, SelectField, StringField,
+                     SubmitField)
 from wtforms.validators import InputRequired, Length, Required
 
 from ..models import UserType
+from ..utils.forms import MultiCheckboxField, SearchField
+
+COLUMNS = [('name', 'Nome'), ('login', 'Login'), ('type', 'Tipo')]
+ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
 
 
 class UserForm(FlaskForm):
@@ -30,8 +35,9 @@ class UserForm(FlaskForm):
         self.user_type_id.choices.insert(0, (0, ''))
 
 
-class UserLoginForm(FlaskForm):
-    login = StringField('Login', [InputRequired(message='Login inválido!')])
-    password = PasswordField('Senha',
-                             [InputRequired(message='Insira a senha!')])
-    submit = SubmitField('Entrar')
+class UserSearchForm(FlaskForm):
+    page = IntegerField('Página', default=1)
+    search = SearchField('Buscar usuários ...', [InputRequired()])
+    filters = MultiCheckboxField('Filtros', choices=COLUMNS, default=['name'])
+    clause = SelectField('Critério', choices=COLUMNS, default='name')
+    order = SelectField('Ordem', choices=ORDERS, default='asc')

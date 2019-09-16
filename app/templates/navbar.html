@@ -18,14 +18,14 @@
             {{ current_user.login }}
           </h6>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="{{ url_for('users.logout') }}">
+          <a class="dropdown-item" href="{{ url_for('auth.logout') }}">
             <i class="fas fa-sign-out text-danger"></i>&nbsp;Sair
           </a>
         </div>
       </li>
       {% else %}
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('users.login') }}"><i class="fas fa-sign-in text-warning"></i> Entrar</a>
+        <a class="nav-link" href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in text-warning"></i> Entrar</a>
       </li>
       {% endif %}
     </ul>

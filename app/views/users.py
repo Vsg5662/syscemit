@@ -1,52 +1,65 @@
 # -*- coding: utf-8 -*-
 
-from flask import (Blueprint, current_app, flash, redirect, render_template,
-                   request, url_for)
-from flask_login import login_required, login_user, logout_user
+from flask import (Blueprint, current_app, redirect, render_template, request,
+                   url_for)
+from flask_login import login_required
 
 from ..decorators import permission_required
-from ..forms.users import UserForm, UserLoginForm
-from ..models import User
+from ..forms.users import COLUMNS, UserForm, UserSearchForm
+from ..models import User, UserType
 
 bp = Blueprint('users', __name__, url_prefix='/usuarios')
-
-
-@bp.route('/login', methods=['GET', 'POST'])
-def login():
-    form = UserLoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(login=form.login.data).first()
-        if user is not None and user.check_password(form.password.data):
-            login_user(user)
-            return redirect(request.args.get('next') or url_for('main.index'))
-        flash('Usuário ou senha inválida')
-    return render_template('users/login.html', form=form)
-
-
-@bp.route('/redefinir_senha', methods=['GET', 'POST'])
-@login_required
-def reset():
-    return 'Pão de batata'
-
-
-@bp.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('main.index'))
 
 
 @bp.route('/')
 @login_required
 @permission_required('admin')
 def index():
-    page = request.args.get('pagina', 1, type=int)
-    pagination = User.query.paginate(page,
-                                     per_page=current_app.config['PER_PAGE'],
-                                     error_out=False)
+    form = UserSearchForm(request.args, csrf_enabled=False)
+    joins = filters = orders = ()
+    search = form.search.data
+    filters_ = form.filters.data
+    clause = form.clause.data
+    order = form.order.data
+
+    if form.validate():
+        if 'type' in filters or clause == 'type':
+            joins += (UserType, )
+
+        if filters_ and search:
+            filters += tuple(
+                getattr(User, f).ilike('%' + search + '%') for f in filters_
+                if f != 'type')
+            if 'type' in filters_:
+                filters += (
+                    User.user_type_id == UserType.id,
+                    UserType.description.ilike('%' + search + '%'),
+                )
+        elif search:
+            filters += (User.name.ilike('%' + search + '%'), )
+
+        if order and clause:
+            if clause != 'type':
+                orders += (getattr(getattr(User, clause), order)(), )
+            else:
+                orders += (getattr(UserType.description, order)(), )
+
+    if not orders:
+        orders += (User.name.asc(), )
+    pagination = User.query.join(*joins).filter(*filters).order_by(
+        *orders).paginate(form.page.data,
+                          per_page=current_app.config['PER_PAGE'],
+                          error_out=False)
     users = pagination.items
+
     return render_template('users/index.html',
+                           form=form,
+                           search=search,
+                           filters=filters_,
+                           clause=clause,
+                           order=order,
                            pagination=pagination,
+                           headers=COLUMNS,
                            users=users)
 
 

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from .utils.helpers import HandleError
-from .views import main, users
+from .views import auth, main, users
 
 
 def init_app(app):
+    app.register_blueprint(auth.bp)
     app.register_blueprint(main.bp)
     app.register_blueprint(users.bp)
 
