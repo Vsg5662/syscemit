@@ -1,4 +1,4 @@
-{% from '_macros.html' import  render_field, render_pagination, render_multicheckbox_field %}
+{% from '_macros.html' import  render_field, render_pagination, render_modal, render_multicheckbox_field %}
 {% extends 'base.html' %}
 
 {% block title %}Usuários{% endblock %}
@@ -77,7 +77,7 @@
                   <a href="{{ url_for('users.edit', id=u.id) }}" class="btn btn-raised btn-warning" title="Editar">
                     <i class="fas fa-edit"></i>
                   </a>
-                  <a href="#" class="btn btn-raised btn-danger" title="Remover">
+                  <a class="btn btn-raised btn-danger delete" data-action="{{ url_for('users.delete', id=u.id) }}" title="Remover">
                     <i class="fas fa-trash"></i>
                   </a>
                 </td>
@@ -91,4 +91,8 @@
       </div>
     </div>
   </div>
+  {% call render_modal('modal-delete', 'Remover Usuário', yes_text='Remover', yes_icon='trash', yes_color='danger') %}
+  <p>Deseja realmente remover o usuário?</p>
+  {% endcall %}
+
 {% endblock %}

@@ -21,7 +21,6 @@ parso
 pexpect
 pickleshare
 pip
-pkg-resources
 prompt-toolkit
 ptyprocess
 pyexcel

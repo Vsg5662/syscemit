@@ -85,6 +85,10 @@ def create():
 def edit(id):
     user = User.get_or_404(id)
     form = UserForm(request.form, obj=user)
+    if form.validate():
+      form.populate_obj(user)
+      user.update()
+      return redirect(url_for('users.index'))
     return render_template('users/view.html',
                            form=form,
                            label='Editar Usuário',

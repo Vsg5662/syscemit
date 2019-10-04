@@ -87,21 +87,21 @@
 {% endmacro %}
 
 {% macro render_modal(name, title, yes_text='Salvar', yes_icon='save', yes_color='success', no_text='Cancelar', no_icon='ban', no_color='info') -%}
-<div class="modal fade {{ name }}" tabindex="-1" role="dialog">
-  <div class="modal-dialog">
+<div class="modal fade {{ name }}" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4>{{ title }}</h4>
+        <h4 class="modal-title">{{ title }}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
         {{ caller() }}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-{{ yes_color }} btn-yes">
+        <button type="button" class="btn btn-raised btn-{{ yes_color }} btn-yes">
           <i id="icon" class="fas fa-{{ yes_icon }}"></i> {{ yes_text }}
         </button>
-        <button type="button" class="btn btn-info btn-{{ no_color }}" data-dismiss="modal">
+        <button type="button" class="btn btn-raised btn-{{ no_color }}" data-dismiss="modal">
           <i class="fas fa-{{ no_icon }}"></i> {{ no_text }}
         </button>
       </div>
