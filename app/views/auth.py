@@ -12,7 +12,7 @@ bp = Blueprint('auth', __name__, url_prefix='/conta')
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     form = AuthLoginForm()
-    if form.validate_on_submit():
+    if form.validate():
         user = User.query.filter_by(login=form.login.data).first()
         if user is not None and user.check_password(form.password.data):
             login_user(user)

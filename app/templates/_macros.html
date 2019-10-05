@@ -8,7 +8,9 @@
 
   {% if field.errors %}
     {% for e in field.errors %}
-    <div id="{{ field.name }}-error" class="invalid-feedback">{{ e }}</div>
+    <div id="{{ field.name }}-error" class="invalid-feedback">
+      <strong>{{ e }}</strong>
+    </div>
     {% endfor %}
   {% endif %}
 </div>
