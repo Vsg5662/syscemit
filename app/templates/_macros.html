@@ -8,7 +8,7 @@
 
   {% if field.errors %}
     {% for e in field.errors %}
-    <span id="{{ field.name }}-error" class="bmd-help">{{ e }}</span>
+    <div id="{{ field.name }}-error" class="invalid-feedback">{{ e }}</div>
     {% endfor %}
   {% endif %}
 </div>

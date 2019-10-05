@@ -79,7 +79,7 @@ def create():
                            color='success')
 
 
-@bp.route('/<int:id>', methods=['GET', 'UPDATE'])
+@bp.route('/<int:id>', methods=['GET', 'POST'])
 @login_required
 @permission_required('admin')
 def edit(id):
@@ -95,7 +95,7 @@ def edit(id):
                            color='warning')
 
 
-@bp.route('/<int:id>', methods=['DELETE'])
+@bp.route('/<int:id>', methods=['POST'])
 @login_required
 @permission_required('admin')
 def delete(id):

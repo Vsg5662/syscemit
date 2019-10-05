@@ -356,7 +356,7 @@ hr {
 
 small,
 .small {
-  font-size: 80%;
+  font-size: 90%;
   font-weight: 400; }
 
 mark,
@@ -387,7 +387,7 @@ mark,
 
 .blockquote-footer {
   display: block;
-  font-size: 80%;
+  font-size: 90%;
   color: #6c757d; }
   .blockquote-footer::before {
     content: "\2014\00A0"; }
@@ -1437,7 +1437,7 @@ textarea.form-control, textarea.custom-file-control {
   display: none;
   width: 100%;
   margin-top: 0.25rem;
-  font-size: 80%;
+  font-size: 90%;
   color: #66bb6a; }
 
 .valid-tooltip {
@@ -1455,15 +1455,14 @@ textarea.form-control, textarea.custom-file-control {
   border-radius: 0.125rem; }
 
 .was-validated .form-control:valid, .was-validated .custom-file-control:valid, .form-control.is-valid, .is-valid.custom-file-control {
-  border-color: #66bb6a;
+  border-bottom: 1px solid #66bb6a;
   padding-right: calc(1.5em + 0.875rem);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2366bb6a' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: center right calc(0.375em + 0.21875rem);
   background-size: calc(0.75em + 0.4375rem) calc(0.75em + 0.4375rem); }
   .was-validated .form-control:valid:focus, .was-validated .custom-file-control:valid:focus, .form-control.is-valid:focus, .is-valid.custom-file-control:focus {
-    border-color: #66bb6a;
-    box-shadow: 0 0 0 0.2rem rgba(102, 187, 106, 0.25); }
+    border-bottom: 1px solid #66bb6a; }
   .was-validated .form-control:valid ~ .valid-feedback, .was-validated .custom-file-control:valid ~ .valid-feedback,
   .was-validated .form-control:valid ~ .valid-tooltip,
   .was-validated .custom-file-control:valid ~ .valid-tooltip, .form-control.is-valid ~ .valid-feedback, .is-valid.custom-file-control ~ .valid-feedback,
@@ -1536,7 +1535,7 @@ textarea.form-control, textarea.custom-file-control {
   display: none;
   width: 100%;
   margin-top: 0.25rem;
-  font-size: 80%;
+  font-size: 90%;
   color: #ef5350; }
 
 .invalid-tooltip {
@@ -1554,15 +1553,14 @@ textarea.form-control, textarea.custom-file-control {
   border-radius: 0.125rem; }
 
 .was-validated .form-control:invalid, .was-validated .custom-file-control:invalid, .form-control.is-invalid, .is-invalid.custom-file-control {
-  border-color: #ef5350;
+  border-bottom: 1px solid #ef5350;
   padding-right: calc(1.5em + 0.875rem);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ef5350' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23ef5350' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
   background-repeat: no-repeat;
   background-position: center right calc(0.375em + 0.21875rem);
   background-size: calc(0.75em + 0.4375rem) calc(0.75em + 0.4375rem); }
   .was-validated .form-control:invalid:focus, .was-validated .custom-file-control:invalid:focus, .form-control.is-invalid:focus, .is-invalid.custom-file-control:focus {
-    border-color: #ef5350;
-    box-shadow: 0 0 0 0.2rem rgba(239, 83, 80, 0.25); }
+    border-bottom: 1px solid #ef5350; }
   .was-validated .form-control:invalid ~ .invalid-feedback, .was-validated .custom-file-control:invalid ~ .invalid-feedback,
   .was-validated .form-control:invalid ~ .invalid-tooltip,
   .was-validated .custom-file-control:invalid ~ .invalid-tooltip, .form-control.is-invalid ~ .invalid-feedback, .is-invalid.custom-file-control ~ .invalid-feedback,
@@ -9709,7 +9707,7 @@ fieldset[disabled][disabled] .custom-file-control .form-control, fieldset[disabl
   display: none;
   width: 100%;
   margin-top: 0.25rem;
-  font-size: 80%;
+  font-size: 90%;
   color: rgba(0, 0, 0, 0.26); }
 
 .custom-file-control .is-focused .valid-tooltip, .custom-file-control.is-focused .valid-tooltip {
@@ -9727,15 +9725,14 @@ fieldset[disabled][disabled] .custom-file-control .form-control, fieldset[disabl
   border-radius: 0.125rem; }
 
 .was-validated .custom-file-control .is-focused .form-control:valid, .was-validated .custom-file-control .is-focused .custom-file-control:valid, .custom-file-control .is-focused .form-control.is-valid, .custom-file-control .is-focused .is-valid.custom-file-control, .was-validated .custom-file-control.is-focused .form-control:valid, .was-validated .custom-file-control.is-focused .custom-file-control:valid, .custom-file-control.is-focused .form-control.is-valid, .custom-file-control.is-focused .is-valid.custom-file-control {
-  border-color: rgba(0, 0, 0, 0.26);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.26);
   padding-right: calc(1.5em + 0.875rem);
   background-image: "none";
   background-repeat: no-repeat;
   background-position: center right calc(0.375em + 0.21875rem);
   background-size: calc(0.75em + 0.4375rem) calc(0.75em + 0.4375rem); }
   .was-validated .custom-file-control .is-focused .form-control:valid:focus, .was-validated .custom-file-control .is-focused .custom-file-control:valid:focus, .custom-file-control .is-focused .form-control.is-valid:focus, .custom-file-control .is-focused .is-valid.custom-file-control:focus, .was-validated .custom-file-control.is-focused .form-control:valid:focus, .was-validated .custom-file-control.is-focused .custom-file-control:valid:focus, .custom-file-control.is-focused .form-control.is-valid:focus, .custom-file-control.is-focused .is-valid.custom-file-control:focus {
-    border-color: rgba(0, 0, 0, 0.26);
-    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25); }
+    border-bottom: 1px solid rgba(0, 0, 0, 0.26); }
   .was-validated .custom-file-control .is-focused .form-control:valid ~ .valid-feedback, .was-validated .custom-file-control .is-focused .custom-file-control:valid ~ .valid-feedback,
   .was-validated .custom-file-control .is-focused .form-control:valid ~ .valid-tooltip,
   .was-validated .custom-file-control .is-focused .custom-file-control:valid ~ .valid-tooltip, .custom-file-control .is-focused .form-control.is-valid ~ .valid-feedback, .custom-file-control .is-focused .is-valid.custom-file-control ~ .valid-feedback,
@@ -9986,7 +9983,7 @@ label.radio-inline {
       background-color: rgba(255, 255, 255, 0.3); }
 
 form {
-  margin-bottom: 1.125rem; }
+  margin-bottom: 1.35rem; }
   .navbar form {
     margin-bottom: 0; }
     .navbar form .bmd-form-group {
@@ -9996,7 +9993,7 @@ form {
       margin-bottom: 0; }
 
 .form-control, .custom-file-control {
-  background: no-repeat center bottom, center calc(100% - 1px);
+  background: no-repeat center bottom, center 100%;
   background-size: 0 100%, 100% 100%;
   border: 0;
   transition: background 0s ease-out;
@@ -10005,7 +10002,7 @@ form {
   .form-control:focus, .custom-file-control:focus,
   .bmd-form-group.is-focused .form-control,
   .bmd-form-group.is-focused .custom-file-control {
-    background-size: 100% 100%, 100% 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.26);
     transition-duration: 0.3s; }
 
 .bmd-help {
@@ -10270,7 +10267,7 @@ fieldset[disabled][disabled] .form-control, fieldset[disabled][disabled] .custom
   display: none;
   width: 100%;
   margin-top: 0.25rem;
-  font-size: 80%;
+  font-size: 90%;
   color: rgba(0, 0, 0, 0.26); }
 
 .is-focused .valid-tooltip,
@@ -10289,15 +10286,14 @@ fieldset[disabled][disabled] .form-control, fieldset[disabled][disabled] .custom
   border-radius: 0.125rem; }
 
 .was-validated .is-focused .form-control:valid, .was-validated .is-focused .custom-file-control:valid, .is-focused .form-control.is-valid, .is-focused .is-valid.custom-file-control, .was-validated .is-focused .form-control:valid, .was-validated .is-focused .custom-file-control:valid, .is-focused .form-control.is-valid, .is-focused .is-valid.custom-file-control {
-  border-color: rgba(0, 0, 0, 0.26);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.26);
   padding-right: calc(1.5em + 0.875rem);
   background-image: "none";
   background-repeat: no-repeat;
   background-position: center right calc(0.375em + 0.21875rem);
   background-size: calc(0.75em + 0.4375rem) calc(0.75em + 0.4375rem); }
   .was-validated .is-focused .form-control:valid:focus, .was-validated .is-focused .custom-file-control:valid:focus, .is-focused .form-control.is-valid:focus, .is-focused .is-valid.custom-file-control:focus, .was-validated .is-focused .form-control:valid:focus, .was-validated .is-focused .custom-file-control:valid:focus, .is-focused .form-control.is-valid:focus, .is-focused .is-valid.custom-file-control:focus {
-    border-color: rgba(0, 0, 0, 0.26);
-    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25); }
+    border-bottom: 1px solid rgba(0, 0, 0, 0.26); }
   .was-validated .is-focused .form-control:valid ~ .valid-feedback, .was-validated .is-focused .custom-file-control:valid ~ .valid-feedback,
   .was-validated .is-focused .form-control:valid ~ .valid-tooltip,
   .was-validated .is-focused .custom-file-control:valid ~ .valid-tooltip, .is-focused .form-control.is-valid ~ .valid-feedback, .is-focused .is-valid.custom-file-control ~ .valid-feedback,
@@ -10475,7 +10471,7 @@ fieldset[disabled][disabled] .has-success .form-control, fieldset[disabled][disa
   display: none;
   width: 100%;
   margin-top: 0.25rem;
-  font-size: 80%;
+  font-size: 90%;
   color: #66bb6a; }
 
 .has-success .is-focused .valid-tooltip, .has-success.is-focused .valid-tooltip {
@@ -10493,15 +10489,14 @@ fieldset[disabled][disabled] .has-success .form-control, fieldset[disabled][disa
   border-radius: 0.125rem; }
 
 .was-validated .has-success .is-focused .form-control:valid, .was-validated .has-success .is-focused .custom-file-control:valid, .has-success .is-focused .form-control.is-valid, .has-success .is-focused .is-valid.custom-file-control, .was-validated .has-success.is-focused .form-control:valid, .was-validated .has-success.is-focused .custom-file-control:valid, .has-success.is-focused .form-control.is-valid, .has-success.is-focused .is-valid.custom-file-control {
-  border-color: #66bb6a;
+  border-bottom: 1px solid #66bb6a;
   padding-right: calc(1.5em + 0.875rem);
   background-image: "none";
   background-repeat: no-repeat;
   background-position: center right calc(0.375em + 0.21875rem);
   background-size: calc(0.75em + 0.4375rem) calc(0.75em + 0.4375rem); }
   .was-validated .has-success .is-focused .form-control:valid:focus, .was-validated .has-success .is-focused .custom-file-control:valid:focus, .has-success .is-focused .form-control.is-valid:focus, .has-success .is-focused .is-valid.custom-file-control:focus, .was-validated .has-success.is-focused .form-control:valid:focus, .was-validated .has-success.is-focused .custom-file-control:valid:focus, .has-success.is-focused .form-control.is-valid:focus, .has-success.is-focused .is-valid.custom-file-control:focus {
-    border-color: #66bb6a;
-    box-shadow: 0 0 0 0.2rem rgba(102, 187, 106, 0.25); }
+    border-bottom: 1px solid #66bb6a; }
   .was-validated .has-success .is-focused .form-control:valid ~ .valid-feedback, .was-validated .has-success .is-focused .custom-file-control:valid ~ .valid-feedback,
   .was-validated .has-success .is-focused .form-control:valid ~ .valid-tooltip,
   .was-validated .has-success .is-focused .custom-file-control:valid ~ .valid-tooltip, .has-success .is-focused .form-control.is-valid ~ .valid-feedback, .has-success .is-focused .is-valid.custom-file-control ~ .valid-feedback,
@@ -10637,7 +10632,7 @@ fieldset[disabled][disabled] .has-info .form-control, fieldset[disabled][disable
   display: none;
   width: 100%;
   margin-top: 0.25rem;
-  font-size: 80%;
+  font-size: 90%;
   color: #29b6f6; }
 
 .has-info .is-focused .valid-tooltip, .has-info.is-focused .valid-tooltip {
@@ -10655,15 +10650,14 @@ fieldset[disabled][disabled] .has-info .form-control, fieldset[disabled][disable
   border-radius: 0.125rem; }
 
 .was-validated .has-info .is-focused .form-control:valid, .was-validated .has-info .is-focused .custom-file-control:valid, .has-info .is-focused .form-control.is-valid, .has-info .is-focused .is-valid.custom-file-control, .was-validated .has-info.is-focused .form-control:valid, .was-validated .has-info.is-focused .custom-file-control:valid, .has-info.is-focused .form-control.is-valid, .has-info.is-focused .is-valid.custom-file-control {
-  border-color: #29b6f6;
+  border-bottom: 1px solid #29b6f6;
   padding-right: calc(1.5em + 0.875rem);
   background-image: "none";
   background-repeat: no-repeat;
   background-position: center right calc(0.375em + 0.21875rem);
   background-size: calc(0.75em + 0.4375rem) calc(0.75em + 0.4375rem); }
   .was-validated .has-info .is-focused .form-control:valid:focus, .was-validated .has-info .is-focused .custom-file-control:valid:focus, .has-info .is-focused .form-control.is-valid:focus, .has-info .is-focused .is-valid.custom-file-control:focus, .was-validated .has-info.is-focused .form-control:valid:focus, .was-validated .has-info.is-focused .custom-file-control:valid:focus, .has-info.is-focused .form-control.is-valid:focus, .has-info.is-focused .is-valid.custom-file-control:focus {
-    border-color: #29b6f6;
-    box-shadow: 0 0 0 0.2rem rgba(41, 182, 246, 0.25); }
+    border-bottom: 1px solid #29b6f6; }
   .was-validated .has-info .is-focused .form-control:valid ~ .valid-feedback, .was-validated .has-info .is-focused .custom-file-control:valid ~ .valid-feedback,
   .was-validated .has-info .is-focused .form-control:valid ~ .valid-tooltip,
   .was-validated .has-info .is-focused .custom-file-control:valid ~ .valid-tooltip, .has-info .is-focused .form-control.is-valid ~ .valid-feedback, .has-info .is-focused .is-valid.custom-file-control ~ .valid-feedback,
@@ -10799,7 +10793,7 @@ fieldset[disabled][disabled] .has-warning .form-control, fieldset[disabled][disa
   display: none;
   width: 100%;
   margin-top: 0.25rem;
-  font-size: 80%;
+  font-size: 90%;
   color: #ffca28; }
 
 .has-warning .is-focused .valid-tooltip, .has-warning.is-focused .valid-tooltip {
@@ -10817,15 +10811,14 @@ fieldset[disabled][disabled] .has-warning .form-control, fieldset[disabled][disa
   border-radius: 0.125rem; }
 
 .was-validated .has-warning .is-focused .form-control:valid, .was-validated .has-warning .is-focused .custom-file-control:valid, .has-warning .is-focused .form-control.is-valid, .has-warning .is-focused .is-valid.custom-file-control, .was-validated .has-warning.is-focused .form-control:valid, .was-validated .has-warning.is-focused .custom-file-control:valid, .has-warning.is-focused .form-control.is-valid, .has-warning.is-focused .is-valid.custom-file-control {
-  border-color: #ffca28;
+  border-bottom: 1px solid #ffca28;
   padding-right: calc(1.5em + 0.875rem);
   background-image: "none";
   background-repeat: no-repeat;
   background-position: center right calc(0.375em + 0.21875rem);
   background-size: calc(0.75em + 0.4375rem) calc(0.75em + 0.4375rem); }
   .was-validated .has-warning .is-focused .form-control:valid:focus, .was-validated .has-warning .is-focused .custom-file-control:valid:focus, .has-warning .is-focused .form-control.is-valid:focus, .has-warning .is-focused .is-valid.custom-file-control:focus, .was-validated .has-warning.is-focused .form-control:valid:focus, .was-validated .has-warning.is-focused .custom-file-control:valid:focus, .has-warning.is-focused .form-control.is-valid:focus, .has-warning.is-focused .is-valid.custom-file-control:focus {
-    border-color: #ffca28;
-    box-shadow: 0 0 0 0.2rem rgba(255, 202, 40, 0.25); }
+    border-bottom: 1px solid #ffca28; }
   .was-validated .has-warning .is-focused .form-control:valid ~ .valid-feedback, .was-validated .has-warning .is-focused .custom-file-control:valid ~ .valid-feedback,
   .was-validated .has-warning .is-focused .form-control:valid ~ .valid-tooltip,
   .was-validated .has-warning .is-focused .custom-file-control:valid ~ .valid-tooltip, .has-warning .is-focused .form-control.is-valid ~ .valid-feedback, .has-warning .is-focused .is-valid.custom-file-control ~ .valid-feedback,
@@ -10961,7 +10954,7 @@ fieldset[disabled][disabled] .has-danger .form-control, fieldset[disabled][disab
   display: none;
   width: 100%;
   margin-top: 0.25rem;
-  font-size: 80%;
+  font-size: 90%;
   color: #ef5350; }
 
 .has-danger .is-focused .valid-tooltip, .has-danger.is-focused .valid-tooltip {
@@ -10979,15 +10972,14 @@ fieldset[disabled][disabled] .has-danger .form-control, fieldset[disabled][disab
   border-radius: 0.125rem; }
 
 .was-validated .has-danger .is-focused .form-control:valid, .was-validated .has-danger .is-focused .custom-file-control:valid, .has-danger .is-focused .form-control.is-valid, .has-danger .is-focused .is-valid.custom-file-control, .was-validated .has-danger.is-focused .form-control:valid, .was-validated .has-danger.is-focused .custom-file-control:valid, .has-danger.is-focused .form-control.is-valid, .has-danger.is-focused .is-valid.custom-file-control {
-  border-color: #ef5350;
+  border-bottom: 1px solid #ef5350;
   padding-right: calc(1.5em + 0.875rem);
   background-image: "none";
   background-repeat: no-repeat;
   background-position: center right calc(0.375em + 0.21875rem);
   background-size: calc(0.75em + 0.4375rem) calc(0.75em + 0.4375rem); }
   .was-validated .has-danger .is-focused .form-control:valid:focus, .was-validated .has-danger .is-focused .custom-file-control:valid:focus, .has-danger .is-focused .form-control.is-valid:focus, .has-danger .is-focused .is-valid.custom-file-control:focus, .was-validated .has-danger.is-focused .form-control:valid:focus, .was-validated .has-danger.is-focused .custom-file-control:valid:focus, .has-danger.is-focused .form-control.is-valid:focus, .has-danger.is-focused .is-valid.custom-file-control:focus {
-    border-color: #ef5350;
-    box-shadow: 0 0 0 0.2rem rgba(239, 83, 80, 0.25); }
+    border-bottom: 1px solid #ef5350; }
   .was-validated .has-danger .is-focused .form-control:valid ~ .valid-feedback, .was-validated .has-danger .is-focused .custom-file-control:valid ~ .valid-feedback,
   .was-validated .has-danger .is-focused .form-control:valid ~ .valid-tooltip,
   .was-validated .has-danger .is-focused .custom-file-control:valid ~ .valid-tooltip, .has-danger .is-focused .form-control.is-valid ~ .valid-feedback, .has-danger .is-focused .is-valid.custom-file-control ~ .valid-feedback,
@@ -11086,7 +11078,7 @@ fieldset[disabled][disabled] .has-danger .form-control, fieldset[disabled][disab
 
 .bmd-form-group {
   position: relative;
-  padding-top: 1.75rem; }
+  padding-top: 1.9rem; }
   .bmd-form-group [class^='bmd-label'],
   .bmd-form-group [class*=' bmd-label'] {
     position: absolute;
@@ -11137,20 +11129,20 @@ fieldset[disabled][disabled] .has-danger .form-control, fieldset[disabled][disab
     font-size: 1rem; }
   .bmd-form-group .bmd-label-floating,
   .bmd-form-group .bmd-label-placeholder {
-    top: 2.1875rem; }
+    top: 2.3375rem; }
   .bmd-form-group.is-focused .bmd-label-floating,
   .bmd-form-group .is-focused .bmd-label-floating, .bmd-form-group.is-filled .bmd-label-floating,
   .bmd-form-group .is-filled .bmd-label-floating {
     top: 1rem;
     left: 0;
-    font-size: 0.75rem; }
+    font-size: 0.9rem; }
   .bmd-form-group .bmd-label-static {
     top: 1rem;
     left: 0;
-    font-size: 0.75rem; }
+    font-size: 0.9rem; }
   .bmd-form-group .bmd-help {
     margin-top: 0;
-    font-size: 0.75rem; }
+    font-size: 0.9rem; }
   .bmd-form-group .form-control.form-control-success, .bmd-form-group .form-control-success.custom-file-control, .bmd-form-group .form-control.form-control-warning, .bmd-form-group .form-control-warning.custom-file-control, .bmd-form-group .form-control.form-control-danger, .bmd-form-group .form-control-danger.custom-file-control {
     background-size: 0 100%, 100% 100%, 0.9375rem 0.9375rem; }
     .bmd-form-group .form-control.form-control-success, .bmd-form-group .form-control-success.custom-file-control, .bmd-form-group .form-control.form-control-success:focus, .bmd-form-group .form-control-success.custom-file-control:focus,
@@ -11162,7 +11154,7 @@ fieldset[disabled][disabled] .has-danger .form-control, fieldset[disabled][disab
     .bmd-form-group.is-focused .bmd-form-group .form-control-danger.custom-file-control {
       padding-right: 0;
       background-repeat: no-repeat, no-repeat;
-      background-position: center bottom, center calc(100% - 1px), center right 0.46875rem; }
+      background-position: center bottom, center 100%, center right 0.46875rem; }
     .bmd-form-group .form-control.form-control-success:focus, .bmd-form-group .form-control-success.custom-file-control:focus,
     .bmd-form-group.is-focused .bmd-form-group .form-control.form-control-success,
     .bmd-form-group.is-focused .bmd-form-group .form-control-success.custom-file-control, .bmd-form-group .form-control.form-control-warning:focus, .bmd-form-group .form-control-warning.custom-file-control:focus,
@@ -11172,7 +11164,7 @@ fieldset[disabled][disabled] .has-danger .form-control, fieldset[disabled][disab
     .bmd-form-group.is-focused .bmd-form-group .form-control-danger.custom-file-control {
       background-size: 100% 100%, 100% 100%, 0.9375rem 0.9375rem; }
   .bmd-form-group.bmd-form-group-sm {
-    padding-top: 1.40625rem; }
+    padding-top: 1.5375rem; }
     .bmd-form-group.bmd-form-group-sm .form-control, .bmd-form-group.bmd-form-group-sm .custom-file-control,
     .bmd-form-group.bmd-form-group-sm label,
     .bmd-form-group.bmd-form-group-sm input::placeholder {
@@ -11196,20 +11188,20 @@ fieldset[disabled][disabled] .has-danger .form-control, fieldset[disabled][disab
       font-size: 0.875rem; }
     .bmd-form-group.bmd-form-group-sm .bmd-label-floating,
     .bmd-form-group.bmd-form-group-sm .bmd-label-placeholder {
-      top: 1.65625rem; }
+      top: 1.7875rem; }
     .bmd-form-group.bmd-form-group-sm.is-focused .bmd-label-floating,
     .bmd-form-group.bmd-form-group-sm .is-focused .bmd-label-floating, .bmd-form-group.bmd-form-group-sm.is-filled .bmd-label-floating,
     .bmd-form-group.bmd-form-group-sm .is-filled .bmd-label-floating {
       top: 0.75rem;
       left: 0;
-      font-size: 0.65625rem; }
+      font-size: 0.7875rem; }
     .bmd-form-group.bmd-form-group-sm .bmd-label-static {
       top: 0.75rem;
       left: 0;
-      font-size: 0.65625rem; }
+      font-size: 0.7875rem; }
     .bmd-form-group.bmd-form-group-sm .bmd-help {
       margin-top: 0;
-      font-size: 0.65625rem; }
+      font-size: 0.7875rem; }
     .bmd-form-group.bmd-form-group-sm .form-control.form-control-success, .bmd-form-group.bmd-form-group-sm .form-control-success.custom-file-control, .bmd-form-group.bmd-form-group-sm .form-control.form-control-warning, .bmd-form-group.bmd-form-group-sm .form-control-warning.custom-file-control, .bmd-form-group.bmd-form-group-sm .form-control.form-control-danger, .bmd-form-group.bmd-form-group-sm .form-control-danger.custom-file-control {
       background-size: 0 100%, 100% 100%, 0.6875rem 0.6875rem; }
       .bmd-form-group.bmd-form-group-sm .form-control.form-control-success, .bmd-form-group.bmd-form-group-sm .form-control-success.custom-file-control, .bmd-form-group.bmd-form-group-sm .form-control.form-control-success:focus, .bmd-form-group.bmd-form-group-sm .form-control-success.custom-file-control:focus,
@@ -11221,7 +11213,7 @@ fieldset[disabled][disabled] .has-danger .form-control, fieldset[disabled][disab
       .bmd-form-group.is-focused .bmd-form-group.bmd-form-group-sm .form-control-danger.custom-file-control {
         padding-right: 0;
         background-repeat: no-repeat, no-repeat;
-        background-position: center bottom, center calc(100% - 1px), center right 0.34375rem; }
+        background-position: center bottom, center 100%, center right 0.34375rem; }
       .bmd-form-group.bmd-form-group-sm .form-control.form-control-success:focus, .bmd-form-group.bmd-form-group-sm .form-control-success.custom-file-control:focus,
       .bmd-form-group.is-focused .bmd-form-group.bmd-form-group-sm .form-control.form-control-success,
       .bmd-form-group.is-focused .bmd-form-group.bmd-form-group-sm .form-control-success.custom-file-control, .bmd-form-group.bmd-form-group-sm .form-control.form-control-warning:focus, .bmd-form-group.bmd-form-group-sm .form-control-warning.custom-file-control:focus,
@@ -11231,7 +11223,7 @@ fieldset[disabled][disabled] .has-danger .form-control, fieldset[disabled][disab
       .bmd-form-group.is-focused .bmd-form-group.bmd-form-group-sm .form-control-danger.custom-file-control {
         background-size: 100% 100%, 100% 100%, 0.6875rem 0.6875rem; }
   .bmd-form-group.bmd-form-group-lg {
-    padding-top: 1.9375rem; }
+    padding-top: 2.125rem; }
     .bmd-form-group.bmd-form-group-lg .form-control, .bmd-form-group.bmd-form-group-lg .custom-file-control,
     .bmd-form-group.bmd-form-group-lg label,
     .bmd-form-group.bmd-form-group-lg input::placeholder {
@@ -11255,20 +11247,20 @@ fieldset[disabled][disabled] .has-danger .form-control, fieldset[disabled][disab
       font-size: 1.25rem; }
     .bmd-form-group.bmd-form-group-lg .bmd-label-floating,
     .bmd-form-group.bmd-form-group-lg .bmd-label-placeholder {
-      top: 2.5rem; }
+      top: 2.6875rem; }
     .bmd-form-group.bmd-form-group-lg.is-focused .bmd-label-floating,
     .bmd-form-group.bmd-form-group-lg .is-focused .bmd-label-floating, .bmd-form-group.bmd-form-group-lg.is-filled .bmd-label-floating,
     .bmd-form-group.bmd-form-group-lg .is-filled .bmd-label-floating {
       top: 1rem;
       left: 0;
-      font-size: 0.9375rem; }
+      font-size: 1.125rem; }
     .bmd-form-group.bmd-form-group-lg .bmd-label-static {
       top: 1rem;
       left: 0;
-      font-size: 0.9375rem; }
+      font-size: 1.125rem; }
     .bmd-form-group.bmd-form-group-lg .bmd-help {
       margin-top: 0;
-      font-size: 0.9375rem; }
+      font-size: 1.125rem; }
     .bmd-form-group.bmd-form-group-lg .form-control.form-control-success, .bmd-form-group.bmd-form-group-lg .form-control-success.custom-file-control, .bmd-form-group.bmd-form-group-lg .form-control.form-control-warning, .bmd-form-group.bmd-form-group-lg .form-control-warning.custom-file-control, .bmd-form-group.bmd-form-group-lg .form-control.form-control-danger, .bmd-form-group.bmd-form-group-lg .form-control-danger.custom-file-control {
       background-size: 0 100%, 100% 100%, 1.1875rem 1.1875rem; }
       .bmd-form-group.bmd-form-group-lg .form-control.form-control-success, .bmd-form-group.bmd-form-group-lg .form-control-success.custom-file-control, .bmd-form-group.bmd-form-group-lg .form-control.form-control-success:focus, .bmd-form-group.bmd-form-group-lg .form-control-success.custom-file-control:focus,
@@ -11280,7 +11272,7 @@ fieldset[disabled][disabled] .has-danger .form-control, fieldset[disabled][disab
       .bmd-form-group.is-focused .bmd-form-group.bmd-form-group-lg .form-control-danger.custom-file-control {
         padding-right: 0;
         background-repeat: no-repeat, no-repeat;
-        background-position: center bottom, center calc(100% - 1px), center right 0.59375rem; }
+        background-position: center bottom, center 100%, center right 0.59375rem; }
       .bmd-form-group.bmd-form-group-lg .form-control.form-control-success:focus, .bmd-form-group.bmd-form-group-lg .form-control-success.custom-file-control:focus,
       .bmd-form-group.is-focused .bmd-form-group.bmd-form-group-lg .form-control.form-control-success,
       .bmd-form-group.is-focused .bmd-form-group.bmd-form-group-lg .form-control-success.custom-file-control, .bmd-form-group.bmd-form-group-lg .form-control.form-control-warning:focus, .bmd-form-group.bmd-form-group-lg .form-control-warning.custom-file-control:focus,
@@ -11318,7 +11310,7 @@ label {
 
 .bmd-label-floating,
 .bmd-label-placeholder {
-  top: 2.1875rem; }
+  top: 2.3375rem; }
 
 .is-focused .bmd-label-floating,
 .is-focused .bmd-label-floating,
@@ -11326,16 +11318,16 @@ label {
 .is-filled .bmd-label-floating {
   top: 1rem;
   left: 0;
-  font-size: 0.75rem; }
+  font-size: 0.9rem; }
 
 .bmd-label-static {
   top: 1rem;
   left: 0;
-  font-size: 0.75rem; }
+  font-size: 0.9rem; }
 
 .bmd-help {
   margin-top: 0;
-  font-size: 0.75rem; }
+  font-size: 0.9rem; }
 
 .form-control.form-control-success, .form-control-success.custom-file-control, .form-control.form-control-warning, .form-control-warning.custom-file-control, .form-control.form-control-danger, .form-control-danger.custom-file-control {
   background-size: 0 100%, 100% 100%, 0.9375rem 0.9375rem; }
@@ -11348,7 +11340,7 @@ label {
   .bmd-form-group.is-focused .form-control-danger.custom-file-control {
     padding-right: 0;
     background-repeat: no-repeat, no-repeat;
-    background-position: center bottom, center calc(100% - 1px), center right 0.46875rem; }
+    background-position: center bottom, center 100%, center right 0.46875rem; }
   .form-control.form-control-success:focus, .form-control-success.custom-file-control:focus,
   .bmd-form-group.is-focused .form-control.form-control-success,
   .bmd-form-group.is-focused .form-control-success.custom-file-control, .form-control.form-control-warning:focus, .form-control-warning.custom-file-control:focus,
