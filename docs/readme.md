@@ -9,20 +9,23 @@ bash
 ## Criando um ambiente virtual
 mkvirtualenv syscemit
 
-## Saindo do ambiente Virtual
-deactivate
-
 ## Abrindo o ambiente Virtual
 workon syscemit
 
+## Instalando as dependências
+pip install -r dev-requirements.txt
+
 ## Iniciando e populando o banco
-bash app.sh initdb
+./console initdb
 
 ## Populando o banco
-bash app.sh user create -n admin -l admin -t 1
+./console user create -n admin -l admin -t 1
 
 ## Rodando servidor e aplicação
-bash app.sh run
+./console run
 
 ## Abrindo modo console
-bash app.sh shell
+./console shell
+
+## Saindo do ambiente Virtual
+deactivate

@@ -1,0 +1,11 @@
+[Unit]
+Description=Graveyard Management System
+After=Network.target
+
+[Service]
+WorkingDirectory=/srv/syscemit
+ExecStart=/srv/syscemit/.env/bin/python3 /srv/syscemit/run.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
