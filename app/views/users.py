@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import (Blueprint, current_app, redirect, render_template, request,
+from flask import (Blueprint, current_app, jsonify, render_template, request,
                    url_for)
 from flask_login import login_required
 
@@ -15,34 +15,33 @@ bp = Blueprint('users', __name__, url_prefix='/usuarios')
 @login_required
 @permission_required('admin')
 def index():
-    form = UserSearchForm(request.args, csrf_enabled=False)
+    form = UserSearchForm(request.args)
     joins = filters = orders = ()
     search = form.search.data
     filters_ = form.filters.data
     clause = form.clause.data
     order = form.order.data
 
-    if form.validate():
-        if 'type' in filters or clause == 'type':
-            joins += (UserType, )
+    if 'type' in filters or clause == 'type':
+        joins += (UserType, )
 
-        if filters_ and search:
-            filters += tuple(
-                getattr(User, f).ilike('%' + search + '%') for f in filters_
-                if f != 'type')
-            if 'type' in filters_:
-                filters += (
-                    User.user_type_id == UserType.id,
-                    UserType.description.ilike('%' + search + '%'),
-                )
-        elif search:
-            filters += (User.name.ilike('%' + search + '%'), )
+    if filters_ and search:
+        filters += tuple(
+            getattr(User, f).ilike('%' + search + '%') for f in filters_
+            if f != 'type')
+        if 'type' in filters_:
+            filters += (
+                User.user_type_id == UserType.id,
+                UserType.description.ilike('%' + search + '%'),
+            )
+    elif search:
+        filters += (User.name.ilike('%' + search + '%'), )
 
-        if order and clause:
-            if clause != 'type':
-                orders += (getattr(getattr(User, clause), order)(), )
-            else:
-                orders += (getattr(UserType.description, order)(), )
+    if order and clause:
+        if clause != 'type':
+            orders += (getattr(getattr(User, clause), order)(), )
+        else:
+            orders += (getattr(UserType.description, order)(), )
 
     if not orders:
         orders += (User.name.asc(), )
@@ -72,14 +71,15 @@ def create():
         user = User()
         form.populate_obj(user)
         user.save()
-        return redirect(url_for('users.index'))
+        return jsonify({'redirect': url_for('users.index')})
     return render_template('users/view.html',
                            form=form,
+                           method='post',
                            label='Adicionar Usuário',
                            color='success')
 
 
-@bp.route('/<int:id>', methods=['GET', 'POST'])
+@bp.route('/<int:id>', methods=['GET', 'PUT'])
 @login_required
 @permission_required('admin')
 def edit(id):
@@ -88,14 +88,15 @@ def edit(id):
     if form.validate():
         form.populate_obj(user)
         user.update()
-        return redirect(url_for('users.index'))
+        return jsonify({'redirect': url_for('users.index')})
     return render_template('users/view.html',
                            form=form,
+                           method='put',
                            label='Editar Usuário',
                            color='warning')
 
 
-@bp.route('/<int:id>', methods=['POST'])
+@bp.route('/<int:id>', methods=['DELETE'])
 @login_required
 @permission_required('admin')
 def delete(id):
