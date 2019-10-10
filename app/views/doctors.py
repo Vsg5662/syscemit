@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from flask import (Blueprint, current_app, jsonify,
-                   render_template, request, url_for)
+from flask import (Blueprint, current_app, jsonify, render_template, request,
+                   url_for)
 from flask_login import login_required
 
 from ..decorators import permission_required

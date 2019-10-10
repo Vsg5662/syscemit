@@ -15,8 +15,10 @@ class DoctorForm(FlaskForm):
         'Nome',
         [InputRequired(message='Insira o nome do médico!'),
          Length(1, 255)])
-    crm = StringField('CRM', [InputRequired(message='Insira o CRM do médico!'),
-        Length(1, 20)])
+    crm = StringField(
+        'CRM',
+        [InputRequired(message='Insira o CRM do médico!'),
+         Length(1, 20)])
     submit = SubmitField('Salvar')
 
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import (Blueprint, flash, jsonify, redirect, render_template,
+                   request, url_for)
 from flask_login import login_required, login_user, logout_user
 
 from ..forms.auth import AuthLoginForm
@@ -16,9 +17,12 @@ def login():
         user = User.query.filter_by(login=form.login.data).first()
         if user is not None and user.check_password(form.password.data):
             login_user(user)
-            return redirect(request.args.get('next') or url_for('main.index'))
+            return jsonify({
+                'redirect':
+                request.args.get('next') or url_for('main.index')
+            })
         flash('Usuário ou senha inválida')
-    return render_template('auth/login.html', form=form)
+    return render_template('auth/login.html', form=form, method='post')
 
 
 @bp.route('/redefinir_senha', methods=['GET', 'POST'])
