@@ -5,17 +5,17 @@ from flask import (Blueprint, current_app, jsonify, render_template, request,
 from flask_login import login_required
 
 from ..decorators import permission_required
-from ..forms.doctors import COLUMNS, DoctorForm, DoctorSearchForm
-from ..models import Doctor
+from ..forms.graves import COLUMNS, GraveForm, GraveSearchForm
+from ..models import Grave
 
-bp = Blueprint('doctors', __name__, url_prefix='/medicos')
+bp = Blueprint('graves', __name__, url_prefix='/tumulos')
 
 
 @bp.route('/')
 @login_required
 @permission_required('admin')
 def index():
-    form = DoctorSearchForm(request.args)
+    form = GraveSearchForm(request.args)
     joins = filters = orders = ()
     search = form.search.data
     filters_ = form.filters.data
@@ -24,22 +24,22 @@ def index():
 
     if filters_ and search:
         filters += tuple(
-            getattr(Doctor, f).ilike('%' + search + '%') for f in filters_)
+            getattr(Grave, f).ilike('%' + search + '%') for f in filters_)
     elif search:
-        filters += (Doctor.name.ilike('%' + search + '%'), )
+        filters += (Grave.name.ilike('%' + search + '%'), )
 
     if order and clause:
-        orders += (getattr(getattr(Doctor, clause), order)(), )
+        orders += (getattr(getattr(Grave, clause), order)(), )
 
     if not orders:
-        orders += (Doctor.name.asc(), )
-    pagination = Doctor.query.join(*joins).filter(*filters).order_by(
+        orders += (Grave.name.asc(), )
+    pagination = Grave.query.join(*joins).filter(*filters).order_by(
         *orders).paginate(form.page.data,
                           per_page=current_app.config['PER_PAGE'],
                           error_out=False)
-    doctors = pagination.items
+    graves = pagination.items
 
-    return render_template('doctors/index.html',
+    return render_template('graves/index.html',
                            form=form,
                            search=search,
                            filters=filters_,
@@ -47,23 +47,23 @@ def index():
                            order=order,
                            pagination=pagination,
                            headers=COLUMNS,
-                           doctors=doctors)
+                           graves=graves)
 
 
 @bp.route('/adicionar', methods=['GET', 'POST'])
 @login_required
 @permission_required('admin')
 def create():
-    form = DoctorForm()
+    form = GraveForm()
     if form.validate():
-        doctor = Doctor()
-        form.populate_obj(doctor)
-        doctor.save()
-        return jsonify({'redirect': url_for('doctors.index')})
-    return render_template('doctors/view.html',
+        grave = Grave()
+        form.populate_obj(grave)
+        grave.save()
+        return jsonify({'redirect': url_for('graves.index')})
+    return render_template('graves/view.html',
                            form=form,
                            method='post',
-                           label='Adicionar Médico',
+                           label='Adicionar Túmulo',
                            color='success')
 
 
@@ -71,16 +71,16 @@ def create():
 @login_required
 @permission_required('admin')
 def edit(id):
-    doctor = Doctor.get_or_404(id)
-    form = DoctorForm(request.form, obj=doctor)
+    grave = Grave.get_or_404(id)
+    form = GraveForm(request.form, obj=grave)
     if form.validate():
-        form.populate_obj(doctor)
-        doctor.update()
-        return jsonify({'redirect': url_for('doctors.index')})
-    return render_template('doctors/view.html',
+        form.populate_obj(grave)
+        grave.update()
+        return jsonify({'redirect': url_for('graves.index')})
+    return render_template('graves/view.html',
                            form=form,
                            method='put',
-                           label='Editar Médico',
+                           label='Editar Túmulo',
                            color='warning')
 
 
@@ -88,5 +88,5 @@ def edit(id):
 @login_required
 @permission_required('admin')
 def delete(id):
-    Doctor.get_or_404(id).delete()
+    Grave.get_or_404(id).delete()
     return '', 204

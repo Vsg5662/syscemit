@@ -5,17 +5,17 @@ from flask import (Blueprint, current_app, jsonify, render_template, request,
 from flask_login import login_required
 
 from ..decorators import permission_required
-from ..forms.doctors import COLUMNS, DoctorForm, DoctorSearchForm
-from ..models import Doctor
+from ..forms.childrens import COLUMNS, ChildrenForm, ChildrenSearchForm
+from ..models import Children
 
-bp = Blueprint('doctors', __name__, url_prefix='/medicos')
+bp = Blueprint('childrens', __name__, url_prefix='/filiacao')
 
 
 @bp.route('/')
 @login_required
 @permission_required('admin')
 def index():
-    form = DoctorSearchForm(request.args)
+    form = ChildrenSearchForm(request.args)
     joins = filters = orders = ()
     search = form.search.data
     filters_ = form.filters.data
@@ -24,22 +24,22 @@ def index():
 
     if filters_ and search:
         filters += tuple(
-            getattr(Doctor, f).ilike('%' + search + '%') for f in filters_)
+            getattr(Children, f).ilike('%' + search + '%') for f in filters_)
     elif search:
-        filters += (Doctor.name.ilike('%' + search + '%'), )
+        filters += (Children.name.ilike('%' + search + '%'), )
 
     if order and clause:
-        orders += (getattr(getattr(Doctor, clause), order)(), )
+        orders += (getattr(getattr(Children, clause), order)(), )
 
     if not orders:
-        orders += (Doctor.name.asc(), )
-    pagination = Doctor.query.join(*joins).filter(*filters).order_by(
+        orders += (Children.name.asc(), )
+    pagination = Children.query.join(*joins).filter(*filters).order_by(
         *orders).paginate(form.page.data,
                           per_page=current_app.config['PER_PAGE'],
                           error_out=False)
-    doctors = pagination.items
+    childrens = pagination.items
 
-    return render_template('doctors/index.html',
+    return render_template('childrens/index.html',
                            form=form,
                            search=search,
                            filters=filters_,
@@ -47,23 +47,23 @@ def index():
                            order=order,
                            pagination=pagination,
                            headers=COLUMNS,
-                           doctors=doctors)
+                           childrens=childrens)
 
 
 @bp.route('/adicionar', methods=['GET', 'POST'])
 @login_required
 @permission_required('admin')
 def create():
-    form = DoctorForm()
+    form = ChildrenForm()
     if form.validate():
-        doctor = Doctor()
-        form.populate_obj(doctor)
-        doctor.save()
-        return jsonify({'redirect': url_for('doctors.index')})
-    return render_template('doctors/view.html',
+        children = Children()
+        form.populate_obj(children)
+        children.save()
+        return jsonify({'redirect': url_for('childrens.index')})
+    return render_template('childrens/view.html',
                            form=form,
                            method='post',
-                           label='Adicionar Médico',
+                           label='Adicionar filho',
                            color='success')
 
 
@@ -71,16 +71,16 @@ def create():
 @login_required
 @permission_required('admin')
 def edit(id):
-    doctor = Doctor.get_or_404(id)
-    form = DoctorForm(request.form, obj=doctor)
+    children = Children.get_or_404(id)
+    form = ChildrenForm(request.form, obj=children)
     if form.validate():
-        form.populate_obj(doctor)
-        doctor.update()
-        return jsonify({'redirect': url_for('doctors.index')})
-    return render_template('doctors/view.html',
+        form.populate_obj(children)
+        children.update()
+        return jsonify({'redirect': url_for('childrens.index')})
+    return render_template('childrens/view.html',
                            form=form,
                            method='put',
-                           label='Editar Médico',
+                           label='Editar filho',
                            color='warning')
 
 
@@ -88,5 +88,5 @@ def edit(id):
 @login_required
 @permission_required('admin')
 def delete(id):
-    Doctor.get_or_404(id).delete()
+    Children.get_or_404(id).delete()
     return '', 204

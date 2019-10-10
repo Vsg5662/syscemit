@@ -119,6 +119,7 @@ class City(CRUDMixin, db.Model):
     name = db.Column(db.String(40), nullable=False)
     state_id = db.Column(db.Integer, db.ForeignKey('states.id'))
     districts = db.relationship('District', backref='city', lazy='dynamic')
+    registries = db.relationship('Registry', backref='city', lazy='dynamic')
     deceased = db.relationship('Deceased', backref='city', lazy='dynamic')
 
     @classmethod
@@ -173,8 +174,8 @@ class Address(CRUDMixin, db.Model):
                                     backref='address_death',
                                     lazy='dynamic')
 
-    __table_args__ += (
-        db.UniqueConstraint('number', 'complement', 'street_id'), )
+    __table_args__ = (db.UniqueConstraint('number', 'complement',
+                                          'street_id'), )
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.number)
