@@ -12,7 +12,7 @@ from .extensions import db
 
 
 class CRUDMixin():
-    __table_args__ = {'extend_existing': True}
+    __table_args__ = ({'extend_existing': True}, )
     id = db.Column(db.Integer, primary_key=True)
 
     @classmethod
@@ -172,6 +172,9 @@ class Address(CRUDMixin, db.Model):
                                     foreign_keys='Deceased.death_address_id',
                                     backref='address_death',
                                     lazy='dynamic')
+
+    __table_args__ += (
+        db.UniqueConstraint('number', 'complement', 'street_id'), )
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.number)
