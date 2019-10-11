@@ -4,32 +4,37 @@
 {% block title %}Usuários{% endblock %}
 
 {% block body %}
-  {% include "navbar.html" %}
-  <div class="container-fluid">
-    <form id="user" class="needs-validation" action="" data-method="{{ method }}" novalidate>
-      <div class="card">
-        <div class="card-header">
-          <h3>
-            <i class="fas fa-user text-primary"></i> {{label}}
-          </h3>
-        </div>
-        <div class="card-body">
-          <div class="form-row">
-            {{ form.csrf_token }}
-            {{ render_field(form.login, class_="col-md-6", required=True) }}
-            {{ render_field(form.name, class_="col-md-6", required=True)}}
-            {{ render_field(form.password, class_="col-md-6", required=True) }}
-            {{ render_field(form.user_type_id, class_="col-md-6", required=True) }}
+{% include "navbar.html" %}
+<div class="container-fluid">
+  <div class="row">
+    {% include "sidebar.html" %}
+    <div class="col">
+      <form id="user" class="needs-validation" action="" data-method="{{ method }}" novalidate>
+        <div class="card">
+          <div class="card-header">
+            <h3>
+              <i class="fas fa-user text-primary"></i> {{label}}
+            </h3>
           </div>
+          <div class="card-body">
+            <div class="form-row">
+              {{ form.csrf_token }}
+              {{ render_field(form.login, class_="col-md-6", required=True) }}
+              {{ render_field(form.name, class_="col-md-6", required=True)}}
+              {{ render_field(form.password, class_="col-md-6", required=True) }}
+              {{ render_field(form.user_type_id, class_="col-md-6", required=True) }}
+            </div>
+          </div>
+          <div class="card-footer bg-dark">
+            <button id="submit" name="submit" class="btn btn-raised btn-{{color}}" type="submit">
+              <i class="fas fa-save"></i> Salvar
+            </button>
+            <button class="btn btn-raised btn-info cancel" type="button">
+              <i class="fas fa-ban"></i> Cancelar
+            </button>
+          </div>
+      </form>
         </div>
-        <div class="card-footer bg-dark">
-          <button id="submit" name="submit" class="btn btn-raised btn-{{color}}" type="submit">
-            <i class="fas fa-save"></i> Salvar
-          </button>
-          <button class="btn btn-raised btn-info cancel" type="button">
-            <i class="fas fa-ban"></i> Cancelar
-          </button>
-        </div>
-    </form>
+    </div>
   </div>
-{% endblock %}
+  {% endblock %}

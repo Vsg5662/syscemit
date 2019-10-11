@@ -1,0 +1,19 @@
+{% set navbar = [
+  ('main', 'fa-tasks-alt', 'Painel'),
+  ('registries', 'fa-books', 'Cartórios'),
+  ('addresses', 'fa-map-signs', 'Endereços'),
+  ('childrens', 'fa-child', 'Filiação'),
+  ('doctors', 'fa-user-md', 'Médicos'),
+  ('zones', 'fa-map-marked-alt', 'Regiões'),
+  ('graves', 'fa-tombstone', 'Túmulos'),
+  ('users', 'fa-users', 'Usuários')
+] -%}
+<div class="col-lg-auto col-xs-12 pr-0">
+  <div class="list-group shadow py-0">
+    {% for view, icon, label in navbar %}
+    <a class="list-group-item list-group-item-action {% if request.blueprint == view %}bg-dark active{% endif %}" href="{{ url_for(view + '.index') }}">
+      <i class="fas {{ icon }} {% if request.blueprint != view %}text-primary{% else %}text-info{% endif %}"></i> {{ label }}
+    </a>
+    {% endfor %}
+  </div>
+</div>
