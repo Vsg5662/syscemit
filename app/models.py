@@ -118,9 +118,9 @@ class City(CRUDMixin, db.Model):
     __tablename__ = 'cities'
     name = db.Column(db.String(40), nullable=False)
     state_id = db.Column(db.Integer, db.ForeignKey('states.id'))
-    districts = db.relationship('District', backref='city', lazy='dynamic')
     registries = db.relationship('Registry', backref='city', lazy='dynamic')
     deceased = db.relationship('Deceased', backref='city', lazy='dynamic')
+    addresses = db.relationship('Address', backref='city', lazy='dynamic')
 
     @classmethod
     def populate(cls):
@@ -139,32 +139,12 @@ class City(CRUDMixin, db.Model):
         return '{0}({1})'.format(self.__class__.__name__, self.name)
 
 
-class District(CRUDMixin, db.Model):
-    __tablename__ = 'districts'
-    name = db.Column(db.String(255), nullable=False)
-    city_id = db.Column(db.Integer, db.ForeignKey('cities.id'))
-    streets = db.relationship('Street', backref='district', lazy='dynamic')
-
-    def __repr__(self):
-        return '{0}({1})'.format(self.__class__.__name__, self.name)
-
-
-class Street(CRUDMixin, db.Model):
-    __tablename__ = 'streets'
-    name = db.Column(db.String(255), nullable=False)
-    cep = db.Column(db.String(8), nullable=False)
-    district_id = db.Column(db.Integer, db.ForeignKey('districts.id'))
-    addresses = db.relationship('Address', backref='street', lazy='dynamic')
-
-    def __repr__(self):
-        return '{0}({1})'.format(self.__class__.__name__, self.name)
-
-
 class Address(CRUDMixin, db.Model):
     __tablename__ = 'addresses'
-    number = db.Column(db.String(5), default='S/N')
-    complement = db.Column(db.String(255))
-    street_id = db.Column(db.Integer, db.ForeignKey('streets.id'))
+    street = db.Column(db.String(255), nullable=False)
+    cep = db.Column(db.String(8), nullable=False)
+    district = db.Column(db.String(255), nullable=False)
+    city_id = db.Column(db.Integer, db.ForeignKey('cities.id'))
     home_address = db.relationship('Deceased',
                                    foreign_keys='Deceased.home_address_id',
                                    backref='address_home',
@@ -173,9 +153,6 @@ class Address(CRUDMixin, db.Model):
                                     foreign_keys='Deceased.death_address_id',
                                     backref='address_death',
                                     lazy='dynamic')
-
-    __table_args__ = (db.UniqueConstraint('number', 'complement',
-                                          'street_id'), )
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.number)
@@ -280,6 +257,8 @@ class Deceased(CRUDMixin, db.Model):
     gender = db.Column(db.Boolean, nullable=False)
     cause = db.Column(db.String(1500), nullable=False)
     registration = db.Column(db.String(40), nullable=False)
+    number = db.Column(db.String(5), default='S/N')
+    complement = db.Column(db.String(255))
     birthplace_id = db.Column(db.Integer, db.ForeignKey('cities.id'))
     civil_state_id = db.Column(db.Integer, db.ForeignKey('civil_states.id'))
     home_address_id = db.Column(db.Integer, db.ForeignKey('addresses.id'))

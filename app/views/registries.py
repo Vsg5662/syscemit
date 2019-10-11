@@ -56,9 +56,9 @@ def index():
 def create():
     form = RegistryForm()
     if form.validate():
-        doctor = Registry()
-        form.populate_obj(doctor)
-        doctor.save()
+        registry = Registry()
+        form.populate_obj(registry)
+        registry.save()
         return jsonify({'redirect': url_for('registries.index')})
     return render_template('registries/view.html',
                            form=form,
@@ -71,11 +71,11 @@ def create():
 @login_required
 @permission_required('admin')
 def edit(id):
-    doctor = Registry.get_or_404(id)
-    form = RegistryForm(request.form, obj=doctor)
+    registry = Registry.get_or_404(id)
+    form = RegistryForm(request.form, obj=registry)
     if form.validate():
-        form.populate_obj(doctor)
-        doctor.update()
+        form.populate_obj(registry)
+        registry.update()
         return jsonify({'redirect': url_for('registries.index')})
     return render_template('registries/view.html',
                            form=form,

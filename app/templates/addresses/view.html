@@ -1,12 +1,12 @@
 {% from '_macros.html' import render_field %}
 {% extends "base.html" %}
 
-{% block title %}Cartório{% endblock %}
+{% block title %}Endereço{% endblock %}
 
 {% block body %}
   {% include "navbar.html" %}
   <div class="container-fluid">
-    <form id="registries" class="needs-validation" action="" data-method="{{ method }}" novalidate>
+    <form id="doctor" class="needs-validation" action="" data-method="{{ method }}" novalidate>
       <div class="card">
         <div class="card-header">
           <h3>
@@ -16,8 +16,10 @@
         <div class="card-body">
           <div class="form-row">
             {{ form.csrf_token }}
-            {{ render_field(form.name, class_="col-md-6", required=True)}}
-            {{ render_field(form.city_id, class_="col-md-6", required=True) }}
+            {{ render_field(form.street, class_="col-md-6", required=True)}}
+            {{ render_field(form.cep, class_="col-md-6", required=True)}}
+            {{ render_field(form.district, class_="col-md-6", required=True)}}
+            {{ render_field(form.city_id, class_="col-md-6", required=True)}}
           </div>
         </div>
         <div class="card-footer bg-dark">
