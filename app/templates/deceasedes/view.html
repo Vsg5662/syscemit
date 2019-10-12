@@ -1,0 +1,54 @@
+{% from '_macros.html' import render_field %}
+{% extends "base.html" %}
+
+{% block title %}Falecido{% endblock %}
+
+{% block body %}
+{% include "navbar.html" %}
+<div class="container-fluid">
+  <div class="row">
+    {% include "sidebar.html" %}
+    <div class="col">
+      <form id="deceased" class="needs-validation" action="" data-method="{{ method }}" novalidate>
+        <div class="card">
+          <div class="card-header">
+            <h3>
+              <i class="fas fa-user-md text-primary"></i> {{label}}
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="form-row">
+              {{ form.csrf_token }}
+              {{ render_field(form.name, class_="col-md-6", required=True)}}
+              {{ render_field(form.age, class_="col-md-6", required=True)}}
+              {{ render_field(form.birth_date, class_="col-md-6", required=True)}}
+              {{ render_field(form.death_datetime, class_="col-md-6", required=True)}}
+              {{ render_field(form.gender, class_="col-md-6", required=True)}}
+              {{ render_field(form.cause, class_="col-md-6", required=True)}}
+              {{ render_field(form.registration, class_="col-md-6", required=True)}}
+              {{ render_field(form.number, class_="col-md-6", required=True)}}
+              {{ render_field(form.complement, class_="col-md-6", required=True)}}
+              {{ render_field(form.birthplace, class_="col-md-6", required=True)}}
+              {{ render_field(form.civil_state, class_="col-md-6", required=True)}}
+              {{ render_field(form.home_address, class_="col-md-6", required=True)}}
+              {{ render_field(form.death_address, class_="col-md-6", required=True)}}
+              {{ render_field(form.doctor, class_="col-md-6", required=True)}}
+              {{ render_field(form.ethnicity, class_="col-md-6", required=True)}}
+              {{ render_field(form.grave, class_="col-md-6", required=True)}}
+              {{ render_field(form.registry, class_="col-md-6", required=True)}}
+              {{ render_field(form.childrens, class_="col-md-6", required=True) }}
+            </div>
+          </div>
+          <div class="card-footer bg-dark">
+            <button id="submit" name="submit" class="btn btn-raised btn-{{color}}" type="submit">
+              <i class="fas fa-save"></i> Salvar
+            </button>
+            <button class="btn btn-raised btn-info cancel" type="button">
+              <i class="fas fa-ban"></i> Cancelar
+            </button>
+          </div>
+      </form>
+        </div>
+    </div>
+  </div>
+  {% endblock %}

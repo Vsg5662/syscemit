@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .utils.helpers import HandleError
-from .views import (addresses, auth, childrens, doctors, graves, main,
+from .views import (addresses, auth, childrens, deceasedes, doctors, graves, main,
                     registries, users, zones)
 
 
@@ -9,6 +9,7 @@ def init_app(app):
     app.register_blueprint(addresses.bp)
     app.register_blueprint(auth.bp)
     app.register_blueprint(childrens.bp)
+    app.register_blueprint(deceasedes.bp)
     app.register_blueprint(doctors.bp)
     app.register_blueprint(graves.bp)
     app.register_blueprint(main.bp)
