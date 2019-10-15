@@ -1,4 +1,4 @@
-{% from '_macros.html' import render_field %}
+{% from '_macros.html' import render_field, render_multi_field, render_modal %}
 {% extends "base.html" %}
 
 {% block title %}Falecido{% endblock %}
@@ -13,30 +13,32 @@
         <div class="card">
           <div class="card-header">
             <h3>
-              <i class="fas fa-user-md text-primary"></i> {{label}}
+              <i class="fas fa-coffin text-primary"></i> {{label}}
             </h3>
           </div>
           <div class="card-body">
             <div class="form-row">
               {{ form.csrf_token }}
-              {{ render_field(form.name, class_="col-md-6", required=True)}}
-              {{ render_field(form.age, class_="col-md-6", required=True)}}
-              {{ render_field(form.birth_date, class_="col-md-6", required=True)}}
-              {{ render_field(form.death_datetime, class_="col-md-6", required=True)}}
-              {{ render_field(form.gender, class_="col-md-6", required=True)}}
-              {{ render_field(form.cause, class_="col-md-6", required=True)}}
-              {{ render_field(form.registration, class_="col-md-6", required=True)}}
-              {{ render_field(form.number, class_="col-md-6", required=True)}}
-              {{ render_field(form.complement, class_="col-md-6", required=True)}}
-              {{ render_field(form.birthplace, class_="col-md-6", required=True)}}
-              {{ render_field(form.civil_state, class_="col-md-6", required=True)}}
-              {{ render_field(form.home_address, class_="col-md-6", required=True)}}
-              {{ render_field(form.death_address, class_="col-md-6", required=True)}}
-              {{ render_field(form.doctor, class_="col-md-6", required=True)}}
-              {{ render_field(form.ethnicity, class_="col-md-6", required=True)}}
+              {{ render_field(form.name, class_="col-md-12", minlength=1, maxlength=255, required=True)}}
+              {{ render_field(form.age, class_="col-md-1", required=True)}}
+              {{ render_field(form.birth_date, class="date", class_="col-md-2", required=True)}}
+              {{ render_field(form.death_datetime, class="datetime", class_="col-md-2", required=True)}}
+              {{ render_multi_field(form.gender, 'radio', class_="col-md-1 px-1", required=True)}}
+              {{ render_field(form.ethnicity_id, class_="col-md-1", required=True)}}
+              {{ render_field(form.civil_state_id, class_="col-md-2", required=True)}}
+              {{ render_field(form.birthplace, class="city", class_="col-md-3", required=True)}}
+              {{ render_field(form.childrens, class_="col-md-12", required=True) }}
+              {{ render_field(form.home_address_id, class_="col-md-8", required=True)}}
+              {{ render_field(form.home_address_number, class_="col-md-1", minlength=1, maxlength=5, required=True)}}
+              {{ render_field(form.home_address_complement, class_="col-md-3", required=True)}}
+              {{ render_field(form.registration, class="number", class_="col-md-4", minlength=1, maxlength=40, required=True)}}
+              {{ render_field(form.registry, class_="col-md-4", required=True)}}
+              {{ render_field(form.doctor_id, class_="col-md-6", required=True)}}
+              {{ render_field(form.death_address_id, class_="col-md-8", required=True)}}
+              {{ render_field(form.death_address_number, class_="col-md-1", minlength=1, maxlength=5, required=True)}}
+              {{ render_field(form.death_address_complement, class_="col-md-3", required=True)}}
               {{ render_field(form.grave, class_="col-md-6", required=True)}}
-              {{ render_field(form.registry, class_="col-md-6", required=True)}}
-              {{ render_field(form.childrens, class_="col-md-6", required=True) }}
+              {{ render_field(form.cause, class_="col-md-12", maxlength=1500, required=True, rows=4)}}
             </div>
           </div>
           <div class="card-footer bg-dark">
@@ -48,7 +50,9 @@
             </button>
           </div>
       </form>
-        </div>
     </div>
   </div>
-  {% endblock %}
+</div>
+{% call render_modal('create', 'Criar', yes_text='Salvar', yes_icon='save', yes_color='success') %}
+{% endcall %}
+{% endblock %}

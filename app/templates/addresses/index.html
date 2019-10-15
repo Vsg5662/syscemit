@@ -1,4 +1,4 @@
-{% from '_macros.html' import  render_field, render_pagination, render_modal, render_multicheckbox_field %}
+{% from '_macros.html' import  render_field, render_pagination, render_modal, render_multi_field %}
 {% extends 'base.html' %}
 
 {% block title %}Endereços{% endblock %}
@@ -38,7 +38,7 @@
                 <div class="row">
                   <div class="col-md-1">Filtrar por:</div>
                   <div class="col-md-11">
-                    {{ render_multicheckbox_field(form.filters) }}
+                    {{ render_multi_field(form.filters) }}
                   </div>
                 </div>
                 <div class="form-row">

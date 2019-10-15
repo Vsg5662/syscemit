@@ -178,7 +178,7 @@ class Registry(CRUDMixin, db.Model):
         return '{0}({1})'.format(self.__class__.__name__, self.name)
 
 
-class CivilStatus(CRUDMixin, db.Model):
+class CivilStates(CRUDMixin, db.Model):
     __tablename__ = 'civil_states'
     description = db.Column(db.String(15), nullable=False)
     deceased = db.relationship('Deceased',

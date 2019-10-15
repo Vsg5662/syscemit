@@ -38,6 +38,8 @@ def index():
                           per_page=current_app.config['PER_PAGE'],
                           error_out=False)
     deceasedes = pagination.items
+    headers = [('name', 'Nome'), ('city', 'Cidade'),
+               ('death_datetime', 'Data de Falecimento'), ('grave', 'Túmulo')]
 
     return render_template('deceasedes/index.html',
                            form=form,
@@ -46,7 +48,7 @@ def index():
                            clause=clause,
                            order=order,
                            pagination=pagination,
-                           headers=COLUMNS,
+                           headers=headers,
                            deceasedes=deceasedes)
 
 

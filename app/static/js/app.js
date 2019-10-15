@@ -20,6 +20,16 @@ $(document).ready(function() {
   // Init bootstrap-material-design
   $('body').bootstrapMaterialDesign();
 
+  /*  var selects = $('select > option:first-child');
+  if (selects.length > 0) {
+    selects.each(function() {
+      if ($(this).attr('value') == 0) {
+        $(this).attr('disabled', true);
+        $(this).attr('selected', true);
+      }
+    });
+  }*/
+
   // Cancel button returns to previous page
   $('.cancel').on('click', function() {
     window.history.back();
@@ -38,6 +48,70 @@ $(document).ready(function() {
       });
     });
   });
+
+  $('.city').selectize({
+    valueField: 'id',
+    labelField: 'name',
+    searchField: 'name',
+    options: [],
+    create: false,
+    render: {
+      item: function(item, escape) {
+        if (item.state) {
+          return '<div>' + escape(item.name) + ' - ' + escape(item.state) + '</div>';
+        } else {
+          return '<div>' + escape(item.name) + '</div>';
+        }
+      },
+      option: function(item, escape) {
+        if (item.state) {
+          return '<div>' + escape(item.name) + ' - ' + escape(item.state) + '</div>';
+        } else {
+          return '<div>' + escape(item.name) + '</div>';
+        }
+      }
+    },
+    load: function(query, callback) {
+      if (!query.length) return callback();
+      $.getJSON('/cidades/?search=' + query)
+        .done(function(data) {
+          callback(data.cities);
+        }).fail(function() {
+          callback();
+        });
+    },
+    /*onChange: function (value) {
+      var control = $(this.$wrapper).parent();
+      if (control.hasClass('has-error')) {
+        control.find('.help-block').hide();
+        control.removeClass('has-error');
+      }
+    }*/
+  });
+
+  // Input field masks
+  $('.cep').inputmask({
+    'mask': '99999-999',
+    'clearIncomplete': true
+  });
+
+  $('.date').inputmask({
+    'alias': 'datetime',
+    'clearIncomplete': true,
+    'displayFormat': true,
+    'inputFormat': 'dd/mm/yyyy',
+    'jitMasking': true
+  });
+
+  $('.datetime').inputmask({
+    'alias': 'datetime',
+    'clearIncomplete': true,
+    'displayFormat': true,
+    'inputFormat': 'dd/mm/yyyy HH:MM[:ss]',
+    'jitMasking': true
+  });
+
+  $('.number').inputmask({'regex': "\\d*"});
 
   // Fetch all the forms we want to apply custom Bootstrap validation styles to
   // Loop over them and prevent submission

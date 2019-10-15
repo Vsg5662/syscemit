@@ -25,28 +25,17 @@
 </div>
 {%- endmacro %}
 
-{% macro render_multicheckbox_field(field) -%}
-<div class="form-group {{ kwargs.pop('class_', '') }}">
-{% for value, label, checked in field.iter_choices() %}
-  <div class="form-checkbox {{ kwargs.pop('class', '') }}">
-    <input id="{{ field.id }}-{{ loop0 }}" class="form-check-input" type="checkbox" name="{{ field.name }}" value="{{ value }}" {% if checked %}checked{% endif %}>
-    <label class="form-check-label" for="{{ value }}">{{ label }}</label>
+{% macro render_multi_field(field, type) -%}
+<div class="form-group {% if field.errors %}has-error{% endif %} {{ kwargs.pop('class_', '') }}">
+  {{ field.label(class='bmd-label-static') }}
+  {% for subfield in field %}
+  <div class="form-check{% if type == 'checkbox' %}box{% endif %}">
+    {{ subfield(class_='form-check-input' + kwargs.pop('class', ''), **kwargs) }}
+    {{ subfield.label(class='form-check-label') }}
   </div>
-{% endfor %}
+  {% endfor %}
 </div>
 {%- endmacro %}
-
-{% macro render_radio_field(field) -%}
-{% set args = kwargs.pop('class_', '') %}
-{% for value, label, _ in field.iter_choices() %}
-<div class="radio {{ args }}">
-  <label>
-    <input type="radio" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">{{ label }}
-  </label>
-</div>
-{% endfor %}
-{%- endmacro %}
-
 
 {% macro render_pagination(pagination, endpoint) %}
 <nav>
