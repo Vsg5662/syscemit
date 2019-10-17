@@ -20,15 +20,7 @@ $(document).ready(function() {
   // Init bootstrap-material-design
   $('body').bootstrapMaterialDesign();
 
-  /*  var selects = $('select > option:first-child');
-  if (selects.length > 0) {
-    selects.each(function() {
-      if ($(this).attr('value') == 0) {
-        $(this).attr('disabled', true);
-        $(this).attr('selected', true);
-      }
-    });
-  }*/
+  // Init bootstrap-select
 
   // Cancel button returns to previous page
   $('.cancel').on('click', function() {
@@ -49,6 +41,29 @@ $(document).ready(function() {
     });
   });
 
+  var storage = {
+    fetch: function(key) {
+      return JSON.parse(localStorage.getItem(key)) || false;
+    },
+
+    delete: function(key) {
+      if (this.fetch(key)) {
+        localStorage.removeItem(key);
+        return true;
+      }
+      return false;
+    },
+
+    clear: function() {
+      localStorage.clear();
+    },
+
+    save: function(key, data) {
+      localStorage.setItem(key, JSON.stringify(data));
+      return true;
+    }
+  };
+
   $('.city').selectize({
     valueField: 'id',
     labelField: 'name',
@@ -57,36 +72,95 @@ $(document).ready(function() {
     create: false,
     render: {
       item: function(item, escape) {
-        if (item.state) {
-          return '<div>' + escape(item.name) + ' - ' + escape(item.state) + '</div>';
-        } else {
-          return '<div>' + escape(item.name) + '</div>';
-        }
+        return '<div>' + escape(item.name) + '</div>';
       },
       option: function(item, escape) {
-        if (item.state) {
-          return '<div>' + escape(item.name) + ' - ' + escape(item.state) + '</div>';
-        } else {
-          return '<div>' + escape(item.name) + '</div>';
-        }
+        return '<div>' + escape(item.name) + '</div>';
       }
     },
     load: function(query, callback) {
-      if (!query.length) return callback();
-      $.getJSON('/cidades/?search=' + query)
+      if (!query.length || query.length < 2) return callback();
+      $.get('/cidades?search=' + query)
         .done(function(data) {
-          callback(data.cities);
+          callback(data.result);
+        }).fail(function() {
+          callback();
+        });
+    }
+  });
+
+  $('.address').selectize({
+    valueField: 'id',
+    labelField: 'name',
+    searchField: 'name',
+    preload: true,
+    options: [],
+    create: false,
+    render: {
+      item: function(item, escape) {
+        return '<div>' + escape(item.name) + '</div>';
+      },
+      option: function(item, escape) {
+        return '<div>' + escape(item.name) + '</div>';
+      }
+    },
+    load: function(query, callback) {
+      if (!query.length || query.length < 2) return callback();
+      $.get('/enderecos?search=' + query)
+        .done(function(data) {
+          callback(data.result);
         }).fail(function() {
           callback();
         });
     },
-    /*onChange: function (value) {
-      var control = $(this.$wrapper).parent();
-      if (control.hasClass('has-error')) {
-        control.find('.help-block').hide();
-        control.removeClass('has-error');
+    onItemAdd: function(value, $item) {
+      // Get current loaded data, fill and disable the field
+      var option = this.options[value].address,
+        id = this.$input.attr('id').split('_id')[0];
+      for (var opt in option) {
+        var $field = $('#' + id + '-' + opt),
+          val = option[opt];
+        // If element is a selectize widget
+        if ($field[0].hasOwnProperty('selectize')) {
+          var select = $field[0].selectize,
+            control = select.$wrapper.parent();
+          select.addOption(val);
+          select.setValue(val.id);
+          select.disable();
+          control.find('.invalid-feedback').hide();
+        } else {
+          $field.val(val)
+            .trigger('change')
+            .prop('disabled', true);
+        }
       }
-    }*/
+    },
+    onChange: function (value) {
+      if (!value) {
+        var self = this,
+          option = this.options[1].address,
+          id = this.$input.attr('id').split('_id')[0];
+        for (var opt in option) {
+          var $field = $('#' + id + '-' + opt);
+          if ($field[0].hasOwnProperty('selectize')) {
+            var select = $field[0].selectize;
+            select.clear();
+            select.clearOptions();
+            select.enable();
+          } else {
+            $field.val('')
+              .trigger('change')
+              .prop('disabled', false);
+          }
+        }
+      } else {
+        var control = $(this.$wrapper).parent();
+        if (control.hasClass('has-error')) {
+          control.find('.invalid-feedback').hide();
+          control.removeClass('has-error');
+        }
+      }
+    }
   });
 
   // Input field masks
@@ -121,7 +195,11 @@ $(document).ready(function() {
       method = $(this).data('method');
     $(this).on('submit', function(event) {
       event.preventDefault();
-      if (form.checkValidity() === false) {
+      if (this.checkValidity && !this.checkValidity()) {
+        var invalid = $(this).find(':invalid')
+          .first()
+          .focus()[0]
+          .scrollIntoView();
         event.stopPropagation();
       } else {
         var data = $(this).serialize();

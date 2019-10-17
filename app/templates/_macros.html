@@ -1,7 +1,9 @@
 {% macro render_field(field) -%}
 <div class="form-group {% if field.errors %}has-error{% endif %} {{ kwargs.pop('class_', '') }}">
-  {% if (field.type != 'HiddenField' and field.type != 'CSRFTokenField')%}
+  {% if (field.type != 'HiddenField' and field.type != 'CSRFTokenField' and field.type != 'SelectField') %}
   {{ field.label(class='bmd-label-floating') }}
+  {% elif (field.type == 'SelectField') %}
+  {{ field.label(class='bmd-label-static') }}
   {% endif %}
 
   {{ field(class_='form-control ' + kwargs.pop('class', ''), **kwargs) }}

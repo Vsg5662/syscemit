@@ -3,9 +3,10 @@
 from flask_wtf import FlaskForm
 from wtforms import (DateField, FormField, RadioField, IntegerField,
                      SelectField, StringField, SubmitField)
-from wtforms.validators import InputRequired, Length
+from wtforms.validators import InputRequired, Optional, Length
 from wtforms.widgets import html5, TextArea
 
+from .addresses import AddressForm
 from ..utils.forms import MultiCheckboxField, SearchField
 from ..models import CivilStates, Ethnicity
 
@@ -60,8 +61,8 @@ class DeceasedForm(FlaskForm):
         'Número', [Length(1, 5)])
     home_address_complement = StringField(
         'Complemento',
-        [InputRequired(message='Insira o Complemento!'),
-        Length(1, 255)])
+        [Optional(), Length(1, 255)])
+    home_address = FormField(AddressForm)
     death_address_id = SelectField(
         'Endereço de Falecimento',
         [InputRequired('Selecione o Endereço de Falecimento')],
@@ -72,6 +73,7 @@ class DeceasedForm(FlaskForm):
         'Complemento',
         [InputRequired(message='Insira o Complemento!'),
         Length(1, 255)])
+    death_address = FormField(AddressForm)
     doctor_id = SelectField(
         'Medico',
         [InputRequired(message='Insira o nome do Médico!')],

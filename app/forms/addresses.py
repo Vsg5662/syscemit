@@ -15,9 +15,6 @@ class AddressForm(FlaskForm):
     street = StringField(
         'Rua', [InputRequired(message='Insira a Rua!'),
                 Length(1, 255)])
-    cep = StringField('CEP',
-                      [InputRequired(message='Insira a CEP!'),
-                       Length(1, 255)])
     district = StringField(
         'Bairro', [InputRequired(message='Insira a Bairro!'),
                    Length(1, 255)])
@@ -25,6 +22,9 @@ class AddressForm(FlaskForm):
                           [InputRequired(message='Selecione uma cidade!')],
                           choices=(),
                           coerce=int)
+    cep = StringField('CEP',
+                      [InputRequired(message='Insira a CEP!'),
+                       Length(1, 255)])
     submit = SubmitField('Salvar')
 
 

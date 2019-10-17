@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Jonathan Batista de Oliveira">
+    <meta name="author" content="Tibério Augusto dos Santos">
     <title>SYSCEMIT - {% block title %}{% endblock %}</title>
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-material-design.min.css') }}" type="text/css" media="all">
@@ -12,9 +14,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/quicksand.min.css') }}" type="text/css" media="all">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" media="all">
     {% block css %}{% endblock %}
-    <style>
-      body { padding-top: 5rem; }
-    </style>
   </head>
   <body>
     {% with messages = get_flashed_messages(with_categories=true) %}

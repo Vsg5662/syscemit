@@ -1,13 +1,9 @@
 {% from '_macros.html' import render_field %}
 
-{% if not request.accept_mimetypes.accept_json or not request.is_xhr %}
 {% extends "base.html" %}
 {% block title %}Endereço{% endblock %}
-{% endif %}
 
 {% block body %}
-
-{% if not request.accept_mimetypes.accept_json or not request.is_xhr %}
 {% include "navbar.html" %}
 <div class="container-fluid">
   <div class="row">
@@ -21,17 +17,13 @@
             </h3>
           </div>
           <div class="card-body">
-{% endif %}
-
             <div class="form-row">
               {{ form.csrf_token }}
-              {{ render_field(form.street, class_="col-md-10", required=True)}}
+              {{ render_field(form.street, class_="col-md-8", autofocus=True, required=True)}}
               {{ render_field(form.district, class_="col-md-4", required=True)}}
-              {{ render_field(form.city_id, class_="col-md-4", required=True)}}
+              {{ render_field(form.city_id, class="city", class_="col-md-4", required=True)}}
               {{ render_field(form.cep, class="cep", class_="col-md-2", required=True)}}
             </div>
-
-{% if not request.accept_mimetypes.accept_json or not request.is_xhr %}
           </div>
           <div class="card-footer bg-dark">
             <button id="submit" name="submit" class="btn btn-raised btn-{{color}}" type="submit">
@@ -42,9 +34,7 @@
             </button>
           </div>
       </form>
-        </div>
     </div>
   </div>
-{% endif %}
-
+</div>
 {% endblock %}

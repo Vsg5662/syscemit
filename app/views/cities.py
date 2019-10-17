@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 from flask import Blueprint, abort, current_app, jsonify, request
 from flask_login import login_required
 
@@ -17,11 +19,14 @@ def cities():
     if search:
         filters += (City.name.like('%'+search+'%'),)
     cities = City.query.filter(*filters).order_by(
-        City.name.asc()).all()
+        City.name.asc()).paginate(1,
+            per_page=current_app.config['PER_PAGE'],
+            error_out=False)
+    cities = cities.items
+
     return jsonify({
-        'cities': [{
+        'result': [{
             'id': c.id,
-            'name': c.name,
-            'state': c.state.name,
+            'name': f'{c.name} - {c.state.name}'
         } for c in cities]
     })

@@ -72,8 +72,10 @@
               <tbody>
                 {% for a in addresses %}
                 <tr>
-                  <td>{{ a.name }}</td>
-                  <td>{{ a.city.description }}</td>
+                  <td>{{ a.street }}</td>
+                  <td>{{ a.cep }}</td>
+                  <td>{{ a.district }}</td>
+                  <td>{{ a.city.name }}</td>
                   <td>
                     <a href="{{ url_for('addresses.edit', id=a.id) }}" class="btn btn-raised btn-warning" title="Editar">
                       <i class="fas fa-edit"></i>
