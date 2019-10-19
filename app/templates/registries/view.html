@@ -1,7 +1,7 @@
 {% from '_macros.html' import render_field %}
 {% extends "base.html" %}
 
-{% block title %}{{ label }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 {% include "navbar.html" %}
@@ -15,7 +15,7 @@
         <div class="card">
           <div class="card-header">
             <h3>
-              <i class="fas fa-books text-primary"></i> {{ label }}
+              <i class="fas fa-books text-primary"></i> {{ title }}
             </h3>
           </div>
             <div class="table-responsive">

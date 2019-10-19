@@ -59,6 +59,10 @@ def index():
             } for a in addresses]
         })
     return render_template('addresses/index.html',
+                           title='Endereços',
+                           icon='fa-map-signs',
+                           clean_url=url_for('addresses.index'),
+                           create_url=url_for('addresses.create'),
                            form=form,
                            search=search,
                            filters=filters_,

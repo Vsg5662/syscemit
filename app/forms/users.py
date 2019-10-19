@@ -32,7 +32,7 @@ class UserForm(FlaskForm):
         super(UserForm, self).__init__(*args, **kwargs)
         self.user_type_id.choices = [(u.id, u.description)
                                      for u in UserType.query.all()]
-        self.user_type_id.choices.insert(0, (None, ''))
+        self.user_type_id.choices.insert(0, (0, ''))
 
 
 class UserSearchForm(FlaskForm):

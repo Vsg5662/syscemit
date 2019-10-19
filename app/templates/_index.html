@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+{% include 'navbar.html' %}
+<div class="container-fluid">
+  <div class="row">
+    {% include 'sidebar.html' %}
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <form class="form">
+            <h3>
+              <i class="fas {{ icon }} text-primary"></i> {{ title }}
+            </h3>
+            <div class="input-group">
+              {% block search -%}{%- endblock %}
+              <div class="input-group-append">
+                <a class="btn btn-warning btn-raised" href="{{ clean_url }}" title="Limpar">
+                  <i class="fas fa-times"></i>
+                </a>
+              </div>
+              <div class="input-group-append">
+                <a class="btn btn-info btn-raised" href="#Filters" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="Filters" title="Filtrar">
+                  <i class="fas fa-filter"></i>
+                </a>
+              </div>
+              <div class="input-group-append">
+                <button class="btn btn-primary btn-raised" type="submit" title="Buscar">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+            <div id="Filters" class="mt-2 collapse">
+              <div class="card card-body">
+                <div class="row">
+                  <div class="col-md-1">Filtrar por:</div>
+                  <div class="col-md-11">
+                    {% block filters -%}{%- endblock %}
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="col-md-1">Ordenar por:</div>
+                  <div class="col-md-1">
+                    {% block clause -%}{%- endblock %}
+                  </div>
+                  <div class="col-md-1">
+                    {% block order -%}{%- endblock %}
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+          </form>
+          <div class="card-body bg-secondary">
+            {% if current_user.has_permissions('admin') %}
+            <a class="btn btn-raised btn-success" href="{{ create_url }}">
+              <i class="fas fa-plus"></i> Adicionar
+            </a>
+            {% endif %}
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr class="thead-dark">
+                {% block headers -%}{%- endblock %}
+                </tr>
+              </thead>
+              <tbody>
+              {% block result -%}{%- endblock %}
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer bg-light">
+          {% block paginator -%}{%- endblock %}
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% block dialog -%}{%- endblock %}
+{% endblock %}

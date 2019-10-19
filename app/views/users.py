@@ -67,11 +67,13 @@ def index():
 @permission_required('admin')
 def create():
     form = UserForm()
+
     if form.validate():
         user = User()
         form.populate_obj(user)
         user.save()
         return jsonify({'redirect': url_for('users.index')})
+
     return render_template('users/view.html',
                            form=form,
                            method='post',
@@ -85,10 +87,12 @@ def create():
 def edit(id):
     user = User.get_or_404(id)
     form = UserForm(request.form, obj=user)
+
     if form.validate():
         form.populate_obj(user)
         user.update()
         return jsonify({'redirect': url_for('users.index')})
+
     return render_template('users/view.html',
                            form=form,
                            method='put',

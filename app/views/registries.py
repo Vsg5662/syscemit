@@ -67,9 +67,9 @@ def create():
         return jsonify({'redirect': url_for('registries.index')})
 
     return render_template('registries/view.html',
+                           title='Adicionar Cartório',
                            form=form,
                            method='post',
-                           label='Adicionar Cartório',
                            color='success')
 
 
@@ -85,7 +85,7 @@ def edit(id):
 
     if request.args.get('format', '', type=str) == 'view':
         return render_template('registries/view.html',
-                               label='Cartório',
+                               title='Cartório',
                                form=form,
                                view=True)
 
@@ -95,9 +95,9 @@ def edit(id):
         return jsonify({'redirect': url_for('registries.index')})
 
     return render_template('registries/view.html',
+                           title='Editar Cartório',
                            form=form,
                            method='put',
-                           label='Editar Cartório',
                            color='warning')
 
 
