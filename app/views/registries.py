@@ -38,6 +38,14 @@ def index():
                           error_out=False)
     registries = pagination.items
 
+    if request.is_xhr:
+        return jsonify({
+            'result': [{
+                'id': r.id,
+                'name': f'{r.name} - {r.city.name}'
+            } for r in registries]
+        })
+
     return render_template('registries/index.html',
                            icon='fa-books',
                            title='Cartórios',

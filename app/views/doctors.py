@@ -38,6 +38,14 @@ def index():
                           error_out=False)
     doctors = pagination.items
 
+    if request.is_xhr:
+        return jsonify({
+            'result': [{
+                'id': d.id,
+                'name': f'{d.name} - {d.crm}'
+            } for d in doctors]
+        })
+
     return render_template('doctors/index.html',
                            icon='fa-user-md',
                            title='Médicos',

@@ -25,18 +25,26 @@ def index():
         filters += tuple(
             getattr(Grave, f).ilike('%' + search + '%') for f in filters_)
     elif search:
-        filters += (Grave.name.ilike('%' + search + '%'), )
+        filters += (Grave.street.ilike('%' + search + '%'), )
 
     if order and clause:
         orders += (getattr(getattr(Grave, clause), order)(), )
 
     if not orders:
-        orders += (Grave.name.asc(), )
+        orders += (Grave.street.asc(), )
     pagination = Grave.query.join(*joins).filter(*filters).order_by(
         *orders).paginate(form.page.data,
                           per_page=current_app.config['PER_PAGE'],
                           error_out=False)
     graves = pagination.items
+
+    if request.is_xhr:
+        return jsonify({
+            'result': [{
+                'id': g.id,
+                'name': f'{g.street}, {g.number}, {g.zone.description} - {g.zone.complement}'
+            } for g in graves]
+        })
 
     return render_template('graves/index.html',
                            icon='fa-tombstone',

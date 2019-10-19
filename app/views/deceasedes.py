@@ -5,9 +5,8 @@ from flask import (Blueprint, current_app, jsonify, render_template, request,
 from flask_login import current_user, login_required
 
 from ..decorators import permission_required
-from ..forms.addresses import AddressForm
 from ..forms.deceasedes import COLUMNS, DeceasedForm, DeceasedSearchForm
-from ..models import Deceased
+from ..models import Address, City, Deceased, Doctor, Grave, Registry, Zone
 
 bp = Blueprint('deceasedes', __name__, url_prefix='/falecidos')
 
@@ -61,8 +60,33 @@ def index():
 @permission_required('admin')
 def create():
     form = DeceasedForm()
-    home_address_form = AddressForm()
-    death_address_form = AddressForm()
+    form.gender.data = bool(form.gender.data)
+
+    if form.birthplace_id.data:
+        city = City.get_or_404(form.birthplace_id.data)
+        form.birthplace_id.choices = [(city.id, f'{city.name} - {city.state.name}')]
+
+    if form.home_address_id.data:
+        address = Address.get_or_404(form.home_address_id.data)
+        form.home_address_id.choices = [(
+            address.id, f'{address.street} - {address.district}, {address.city.name} - {address.city.state.name}, {address.cep}')]
+
+    if form.death_address_id.data:
+        address = Address.get_or_404(form.death_address_id.data)
+        form.death_address_id.choices = [(
+            address.id, f'{address.street} - {address.district}, {address.city.name} - {address.city.state.name}, {address.cep}')]
+
+    if form.doctor_id.data:
+        doctor = Doctor.get_or_404(form.doctor_id.data)
+        form.doctor_id.choices = [(doctor.id, f'{doctor.name} - {doctor.crm}')]
+
+    if form.grave_id.data:
+        grave = Grave.get_or_404(form.grave_id.data)
+        form.grave_id.choices = [(grave.id, f'{grave.street} - {grave.number}, {grave.zone.description} - {grave.zone.complement}')]
+
+    if form.registry_id.data:
+        registry = Registry.get_or_404(form.registry_id.data)
+        form.registry_id.choices = [(registry.id, f'{registry.name} - {registry.city.name}')]
 
     if form.validate() and request.method == 'POST':
         deceased = Deceased()
@@ -70,12 +94,14 @@ def create():
         deceased.save()
         return jsonify({'redirect': url_for('deceasedes.index')})
 
+    print('#' * 100)
+    print(form.errors)
+    print('#' * 100)
+
     return render_template('deceasedes/view.html',
                            icon='fa-coffin',
                            title='Adicionar Falecido',
                            form=form,
-                           home_address_form=home_address_form,
-                           death_address_form=death_address_form,
                            method='post',
                            color='success')
 
@@ -85,6 +111,32 @@ def create():
 def edit(id):
     deceased = Deceased.get_or_404(id)
     form = DeceasedForm(request.form, obj=deceased)
+
+    if form.birthplace_id.data:
+        city = City.get_or_404(form.birthplace_id.data)
+        form.birthplace_id.choices = [(city.id, f'{city.name} - {city.state.name}')]
+
+    if form.home_address_id.data:
+        address = Address.get_or_404(form.home_address_id.data)
+        form.home_address_id.choices = [(
+            address.id, f'{address.street} - {address.district}, {address.city.name} - {address.city.state.name}, {address.cep}')]
+
+    if form.death_address_id.data:
+        address = Address.get_or_404(form.home_death_id.data)
+        form.death_address_id.choices = [(
+            address.id, f'{address.street} - {address.district}, {address.city.name} - {address.city.state.name}, {address.cep}')]
+
+    if form.doctor_id.data:
+        doctor = Doctor.get_or_404(form.doctor_id.data)
+        form.doctor_id.choices = [(doctor.id, f'{doctor.name} - {doctor.crm}')]
+
+    if form.grave_id.data:
+        grave = Grave.get_or_404(form.grave_id.data)
+        form.grave_id.choices = [(grave.id, f'{grave.street} - {grave.number}, {grave.zone.description} - {grave.zone.complement}')]
+
+    if form.registry_id.data:
+        registry = Registry.get_or_404(form.registry_id.data)
+        form.registry_id.choices = [(registry.id, f'{registry.name} - {registry.city.name}')]
 
     if request.args.get('format', '', type=str) == 'view':
         return render_template('deceasedes/view.html',

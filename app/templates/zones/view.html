@@ -5,7 +5,7 @@
 {% block editor %}
 {{ form.csrf_token }}
 {{ render_field(form.description, class_="col-md-6", autofocus=True, required=True) }}
-{{ render_field(form.complement, class_="col-md-6") }}
+{{ render_field(form.complement, class_="col-md-6", maxlength=10) }}
 {% endblock %}
 
 {% block report %}

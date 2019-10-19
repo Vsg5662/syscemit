@@ -27,13 +27,12 @@ ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
 class DeceasedForm(FlaskForm):
     name = StringField('Nome', [Optional(), Length(1, 255)])
     age = IntegerField('Idade', [Optional()], widget=html5.NumberInput(min=0))
-    birth_date = DateField('Data de Nascimento', [Optional(), Length(1, 255)])
+    birth_date = DateField('Data de Nascimento', [Optional()], format='%d/%m/%Y')
     death_datetime = DateField('Data de Falecimento', [
         InputRequired(message='Insira a Data de Falecimento!'),
-        Length(1, 255)
-    ])
+    ], format='%d/%m/%Y %H:%M')
     gender = RadioField('Genêro', [InputRequired(message='Insira o Genêro!')],
-                        choices=[('M', 'Masculino'), ('F', 'Feminino')])
+                        choices=[(0, 'Masculino'), (1, 'Feminino')])
     cause = StringField(
         'Causa da Morte',
         [InputRequired(message='Insira a Causa da Morte!'),
@@ -64,7 +63,7 @@ class DeceasedForm(FlaskForm):
     death_address_complement = StringField(
         'Complemento', [Optional(), Length(1, 255)])
     doctor_id = SelectField(
-        'Medico', [InputRequired(message='Insira o nome do Médico!')],
+        'Médico', [InputRequired(message='Insira o nome do Médico!')],
         choices=(),
         coerce=int)
     ethnicity_id = SelectField('Etnia',
@@ -79,9 +78,7 @@ class DeceasedForm(FlaskForm):
                               [InputRequired(message='Insira o Cartório!')],
                               choices=(),
                               coerce=int)
-    filiation_id = SelectField('Filiação', [Optional()],
-                                choices=(),
-                                coerce=int)
+    filiation = StringField('Filiação', [Optional(), Length(1, 255)])
     submit = SubmitField('Salvar')
 
     def __init__(self, *args, **kwargs):

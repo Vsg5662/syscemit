@@ -41,7 +41,7 @@ var app = {
         'alias': 'datetime',
         'clearIncomplete': true,
         'displayFormat': true,
-        'inputFormat': 'dd/mm/yyyy HH:MM[:ss]',
+        'inputFormat': 'dd/mm/yyyy HH:MM',
         'jitMasking': true
       });
 
@@ -62,6 +62,31 @@ var app = {
     },
 
     selectors: function() {
+      $('.address').selectize({
+        valueField: 'id',
+        labelField: 'name',
+        searchField: 'name',
+        options: [],
+        create: false,
+        render: {
+          item: function(item, escape) {
+            return '<div>' + escape(item.name) + '</div>';
+          },
+          option: function(item, escape) {
+            return '<div>' + escape(item.name) + '</div>';
+          },
+        },
+        load: function(query, callback) {
+          if (!query.length || query.length < 2) return callback();
+          $.get('/enderecos?search=' + query)
+            .done(function(data) {
+              callback(data.result);
+            }).fail(function() {
+              callback();
+            });
+        }
+      });
+
       $('.city').selectize({
         valueField: 'id',
         labelField: 'name',
@@ -87,6 +112,101 @@ var app = {
         }
       });
 
+      $('.doctor').selectize({
+        valueField: 'id',
+        labelField: 'name',
+        searchField: 'name',
+        options: [],
+        create: false,
+        render: {
+          item: function(item, escape) {
+            return '<div>' + escape(item.name) + '</div>';
+          },
+          option: function(item, escape) {
+            return '<div>' + escape(item.name) + '</div>';
+          }
+        },
+        load: function(query, callback) {
+          if (!query.length || query.length < 2) return callback();
+          $.get('/medicos?search=' + query)
+            .done(function(data) {
+              callback(data.result);
+            }).fail(function() {
+              callback();
+            });
+        }
+      });
+
+      $('.filiation').selectize({
+        delimiter: ',',
+        persist: false,
+        create: function(input) {
+          return {
+            value: input,
+            text: input
+          };
+        },
+        onFocus: function() {
+          $(this.$input[0]).trigger('blur');
+        },
+        render: {
+          option_create: function(item, escape) {
+            console.log(item);
+            return '<div>Adicionar ' + escape(item.input) + '</div>';
+          }
+        }
+      });
+
+      $('.grave').selectize({
+        valueField: 'id',
+        labelField: 'name',
+        searchField: 'name',
+        options: [],
+        create: false,
+        render: {
+          item: function(item, escape) {
+            return '<div>' + escape(item.name) + '</div>';
+          },
+          option: function(item, escape) {
+            return '<div>' + escape(item.name) + '</div>';
+          },
+        },
+        load: function(query, callback) {
+          if (!query.length || query.length < 2) return callback();
+          $.get('/tumulos?search=' + query)
+            .done(function(data) {
+              callback(data.result);
+            }).fail(function() {
+              callback();
+            });
+        }
+      });
+
+      $('.registry').selectize({
+        valueField: 'id',
+        labelField: 'name',
+        searchField: 'name',
+        options: [],
+        create: false,
+        render: {
+          item: function(item, escape) {
+            return '<div>' + escape(item.name) + '</div>';
+          },
+          option: function(item, escape) {
+            return '<div>' + escape(item.name) + '</div>';
+          },
+        },
+        load: function(query, callback) {
+          if (!query.length || query.length < 2) return callback();
+          $.get('/cartorios?search=' + query)
+            .done(function(data) {
+              callback(data.result);
+            }).fail(function() {
+              callback();
+            });
+        }
+      });
+
       $('.zone').selectize({
         valueField: 'id',
         labelField: 'name',
@@ -104,41 +224,6 @@ var app = {
         load: function(query, callback) {
           if (!query.length || query.length < 2) return callback();
           $.get('/regioes?search=' + query)
-            .done(function(data) {
-              callback(data.result);
-            }).fail(function() {
-              callback();
-            });
-        }
-      });
-
-
-      $('.address').selectize({
-        valueField: 'id',
-        labelField: 'name',
-        searchField: 'name',
-        options: [],
-        create: function(input, callback) {
-          var dialog = $(this.$input.attr('id').split('_id')[0]);
-          dialog.modal('toggle');
-          dialog.on('shown.bs.modal', function() {
-          });
-          return callback();
-        },
-        render: {
-          item: function(item, escape) {
-            return '<div>' + escape(item.name) + '</div>';
-          },
-          option: function(item, escape) {
-            return '<div>' + escape(item.name) + '</div>';
-          },
-          option_create: function(item, escape) {
-            return '<div> Adicionar ' + escape(item.input) + '</div>';
-          }
-        },
-        load: function(query, callback) {
-          if (!query.length || query.length < 2) return callback();
-          $.get('/enderecos?search=' + query)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
