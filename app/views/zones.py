@@ -26,18 +26,25 @@ def index():
         filters += tuple(
             getattr(Zone, f).ilike('%' + search + '%') for f in filters_)
     elif search:
-        filters += (Zone.name.ilike('%' + search + '%'), )
+        filters += (Zone.description.ilike('%' + search + '%'), )
 
     if order and clause:
         orders += (getattr(getattr(Zone, clause), order)(), )
 
     if not orders:
-        orders += (Zone.name.asc(), )
+        orders += (Zone.description.asc(), )
     pagination = Zone.query.join(*joins).filter(*filters).order_by(
         *orders).paginate(form.page.data,
                           per_page=current_app.config['PER_PAGE'],
                           error_out=False)
     zones = pagination.items
+    if request.is_xhr:
+        return jsonify({
+            'result': [{
+                'id': z.id,
+                'name': f'{z.description} - {z.complement}'
+            } for z in zones]
+        })
 
     return render_template('zones/index.html',
                            form=form,
@@ -55,11 +62,13 @@ def index():
 @permission_required('admin')
 def create():
     form = ZoneForm()
-    if form.validate():
+
+    if form.validate() and request.method == 'POST':
         doctor = Zone()
         form.populate_obj(doctor)
         doctor.save()
         return jsonify({'redirect': url_for('zones.index')})
+
     return render_template('zones/view.html',
                            form=form,
                            method='post',
@@ -73,10 +82,12 @@ def create():
 def edit(id):
     doctor = Zone.get_or_404(id)
     form = ZoneForm(request.form, obj=doctor)
-    if form.validate():
+
+    if form.validate() and request.method == 'PUT':
         form.populate_obj(doctor)
         doctor.update()
         return jsonify({'redirect': url_for('zones.index')})
+
     return render_template('zones/view.html',
                            form=form,
                            method='put',

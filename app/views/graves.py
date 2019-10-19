@@ -6,7 +6,7 @@ from flask_login import login_required
 
 from ..decorators import permission_required
 from ..forms.graves import COLUMNS, GraveForm, GraveSearchForm
-from ..models import Grave
+from ..models import Grave, Zone
 
 bp = Blueprint('graves', __name__, url_prefix='/tumulos')
 
@@ -55,11 +55,17 @@ def index():
 @permission_required('admin')
 def create():
     form = GraveForm()
-    if form.validate():
+
+    if form.zone_id.data:
+        zone = Zone.get_or_404(form.zone_id.data)
+        form.zone_id.choices = [(zone.id, f'{zone.description} - {zone.complement}')]
+
+    if form.validate() and request.method == 'POST':
         grave = Grave()
         form.populate_obj(grave)
         grave.save()
         return jsonify({'redirect': url_for('graves.index')})
+
     return render_template('graves/view.html',
                            form=form,
                            method='post',
@@ -73,10 +79,16 @@ def create():
 def edit(id):
     grave = Grave.get_or_404(id)
     form = GraveForm(request.form, obj=grave)
-    if form.validate():
+
+    if form.zone_id.data:
+        zone = Zone.get_or_404(form.zone_id.data)
+        form.zone_id.choices = [(zone.id, f'{zone.description} - {zone.complement}')]
+
+    if form.validate() and request.method == 'PUT':
         form.populate_obj(grave)
         grave.update()
         return jsonify({'redirect': url_for('graves.index')})
+
     return render_template('graves/view.html',
                            form=form,
                            method='put',

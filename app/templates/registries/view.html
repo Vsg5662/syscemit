@@ -1,7 +1,7 @@
 {% from '_macros.html' import render_field %}
 {% extends "base.html" %}
 
-{% block title %}Cartório{% endblock %}
+{% block title %}{{ label }}{% endblock %}
 
 {% block body %}
 {% include "navbar.html" %}
@@ -9,30 +9,54 @@
   <div class="row">
     {% include "sidebar.html" %}
     <div class="col">
+      {% if not view and current_user.has_permissions('admin') %}
       <form id="registry" class="needs-validation" action="" data-method="{{ method }}" novalidate>
+      {% endif %}
         <div class="card">
           <div class="card-header">
             <h3>
-              <i class="fas fa-books text-primary"></i> {{label}}
+              <i class="fas fa-books text-primary"></i> {{ label }}
             </h3>
           </div>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <tr>
+                  <th class="col-md-1">{{ form.name.label }}</th>
+                  <td>{{ form.name.data }}</td>
+                </tr>
+                <tr>
+                  <th class="col-md-1">{{ form.city_id.label }}</th>
+                  <td>{{ form.city_id.choices[0][1] }}</td>
+                </tr>
+              </table>
+            </div>
+          {% if not view and current_user.has_permissions('admin') %}
           <div class="card-body">
             <div class="form-row">
               {{ form.csrf_token }}
-              {{ render_field(form.name, class_="col-md-6", required=True)}}
-              {{ render_field(form.city_id, class_="col-md-6", required=True) }}
+              {{ render_field(form.name, class_="col-md-6", required=True) }}
+              {{ render_field(form.city_id, class="city", class_="col-md-6", required=True) }}
             </div>
           </div>
+          {% endif %}
           <div class="card-footer bg-dark">
-            <button id="submit" name="submit" class="btn btn-raised btn-{{color}}" type="submit">
+            {% if not view and current_user.has_permissions('admin') %}
+            <button id="submit" name="submit" class="btn btn-raised btn-{{ color }}" type="submit">
               <i class="fas fa-save"></i> Salvar
             </button>
-            <button class="btn btn-raised btn-info cancel" type="button">
+            <button class="btn btn-raised btn-info" type="button" onclick="app.methods.cancel()">
               <i class="fas fa-ban"></i> Cancelar
             </button>
+            {% else %}
+            <button class="btn btn-raised btn-info" type="button" onclick="app.methods.cancel()">
+              <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            {% endif %}
           </div>
-      </form>
-        </div>
+        {% if not view and current_user.has_permissions('admin') %}
+        </form>
+        {% endif %}
+      </div>
     </div>
   </div>
   {% endblock %}

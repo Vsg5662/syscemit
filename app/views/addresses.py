@@ -50,20 +50,12 @@ def index():
                           per_page=current_app.config['PER_PAGE'],
                           error_out=False)
     addresses = pagination.items
+
     if request.is_xhr:
         return jsonify({
             'result': [{
                 'id': a.id,
-                'name': f'{a.street} - {a.district}, {a.city.name} - {a.city.state.name}, {a.cep}',
-                'address': {
-                    'street': a.street,
-                    'district': a.district,
-                    'city_id': {
-                        'id': a.city.id,
-                        'name': f'{a.city.name} - {a.city.state.name}'
-                    },
-                    'cep': a.cep
-                }
+                'name': f'{a.street} - {a.district}, {a.city.name} - {a.city.state.name}, {a.cep}'
             } for a in addresses]
         })
     return render_template('addresses/index.html',
@@ -82,21 +74,19 @@ def index():
 @permission_required('admin')
 def create():
     form = AddressForm()
-    city = request.form.get('city_id', 0, type=int)
+    modal = request.args.get('modal', 0, type=bool)
 
-    if city:
-        city = City.get_or_404(city)
-        form.city_id.choices = [(city.id, city.name)]
-        form.city_id.data = city.id
-        form.city_id.errors = []
+    if form.city_id.data:
+        city = City.get_or_404(form.city_id.data)
+        form.city_id.choices = [(city.id, f'{city.name} - {city.state.name}')]
 
-    if form.validate():
+    if form.validate() and request.method == 'POST':
         address = Address()
         form.populate_obj(address)
         address.save()
+        if modal:
+            return jsonify({})
         return jsonify({'redirect': url_for('addresses.index')})
-    print('-' * 50)
-    print(form.errors)
     return render_template('addresses/view.html',
                            form=form,
                            method='post',
@@ -110,10 +100,12 @@ def create():
 def edit(id):
     address = Address.get_or_404(id)
     form = AddressForm(request.form, obj=address)
-    form.city_id.choices = [(address.city.id, address.city.name)]
-    form.city_id.data = address.city_id
 
-    if form.validate():
+    if form.city_id.data:
+        city = City.get_or_404(form.city_id.data)
+        form.city_id.choices = [(city.id, f'{city.name} - {city.state.name}')]
+
+    if form.validate() and request.method == 'PUT':
         form.populate_obj(address)
         address.update()
         return jsonify({'redirect': url_for('addresses.index')})

@@ -1,3 +1,4 @@
+alembic
 backcall
 Click
 decorator
@@ -5,22 +6,26 @@ et-xmlfile
 Flask
 Flask-Excel
 Flask-Login
+Flask-Migrate
 flask-shell-ipython
 Flask-SQLAlchemy
 Flask-WTF
 ipython
 ipython-genutils
+isort
 itsdangerous
 jdcal
 jedi
 Jinja2
 lml
+Mako
 MarkupSafe
-openpyxl==2.5.14
+openpyxl
 parso
 pexpect
 pickleshare
 pip
+pkg-resources
 prompt-toolkit
 ptyprocess
 pyexcel
@@ -28,6 +33,8 @@ pyexcel-io
 pyexcel-webio
 pyexcel-xlsx
 Pygments
+python-dateutil
+python-editor
 setuptools
 six
 SQLAlchemy
@@ -37,3 +44,4 @@ wcwidth
 Werkzeug
 wheel
 WTForms
+yapf

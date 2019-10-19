@@ -18,7 +18,7 @@
             <div class="input-group">
               {{ form.search(class='form-control', placeholder=form.search.label.text, autofocus=True) }}
               <div class="input-group-append">
-                <a class="btn btn-warning btn-raised" href="{{ url_for('childrens.index') }}" title="Limpar">
+                <a class="btn btn-warning btn-raised" href="{{ url_for('filiations.index') }}" title="Limpar">
                   <i class="fas fa-times"></i>
                 </a>
               </div>
@@ -55,7 +55,7 @@
         </div>
           </form>
           <div class="card-body bg-secondary">
-            <a class="btn btn-raised btn-success" href="{{ url_for('childrens.create') }}">
+            <a class="btn btn-raised btn-success" href="{{ url_for('filiations.create') }}">
               <i class="fas fa-plus"></i> Adicionar
             </a>
           </div>
@@ -70,14 +70,14 @@
                 </tr>
               </thead>
               <tbody>
-                {% for c in childrens %}
+                {% for c in filiations %}
                 <tr>
                   <td>{{ c.name }}</td>
                   <td>
-                    <a href="{{ url_for('childrens.edit', id=c.id) }}" class="btn btn-raised btn-warning" title="Editar">
+                    <a href="{{ url_for('filiations.edit', id=c.id) }}" class="btn btn-raised btn-warning" title="Editar">
                       <i class="fas fa-edit"></i>
                     </a>
-                    <a class="btn btn-raised btn-danger delete" data-action="{{ url_for('childrens.delete', id=c.id) }}" title="Remover">
+                    <a class="btn btn-raised btn-danger" data-action="{{ url_for('filiations.delete', id=c.id) }}" onclick="app.methods.remove(this)" title="Remover">
                       <i class="fas fa-trash"></i>
                     </a>
                   </td>
@@ -87,13 +87,13 @@
             </table>
           </div>
           <div class="card-footer bg-light">
-          {{ render_pagination(pagination, 'childrens.index', search=search, filters=filters, clause=clause, order=order) }}
+          {{ render_pagination(pagination, 'filiations.index', search=search, filters=filters, clause=clause, order=order) }}
           </div>
       </div>
     </div>
   </div>
 </div>
 {% call render_modal('modal-delete', 'Remover Filiação', yes_text='Remover', yes_icon='trash', yes_color='danger') %}
-<p>Deseja realmente remover o filiação?</p>
+<p>Deseja realmente remover o parente?</p>
 {% endcall %}
 {% endblock %}

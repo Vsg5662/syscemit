@@ -15,18 +15,17 @@ ORDERS = [('asc','Ascendente'), ('desc','Descente')]
 
 
 class DeceasedForm(FlaskForm):
-
     name = StringField(
         'Nome',
-        [InputRequired(message='Insira o Nome!'),
-        Length(1, 255)])
+        [Optional(),
+         Length(1, 255)])
     age = IntegerField(
         'Idade',
-        [InputRequired(message='Insira a Idade!')],
+        [Optional()],
         widget=html5.NumberInput(min=0))
     birth_date = DateField(
         'Data de Nascimento',
-        [InputRequired(message='Insira a Data de Nascimento!'),
+        [Optional(),
         Length(1, 255)])
     death_datetime = DateField(
         'Data de Falecimento',
@@ -42,38 +41,41 @@ class DeceasedForm(FlaskForm):
         Length(1, 1500)],
         widget=TextArea())
     registration = StringField(
-        'Matrícula',
+        'Matrícula do Óbito',
         [InputRequired(message='Insira a Matrícula!'),
         Length(1, 40)])
-    birthplace = SelectField(
+    birthplace_id = SelectField(
         'Local de Nascimento',
-        [InputRequired(message='Insira o Local de Nascimento!')],
+        [Optional()],
         choices=(), coerce=int)
     civil_state_id = SelectField(
         'Estado Civil',
-        [InputRequired(message='Insira o Estado civil!')],
+        [Optional()],
         choices=(), coerce=int)
     home_address_id = SelectField(
         'Endereço Residencial',
-        [InputRequired('Selecione o Endereço Residencial')],
+        [Optional()],
         choices=(), coerce=int)
     home_address_number = StringField(
-        'Número', [Length(1, 5)])
+        'Número',
+        [Optional(),
+         Length(1, 5)])
     home_address_complement = StringField(
         'Complemento',
-        [Optional(), Length(1, 255)])
-    home_address = FormField(AddressForm)
+        [Optional(),
+         Length(1, 255)])
     death_address_id = SelectField(
         'Endereço de Falecimento',
         [InputRequired('Selecione o Endereço de Falecimento')],
         choices=(), coerce=int)
     death_address_number = StringField(
-        'Número', [Length(1, 5)])
+        'Número',
+        [Optional(),
+         Length(1, 5)])
     death_address_complement = StringField(
         'Complemento',
-        [InputRequired(message='Insira o Complemento!'),
+        [Optional(),
         Length(1, 255)])
-    death_address = FormField(AddressForm)
     doctor_id = SelectField(
         'Medico',
         [InputRequired(message='Insira o nome do Médico!')],
@@ -82,17 +84,17 @@ class DeceasedForm(FlaskForm):
         'Etnia',
         [InputRequired(message='Insira a Etnia!')],
         choices=(), coerce=int)
-    grave = SelectField(
+    grave_id = SelectField(
         'Tumulo',
         [InputRequired(message='Insira o Tumulo!')],
         choices=(), coerce=int)
-    registry = SelectField(
-        'Cartorio',
-        [InputRequired(message='Insira o Cartorio!')],
+    registry_id = SelectField(
+        'Cartório',
+        [InputRequired(message='Insira o Cartório!')],
         choices=(), coerce=int)
-    childrens = SelectField(
+    filiations_id = SelectField(
         'Filiação',
-        [InputRequired(message='Insira o Filiação!')],
+        [Optional()],
         choices=(), coerce=int)
     submit = SubmitField('Salvar')
 

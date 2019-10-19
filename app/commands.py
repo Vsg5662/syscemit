@@ -5,7 +5,7 @@ import subprocess
 import click
 from flask.cli import AppGroup
 
-from .models import (Address, Children, City, CivilStates, Deceased, Doctor,
+from .models import (Address, Filiation, City, CivilStates, Deceased, Doctor,
                      Ethnicity, Grave, Registry, State, User, UserType, Zone,
                      db)
 from .utils.helpers import shell_context
@@ -16,7 +16,7 @@ def init_app(app):
 
     @app.shell_context_processor
     def make_shell_context():
-        return shell_context(app, db, Address, Children, City, CivilStates,
+        return shell_context(app, db, Address, Filiation, City, CivilStates,
                              Deceased, Doctor, Ethnicity, Grave, Registry,
                              State, User, UserType, Zone)
 

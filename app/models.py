@@ -66,7 +66,7 @@ class User(CRUDMixin, UserMixin, db.Model):
     name = db.Column(db.String(255), nullable=False)
     login = db.Column(db.String(30), nullable=False)
     _pwd_hash = db.Column(db.String(255), nullable=False)
-    user_type_id = db.Column(db.Integer, db.ForeignKey('user_types.id'))
+    user_type_id = db.Column(db.Integer, db.ForeignKey('user_types.id'), nullable=False)
 
     @property
     def password(self):
@@ -117,7 +117,7 @@ class State(CRUDMixin, db.Model):
 class City(CRUDMixin, db.Model):
     __tablename__ = 'cities'
     name = db.Column(db.String(40), nullable=False)
-    state_id = db.Column(db.Integer, db.ForeignKey('states.id'))
+    state_id = db.Column(db.Integer, db.ForeignKey('states.id'), nullable=False)
     registries = db.relationship('Registry', backref='city', lazy='dynamic')
     deceased = db.relationship('Deceased', backref='city', lazy='dynamic')
     addresses = db.relationship('Address', backref='city', lazy='dynamic')
@@ -142,9 +142,9 @@ class City(CRUDMixin, db.Model):
 class Address(CRUDMixin, db.Model):
     __tablename__ = 'addresses'
     street = db.Column(db.String(255), nullable=False)
-    cep = db.Column(db.String(8), nullable=False)
     district = db.Column(db.String(255), nullable=False)
-    city_id = db.Column(db.Integer, db.ForeignKey('cities.id'))
+    cep = db.Column(db.String(8), nullable=False)
+    city_id = db.Column(db.Integer, db.ForeignKey('cities.id'), nullable=False)
     home_address = db.relationship('Deceased',
                                    foreign_keys='Deceased.home_address_id',
                                    backref='address_home',
@@ -171,7 +171,7 @@ class Doctor(CRUDMixin, db.Model):
 class Registry(CRUDMixin, db.Model):
     __tablename__ = 'registries'
     name = db.Column(db.String(255), nullable=False)
-    city_id = db.Column(db.Integer, db.ForeignKey('cities.id'))
+    city_id = db.Column(db.Integer, db.ForeignKey('cities.id'), nullable=False)
     deceased = db.relationship('Deceased', backref='registry', lazy='dynamic')
 
     def __repr__(self):
@@ -229,7 +229,7 @@ class Grave(CRUDMixin, db.Model):
     __tablename__ = 'graves'
     street = db.Column(db.String(5), nullable=False)
     number = db.Column(db.String(5), nullable=False)
-    zone_id = db.Column(db.Integer, db.ForeignKey('zones.id'))
+    zone_id = db.Column(db.Integer, db.ForeignKey('zones.id'), nullable=False)
     deceased = db.relationship('Deceased', backref='grave', lazy='dynamic')
 
     def __repr__(self):
@@ -239,9 +239,9 @@ class Grave(CRUDMixin, db.Model):
 
 memberships = db.Table(
     'memberships',
-    db.Column('children_id',
+    db.Column('filiation_id',
               db.Integer,
-              db.ForeignKey('childrens.id'),
+              db.ForeignKey('filiations.id'),
               primary_key=True),
     db.Column('deceased_id',
               db.Integer,
@@ -250,24 +250,26 @@ memberships = db.Table(
 
 
 class Deceased(CRUDMixin, db.Model):
-    name = db.Column(db.String(255), nullable=False)
-    age = db.Column(db.Integer, nullable=False)
-    birth_date = db.Column(db.Date, nullable=False)
+    name = db.Column(db.String(255))
+    age = db.Column(db.Integer)
+    birth_date = db.Column(db.Date)
     death_datetime = db.Column(db.DateTime, nullable=False)
     gender = db.Column(db.Boolean, nullable=False)
     cause = db.Column(db.String(1500), nullable=False)
     registration = db.Column(db.String(40), nullable=False)
-    number = db.Column(db.String(5), default='S/N')
-    complement = db.Column(db.String(255))
+    home_address_number = db.Column(db.String(5))
+    home_address_complement = db.Column(db.String(255))
     birthplace_id = db.Column(db.Integer, db.ForeignKey('cities.id'))
     civil_state_id = db.Column(db.Integer, db.ForeignKey('civil_states.id'))
     home_address_id = db.Column(db.Integer, db.ForeignKey('addresses.id'))
-    death_address_id = db.Column(db.Integer, db.ForeignKey('addresses.id'))
-    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'))
-    ethnicity_id = db.Column(db.Integer, db.ForeignKey('ethnicities.id'))
-    grave_id = db.Column(db.Integer, db.ForeignKey('graves.id'))
-    registry_id = db.Column(db.Integer, db.ForeignKey('registries.id'))
-    childrens = db.relationship('Children',
+    death_address_id = db.Column(db.Integer, db.ForeignKey('addresses.id'), nullable=False)
+    death_address_number = db.Column(db.String(5))
+    death_address_complement = db.Column(db.String(255))
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=False)
+    ethnicity_id = db.Column(db.Integer, db.ForeignKey('ethnicities.id'), nullable=False)
+    grave_id = db.Column(db.Integer, db.ForeignKey('graves.id'), nullable=False)
+    registry_id = db.Column(db.Integer, db.ForeignKey('registries.id'), nullable=False)
+    filiations = db.relationship('Filiation',
                                 secondary=memberships,
                                 lazy='subquery',
                                 backref=db.backref('deceased', lazy=True))
@@ -276,8 +278,8 @@ class Deceased(CRUDMixin, db.Model):
         return '{0}({1})'.format(self.__class__.__name__, self.name)
 
 
-class Children(CRUDMixin, db.Model):
-    __tablename__ = 'childrens'
+class Filiation(CRUDMixin, db.Model):
+    __tablename__ = 'filiations'
     name = db.Column(db.String(255), nullable=False)
 
     def __repr__(self):

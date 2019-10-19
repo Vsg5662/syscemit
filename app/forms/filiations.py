@@ -10,18 +10,18 @@ COLUMNS = [('name', 'Nome')]
 ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
 
 
-class ChildrenForm(FlaskForm):
+class FiliationForm(FlaskForm):
     name = StringField(
         'Nome',
-        [InputRequired(message='Insira o nome do filho!'),
+        [InputRequired(message='Insira o nome do parente!'),
          Length(1, 255)])
 
     submit = SubmitField('Salvar')
 
 
-class ChildrenSearchForm(FlaskForm):
+class FiliationSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
-    search = SearchField('Buscar filho ...')
+    search = SearchField('Buscar Parentes ...')
     filters = MultiCheckboxField('Filtros', choices=COLUMNS, default=['name'])
     clause = SelectField('Critério', choices=COLUMNS, default='name')
     order = SelectField('Ordem', choices=ORDERS, default='asc')

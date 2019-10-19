@@ -6,6 +6,7 @@ from flask_login import login_required
 
 from ..decorators import permission_required
 from ..forms.deceasedes import COLUMNS, DeceasedForm, DeceasedSearchForm
+from ..forms.addresses import AddressForm
 from ..models import Deceased
 
 bp = Blueprint('deceasedes', __name__, url_prefix='/falecidos')
@@ -57,13 +58,19 @@ def index():
 @permission_required('admin')
 def create():
     form = DeceasedForm()
-    if form.validate():
+    home_address_form = AddressForm()
+    death_address_form = AddressForm()
+
+    if form.validate() and request.method == 'POST':
         deceased = Deceased()
         form.populate_obj(deceased)
         deceased.save()
         return jsonify({'redirect': url_for('deceasedes.index')})
+
     return render_template('deceasedes/view.html',
                            form=form,
+                           home_address_form=home_address_form,
+                           death_address_form=death_address_form,
                            method='post',
                            label='Adicionar Falecido',
                            color='success')
@@ -75,10 +82,12 @@ def create():
 def edit(id):
     deceased = Deceased.get_or_404(id)
     form = DeceasedForm(request.form, obj=deceased)
-    if form.validate():
+
+    if form.validate() and request.method == 'PUT':
         form.populate_obj(deceased)
         deceased.update()
         return jsonify({'redirect': url_for('deceasedes.index')})
+
     return render_template('deceasedes/view.html',
                            form=form,
                            method='put',

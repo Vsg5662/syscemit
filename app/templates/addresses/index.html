@@ -13,7 +13,7 @@
         <div class="card-header">
           <form class="form">
             <h3>
-              <i class="fas fa-users text-primary"></i> Endereços
+              <i class="fas fa-map-signs text-primary"></i> Endereços
             </h3>
             <div class="input-group">
               {{ form.search(class='form-control', placeholder=form.search.label.text, autofocus=True) }}
@@ -80,7 +80,7 @@
                     <a href="{{ url_for('addresses.edit', id=a.id) }}" class="btn btn-raised btn-warning" title="Editar">
                       <i class="fas fa-edit"></i>
                     </a>
-                    <a class="btn btn-raised btn-danger delete" data-action="{{ url_for('addresses.delete', id=a.id) }}" title="Remover">
+                    <a class="btn btn-raised btn-danger" data-action="{{ url_for('addresses.delete', id=a.id) }}" onclick="app.methods.remove(this)" title="Remover">
                       <i class="fas fa-trash"></i>
                     </a>
                   </td>

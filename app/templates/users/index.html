@@ -79,7 +79,7 @@
                     <a href="{{ url_for('users.edit', id=u.id) }}" class="btn btn-raised btn-warning" title="Editar">
                       <i class="fas fa-edit"></i>
                     </a>
-                    <a class="btn btn-raised btn-danger delete" data-action="{{ url_for('users.delete', id=u.id) }}" title="Remover">
+                    <a class="btn btn-raised btn-danger" data-action="{{ url_for('users.delete', id=u.id) }}" onclick="app.methods.remove(this)" title="Remover">
                       <i class="fas fa-trash"></i>
                     </a>
                   </td>

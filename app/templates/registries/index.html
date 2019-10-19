@@ -55,9 +55,11 @@
         </div>
           </form>
           <div class="card-body bg-secondary">
+            {% if current_user.has_permissions('admin') %}
             <a class="btn btn-raised btn-success" href="{{ url_for('registries.create') }}">
               <i class="fas fa-plus"></i> Adicionar
             </a>
+            {% endif %}
           </div>
           <div class="table-responsive">
             <table class="table table-hover">
@@ -73,14 +75,19 @@
                 {% for r in registries %}
                 <tr>
                   <td>{{ r.name }}</td>
-                  <td>{{ r.city.description }}</td>
+                  <td>{{ r.city.name }}</td>
                   <td>
+                    <a href="{{ url_for('registries.edit', id=r.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    {% if current_user.has_permissions('admin') %}
                     <a href="{{ url_for('registries.edit', id=r.id) }}" class="btn btn-raised btn-warning" title="Editar">
                       <i class="fas fa-edit"></i>
                     </a>
-                    <a class="btn btn-raised btn-danger delete" data-action="{{ url_for('registries.delete', id=r.id) }}" title="Remover">
+                    <a class="btn btn-raised btn-danger" data-action="{{ url_for('registries.delete', id=r.id) }}" onclick="app.methods.remove(this)" title="Remover">
                       <i class="fas fa-trash"></i>
                     </a>
+                    {% endif %}
                   </td>
                 </tr>
                 {% endfor %}
