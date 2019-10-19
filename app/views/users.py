@@ -52,6 +52,10 @@ def index():
     users = pagination.items
 
     return render_template('users/index.html',
+                           icon='fa-users',
+                           title='Usuários',
+                           clean_url=url_for('users.index'),
+                           create_url=url_for('users.create'),
                            form=form,
                            search=search,
                            filters=filters_,
@@ -68,16 +72,17 @@ def index():
 def create():
     form = UserForm()
 
-    if form.validate():
+    if form.validate() and request.method == 'POST':
         user = User()
         form.populate_obj(user)
         user.save()
         return jsonify({'redirect': url_for('users.index')})
 
     return render_template('users/view.html',
+                           icon='fa-users',
+                           title='Adicionar Usuário',
                            form=form,
                            method='post',
-                           label='Adicionar Usuário',
                            color='success')
 
 
@@ -88,15 +93,23 @@ def edit(id):
     user = User.get_or_404(id)
     form = UserForm(request.form, obj=user)
 
-    if form.validate():
+    if request.args.get('format', '', type=str) == 'view':
+        return render_template('users/view.html',
+                               icon='fa-users',
+                               title='Usuário',
+                               form=form,
+                               view=True)
+
+    if form.validate() and request.method == 'PUT':
         form.populate_obj(user)
         user.update()
         return jsonify({'redirect': url_for('users.index')})
 
     return render_template('users/view.html',
+                           icon='fa-users',
+                           title='Editar Usuário',
                            form=form,
                            method='put',
-                           label='Editar Usuário',
                            color='warning')
 
 

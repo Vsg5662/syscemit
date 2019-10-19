@@ -43,6 +43,10 @@ def index():
                ('death_datetime', 'Data de Falecimento'), ('grave', 'Túmulo')]
 
     return render_template('deceasedes/index.html',
+                           icon='fa-coffin',
+                           title='Falecidos',
+                           clean_url=url_for('deceasedes.index'),
+                           create_url=url_for('deceasedes.create'),
                            form=form,
                            search=search,
                            filters=filters_,
@@ -68,11 +72,12 @@ def create():
         return jsonify({'redirect': url_for('deceasedes.index')})
 
     return render_template('deceasedes/view.html',
+                           icon='fa-coffin',
+                           title='Adicionar Falecido',
                            form=form,
                            home_address_form=home_address_form,
                            death_address_form=death_address_form,
                            method='post',
-                           label='Adicionar Falecido',
                            color='success')
 
 
@@ -83,15 +88,23 @@ def edit(id):
     deceased = Deceased.get_or_404(id)
     form = DeceasedForm(request.form, obj=deceased)
 
+    if request.args.get('format', '', type=str) == 'view':
+        return render_template('deceasedes/view.html',
+                               icon='fa-coffin',
+                               title='Falecido',
+                               form=form,
+                               view=True)
+
     if form.validate() and request.method == 'PUT':
         form.populate_obj(deceased)
         deceased.update()
         return jsonify({'redirect': url_for('deceasedes.index')})
 
     return render_template('deceasedes/view.html',
+                           icon='fa-coffin',
+                           title='Editar Falecido',
                            form=form,
                            method='put',
-                           label='Editar Falecido',
                            color='warning')
 
 

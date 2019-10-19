@@ -40,6 +40,10 @@ def index():
     filiations = pagination.items
 
     return render_template('filiations/index.html',
+                           icon='fa-child',
+                           title='Filiações',
+                           clean_url=url_for('filiations.index'),
+                           create_url=url_for('filiations.create'),
                            form=form,
                            search=search,
                            filters=filters_,
@@ -56,16 +60,17 @@ def index():
 def create():
     form = FiliationForm()
 
-    if form.validate():
+    if form.validate() and request.method == 'POST':
         filiation = Filiation()
         form.populate_obj(filiation)
         filiation.save()
         return jsonify({'redirect': url_for('filiations.index')})
 
     return render_template('filiations/view.html',
+                           icon='fa-child',
+                           title='Adicionar Parente',
                            form=form,
                            method='post',
-                           label='Adicionar Parente',
                            color='success')
 
 
@@ -76,15 +81,23 @@ def edit(id):
     filiation = Filiation.get_or_404(id)
     form = FiliationForm(request.form, obj=filiation)
 
+    if request.args.get('format', '', type=str) == 'view':
+        return render_template('filiations/view.html',
+                               icon='fa-child'
+                               title='Filiação',
+                               form=form,
+                               view=True)
+
     if form.validate() and request.method == 'PUT':
         form.populate_obj(filiation)
         filiation.update()
         return jsonify({'redirect': url_for('filiations.index')})
 
         return render_template('filiations/view.html',
+                               icon='fa-child'
+                               title='Editar Filiação',
                                form=form,
                                method='put',
-                               label='Editar filho',
                                color='warning')
 
 

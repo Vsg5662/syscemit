@@ -40,6 +40,10 @@ def index():
     graves = pagination.items
 
     return render_template('graves/index.html',
+                           icon='fa-tombstone',
+                           title='Túmulos',
+                           clean_url=url_for('graves.index'),
+                           create_url=url_for('graves.create'),
                            form=form,
                            search=search,
                            filters=filters_,
@@ -67,9 +71,10 @@ def create():
         return jsonify({'redirect': url_for('graves.index')})
 
     return render_template('graves/view.html',
+                           icon='fa-tombstone',
+                           title='Adicionar Túmulo',
                            form=form,
                            method='post',
-                           label='Adicionar Túmulo',
                            color='success')
 
 
@@ -84,15 +89,23 @@ def edit(id):
         zone = Zone.get_or_404(form.zone_id.data)
         form.zone_id.choices = [(zone.id, f'{zone.description} - {zone.complement}')]
 
+    if request.args.get('format', '', type=str) == 'view':
+        return render_template('graves/view.html',
+                               icon='fa-tombstone',
+                               title='Túmulo',
+                               form=form,
+                               view=True)
+
     if form.validate() and request.method == 'PUT':
         form.populate_obj(grave)
         grave.update()
         return jsonify({'redirect': url_for('graves.index')})
 
     return render_template('graves/view.html',
+                           icon='fa-tombstone',
+                           title='Editar Túmulo',
                            form=form,
                            method='put',
-                           label='Editar Túmulo',
                            color='warning')
 
 

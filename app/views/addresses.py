@@ -59,8 +59,8 @@ def index():
             } for a in addresses]
         })
     return render_template('addresses/index.html',
-                           title='Endereços',
                            icon='fa-map-signs',
+                           title='Endereços',
                            clean_url=url_for('addresses.index'),
                            create_url=url_for('addresses.create'),
                            form=form,
@@ -92,9 +92,10 @@ def create():
             return jsonify({})
         return jsonify({'redirect': url_for('addresses.index')})
     return render_template('addresses/view.html',
+                           icon='fa-map-signs',
+                           title='Adicionar Endereço',
                            form=form,
                            method='post',
-                           label='Adicionar Endereço',
                            color='success')
 
 
@@ -109,14 +110,22 @@ def edit(id):
         city = City.get_or_404(form.city_id.data)
         form.city_id.choices = [(city.id, f'{city.name} - {city.state.name}')]
 
+    if request.args.get('format', '', type=str) == 'view':
+        return render_template('addresses/view.html',
+                               icon='fa-map-signs',
+                               title='Endereço',
+                               form=form,
+                               view=True)
+
     if form.validate() and request.method == 'PUT':
         form.populate_obj(address)
         address.update()
         return jsonify({'redirect': url_for('addresses.index')})
     return render_template('addresses/view.html',
+                           icon='fa-map-signs',
+                           title='Editar Endereço',
                            form=form,
                            method='put',
-                           label='Editar Endereço',
                            color='warning')
 
 

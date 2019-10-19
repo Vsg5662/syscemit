@@ -15,7 +15,8 @@ def login():
     form = AuthLoginForm()
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
-    if form.validate():
+
+    if form.validate() and request.method == 'POST':
         user = User.query.filter_by(login=form.login.data).first()
         if user is not None and user.check_password(form.password.data):
             login_user(user)
@@ -26,6 +27,7 @@ def login():
             redirect = {'redirect': request.url}
             flash('Usuário ou senha inválida', 'danger')
         return jsonify(redirect)
+
     return render_template('auth/login.html', form=form, method='post')
 
 

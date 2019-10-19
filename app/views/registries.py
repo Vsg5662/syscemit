@@ -40,6 +40,10 @@ def index():
     registries = pagination.items
 
     return render_template('registries/index.html',
+                           icon='fa-books',
+                           title='Cartórios',
+                           clean_url=url_for('registries.index'),
+                           create_url=url_for('registries.create'),
                            form=form,
                            search=search,
                            filters=filters_,
@@ -67,6 +71,7 @@ def create():
         return jsonify({'redirect': url_for('registries.index')})
 
     return render_template('registries/view.html',
+                           icon='fa-books',
                            title='Adicionar Cartório',
                            form=form,
                            method='post',
@@ -85,6 +90,7 @@ def edit(id):
 
     if request.args.get('format', '', type=str) == 'view':
         return render_template('registries/view.html',
+                               icon='fa-books',
                                title='Cartório',
                                form=form,
                                view=True)
@@ -95,6 +101,7 @@ def edit(id):
         return jsonify({'redirect': url_for('registries.index')})
 
     return render_template('registries/view.html',
+                           icon='fa-books',
                            title='Editar Cartório',
                            form=form,
                            method='put',

@@ -40,6 +40,10 @@ def index():
     doctors = pagination.items
 
     return render_template('doctors/index.html',
+                           icon='fa-user-md',
+                           title='Médicos',
+                           clean_url=url_for('addresses.index'),
+                           create_url=url_for('addresses.create'),
                            form=form,
                            search=search,
                            filters=filters_,
@@ -63,9 +67,10 @@ def create():
         return jsonify({'redirect': url_for('doctors.index')})
 
     return render_template('doctors/view.html',
+                           icon='fa-user-md',
+                           title='Adicionar Médico'
                            form=form,
                            method='post',
-                           label='Adicionar Médico',
                            color='success')
 
 
@@ -82,9 +87,10 @@ def edit(id):
         return jsonify({'redirect': url_for('doctors.index')})
 
     return render_template('doctors/view.html',
+                           icon='fa-user-md',
+                           title='Editar Médico'
                            form=form,
                            method='put',
-                           label='Editar Médico',
                            color='warning')
 
 
