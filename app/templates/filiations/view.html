@@ -6,3 +6,14 @@
 {{ form.csrf_token }}
 {{ render_field(form.name, class_="col-md-6", required=True)}}
 {% endblock %}
+
+{% block report %}
+<div class="table-responsive">
+  <table class="table table-hover">
+    <tr>
+      <th class="col-md-1">{{ form.name.label }}</th>
+      <td>{{ form.name.data }}</td>
+    </tr>
+  </table>
+</div>
+{% endblock %}

@@ -1,4 +1,4 @@
-{% from '_macros.html' import render_field %}
+{% from '_macros.html' import render_field, render_multi_field %}
 
 {% extends "_view.html" %}
 
@@ -24,4 +24,91 @@
 {{ render_field(form.death_address_complement, class_="col-md-3")}}
 {{ render_field(form.grave_id, class_="col-md-6", required=True)}}
 {{ render_field(form.cause, class_="col-md-12", maxlength=1500, required=True, rows=4)}}
+{% endblock %}
+
+{% block report %}
+<div class="table-responsive">
+  <table class="table table-hover">
+    <tr>
+      <th class="col-md-1">{{ form.name.label }}</th>
+      <td>{{ form.name.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.age.label }}</th>
+      <td>{{ form.age.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.birth_date.label }}</th>
+      <td>{{ form.birth_date.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.death_datetime.label }}</th>
+      <td>{{ form.death_datetime.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.gender.label }}</th>
+      <td>{{ form.gender.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.ethnicity_id.label }}</th>
+      <td>{{ form.ethnicity_id.choices[0][1] }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.civil_state_id.label }}</th>
+      <td>{{ form.civil_state_id.choices[0][1] }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.birthplace_id.label }}</th>
+      <td>{{ form.birthplace_id.choices[0][1] }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.filiation_id.label }}</th>
+      <td>{{ form.filiation_id.choices[0][1] }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.home_address_id.label }}</th>
+      <td>{{ form.home_address_id.choices[0][1] }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.home_address_number.label }}</th>
+      <td>{{ form.home_address_number.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.home_address_complement.label }}</th>
+      <td>{{ form.home_address_complement.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.registration.label }}</th>
+      <td>{{ form.registration.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.registry_id.label }}</th>
+      <td>{{ form.registry_id.choices[0][1] }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.doctor_id.label }}</th>
+      <td>{{ form.doctor_id.choices[0][1] }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.death_address_id.label }}</th>
+      <td>{{ form.death_address_id.choices[0][1] }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.death_address_number.label }}</th>
+      <td>{{ form.death_address_number.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.death_address_complement.label }}</th>
+      <td>{{ form.death_address_complement.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.grave_id.label }}</th>
+      <td>{{ form.grave_id.choices[0][1] }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.cause.label }}</th>
+      <td>{{ form.cause.data }}</td>
+    </tr>
+  </table>
+</div>
 {% endblock %}

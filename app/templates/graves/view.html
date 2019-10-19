@@ -8,3 +8,22 @@
 {{ render_field(form.number, class_="col-md-6", required=True)}}
 {{ render_field(form.zone_id, class="zone", class_="col-md-6", required=True)}}
 {% endblock %}
+
+{% block report %}
+<div class="table-responsive">
+  <table class="table table-hover">
+    <tr>
+      <th class="col-md-1">{{ form.street.label }}</th>
+      <td>{{ form.street.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.number.label }}</th>
+      <td>{{ form.number.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.zone_id.label }}</th>
+      <td>{{ form.zone_id.choices[0][1] }}</td>
+    </tr>
+  </table>
+</div>
+{% endblock %}

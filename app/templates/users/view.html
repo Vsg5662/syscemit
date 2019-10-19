@@ -9,3 +9,30 @@
 {{ render_field(form.password, class_="col-md-6", required=True) }}
 {{ render_field(form.user_type_id, class_="col-md-6", required=True) }}
 {% endblock %}
+
+{% block report %}
+<div class="table-responsive">
+  <table class="table table-hover">
+    <tr>
+      <th class="col-md-1">{{ form.login.label }}</th>
+      <td>{{ form.login.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.name.label }}</th>
+      <td>{{ form.name.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.password.label }}</th>
+      <td>* * *</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.user_type_id.label }}</th>
+      {% for value, label in form.user_type_id.choices %}
+      {% if value == form.user_type_id.data %}
+      <td>{{ label }}</td>
+      {% endif %}
+      {% endfor %}
+    </tr>
+  </table>
+</div>
+{% endblock %}

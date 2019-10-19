@@ -7,3 +7,18 @@
 {{ render_field(form.description, class_="col-md-6", autofocus=True, required=True) }}
 {{ render_field(form.complement, class_="col-md-6") }}
 {% endblock %}
+
+{% block report %}
+<div class="table-responsive">
+  <table class="table table-hover">
+    <tr>
+      <th class="col-md-1">{{ form.description.label }}</th>
+      <td>{{ form.description.data }}</td>
+    </tr>
+    <tr>
+      <th class="col-md-1">{{ form.complement.label }}</th>
+      <td>{{ form.complement.data }}</td>
+    </tr>
+  </table>
+</div>
+{% endblock %}

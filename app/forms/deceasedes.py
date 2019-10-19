@@ -13,14 +13,14 @@ from .addresses import AddressForm
 COLUMNS = [('name', 'Nome'), ('age', 'Idade'),
            ('birth_date', 'Data de Nascimento'),
            ('death_datetime', 'Data de Falecimento'), ('gender', 'Genero'),
-           ('cause', 'Causa da Morte'), ('registration', 'registration'),
+           ('cause', 'Causa da Morte'), ('registration', 'Matrícula do Óbito'),
            ('number', 'Numero'), ('complement', 'Complemento'),
            ('birthplace', 'Local de Nascimento'),
            ('civil_state', 'Estado Civil'),
            ('home_address', 'Endereço da Casa'),
            ('death_address', 'Local do falecimento'), ('doctor', 'Medico'),
            ('ethnicity', 'Etnia'), ('grave', 'Tumulo'),
-           ('registry', 'Cartorio'), ('childrens', 'Filiação')]
+           ('registry', 'Cartorio'), ('filiations', 'Filiação')]
 ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
 
 
@@ -79,7 +79,7 @@ class DeceasedForm(FlaskForm):
                               [InputRequired(message='Insira o Cartório!')],
                               choices=(),
                               coerce=int)
-    filiations_id = SelectField('Filiação', [Optional()],
+    filiation_id = SelectField('Filiação', [Optional()],
                                 choices=(),
                                 coerce=int)
     submit = SubmitField('Salvar')
