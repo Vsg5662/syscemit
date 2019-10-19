@@ -1,38 +1,9 @@
 {% from '_macros.html' import render_field %}
 
-{% extends "base.html" %}
-{% block title %}{{ label }}{% endblock %}
+{% extends "_view.html" %}
 
-{% block body %}
-{% include "navbar.html" %}
-<div class="container-fluid">
-  <div class="row">
-    {% include "sidebar.html" %}
-    <div class="col">
-      <form id="zone" class="needs-validation" action="" data-method="{{ method }}" novalidate>
-        <div class="card">
-          <div class="card-header">
-            <h3>
-              <i class="fas fa-map-marked-alt text-primary"></i> {{ label }}
-            </h3>
-          </div>
-          <div class="card-body">
-            <div class="form-row">
-              {{ form.csrf_token }}
-              {{ render_field(form.description, class_="col-md-6", autofocus=True, required=True) }}
-              {{ render_field(form.complement, class_="col-md-6") }}
-            </div>
-          </div>
-          <div class="card-footer bg-dark">
-            <button id="submit" name="submit" class="btn btn-raised btn-{{color}}" type="submit">
-              <i class="fas fa-save"></i> Salvar
-            </button>
-            <button class="btn btn-raised btn-info" type="button" onclick="app.methods.cancel()">
-              <i class="fas fa-ban"></i> Cancelar
-            </button>
-          </div>
-      </form>
-    </div>
-  </div>
-</div>
+{% block editor %}
+{{ form.csrf_token }}
+{{ render_field(form.description, class_="col-md-6", autofocus=True, required=True) }}
+{{ render_field(form.complement, class_="col-md-6") }}
 {% endblock %}

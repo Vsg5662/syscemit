@@ -1,93 +1,27 @@
-{% from '_macros.html' import render_field, render_multi_field, render_modal %}
-{% extends "base.html" %}
+{% from '_macros.html' import render_field %}
 
-{% block title %}{{ label }}{% endblock %}
+{% extends "_view.html" %}
 
-{% block body %}
-{% include "navbar.html" %}
-<div class="container-fluid">
-  <div class="row">
-    {% include "sidebar.html" %}
-    <div class="col">
-      <form id="deceased" class="needs-validation" action="" data-method="{{ method }}" novalidate>
-        <div class="card">
-          <div class="card-header">
-            <h3>
-              <i class="fas fa-coffin text-primary"></i> {{label}}
-            </h3>
-          </div>
-          <div class="card-body">
-            <div class="form-row">
-              {{ form.csrf_token }}
-              {{ render_field(form.name, class_="col-md-12", minlength=1, maxlength=255) }}
-              {{ render_field(form.age, class_="col-md-1") }}
-              {{ render_field(form.birth_date, class="date", class_="col-md-2") }}
-              {{ render_field(form.death_datetime, class="datetime", class_="col-md-2", required=True) }}
-              {{ render_multi_field(form.gender, 'radio', class_="col-md-1 px-1", required=True) }}
-              {{ render_field(form.ethnicity_id, class_="col-md-1", required=True) }}
-              {{ render_field(form.civil_state_id, class_="col-md-2") }}
-              {{ render_field(form.birthplace_id, class="city", class_="col-md-3") }}
-              {{ render_field(form.filiation_id, class_="col-md-12") }}
-              {{ render_field(form.home_address_id, class="address", class_="col-md-12") }}
-              {{ render_field(form.home_address_number, class_="col-md-1", minlength=1, maxlength=5) }}
-              {{ render_field(form.home_address_complement, class_="col-md-3") }}
-              {{ render_field(form.registration, class="number", class_="col-md-4", minlength=1, maxlength=40, required=True)}}
-              {{ render_field(form.registry_id, class_="col-md-4", required=True)}}
-              {{ render_field(form.doctor_id, class_="col-md-6", required=True)}}
-              {{ render_field(form.death_address_id, class="address", class_="col-md-12", required=True)}}
-              {{ render_field(form.death_address_number, class_="col-md-1", minlength=1, maxlength=5)}}
-              {{ render_field(form.death_address_complement, class_="col-md-3")}}
-              {{ render_field(form.grave_id, class_="col-md-6", required=True)}}
-              {{ render_field(form.cause, class_="col-md-12", maxlength=1500, required=True, rows=4)}}
-            </div>
-          </div>
-          <div class="card-footer bg-dark">
-            <button id="submit" name="submit" class="btn btn-raised btn-{{color}}" type="submit">
-              <i class="fas fa-save"></i> Salvar
-            </button>
-            <button class="btn btn-raised btn-info" type="button" onclick="app.methods.cancel()">
-              <i class="fas fa-ban"></i> Cancelar
-            </button>
-          </div>
-      </form>
-    </div>
-  </div>
-</div>
-{% call render_modal('home_address', 'Adicionar Endereço Residencial', icon='fa-map-signs', footer=False) %}
-<form id="home_address" class="needs-validation my-0" action="{{ url_for('addresses.create', modal=1) }}" data-method="post" novalidate>
-  <div class="form-row">
-    {{ render_field(home_address_form.street, class_="col-md-8", required=True) }}
-    {{ render_field(home_address_form.district, class_="col-md-4", required=True) }}
-    {{ render_field(home_address_form.city_id, class="city", class_="col-md-4", required=True) }}
-    {{ render_field(home_address_form.cep, class="cep", class_="col-md-2", required=True) }}
-  </div>
-  <div class="text-md-right">
-    <button id="submit" name="submit" class="btn btn-raised btn-success" type="submit">
-      <i class="fas fa-save"></i> Salvar
-    </button>
-    <button class="btn btn-raised btn-info" type="button" data-dismiss="modal">
-      <i class="fas fa-ban"></i> Cancelar
-    </button>
-  </div>
-</form>
-{% endcall %}
-
-{% call render_modal('death_address', 'Adicionar Endereço de Falecimento', icon='fa-map-signs', footer=False) %}
-<form id="death_address" class="needs-validation my-0" action="{{ url_for('addresses.create', modal=1) }}" data-method="post" novalidate>
-  <div class="form-row">
-    {{ render_field(death_address_form.street, class_="col-md-8", required=True) }}
-    {{ render_field(death_address_form.district, class_="col-md-4", required=True) }}
-    {{ render_field(death_address_form.city_id, class="city", class_="col-md-4", required=True) }}
-    {{ render_field(death_address_form.cep, class="cep", class_="col-md-2", required=True) }}
-  </div>
-  <div class="text-md-right">
-    <button id="submit" name="submit" class="btn btn-raised btn-success" type="submit">
-      <i class="fas fa-save"></i> Salvar
-    </button>
-    <button class="btn btn-raised btn-info" type="button" data-dismiss="modal">
-      <i class="fas fa-ban"></i> Cancelar
-    </button>
-  </div>
-</form>
-{% endcall %}
+{% block editor %}
+{{ form.csrf_token }}
+{{ render_field(form.name, class_="col-md-12", minlength=1, maxlength=255) }}
+{{ render_field(form.age, class_="col-md-1") }}
+{{ render_field(form.birth_date, class="date", class_="col-md-2") }}
+{{ render_field(form.death_datetime, class="datetime", class_="col-md-2", required=True) }}
+{{ render_multi_field(form.gender, 'radio', class_="col-md-1 px-1", required=True) }}
+{{ render_field(form.ethnicity_id, class_="col-md-1", required=True) }}
+{{ render_field(form.civil_state_id, class_="col-md-2") }}
+{{ render_field(form.birthplace_id, class="city", class_="col-md-3") }}
+{{ render_field(form.filiation_id, class_="col-md-12") }}
+{{ render_field(form.home_address_id, class="address", class_="col-md-12") }}
+{{ render_field(form.home_address_number, class_="col-md-1", minlength=1, maxlength=5) }}
+{{ render_field(form.home_address_complement, class_="col-md-3") }}
+{{ render_field(form.registration, class="number", class_="col-md-4", minlength=1, maxlength=40, required=True)}}
+{{ render_field(form.registry_id, class_="col-md-4", required=True)}}
+{{ render_field(form.doctor_id, class_="col-md-6", required=True)}}
+{{ render_field(form.death_address_id, class="address", class_="col-md-12", required=True)}}
+{{ render_field(form.death_address_number, class_="col-md-1", minlength=1, maxlength=5)}}
+{{ render_field(form.death_address_complement, class_="col-md-3")}}
+{{ render_field(form.grave_id, class_="col-md-6", required=True)}}
+{{ render_field(form.cause, class_="col-md-12", maxlength=1500, required=True, rows=4)}}
 {% endblock %}
