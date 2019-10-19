@@ -1,18 +1,18 @@
 {% set navbar = [
-  ('main', 'fa-tasks-alt', 'Painel'),
-  ('registries', 'fa-books', 'Cartórios'),
-  ('addresses', 'fa-map-signs', 'Endereços'),
-  ('deceasedes', 'fa-coffin', 'Falecidos'),
-  ('filiations', 'fa-child', 'Filiação'),
-  ('doctors', 'fa-user-md', 'Médicos'),
-  ('zones', 'fa-map-marked-alt', 'Regiões'),
-  ('graves', 'fa-tombstone', 'Túmulos'),
-  ('users', 'fa-users', 'Usuários')
+  (0, 'main', 'fa-tasks-alt', 'Painel'),
+  (0, 'registries', 'fa-books', 'Cartórios'),
+  (0, 'addresses', 'fa-map-signs', 'Endereços'),
+  (0, 'deceasedes', 'fa-coffin', 'Falecidos'),
+  (0, 'filiations', 'fa-child', 'Filiação'),
+  (0, 'doctors', 'fa-user-md', 'Médicos'),
+  (0, 'zones', 'fa-map-marked-alt', 'Regiões'),
+  (0, 'graves', 'fa-tombstone', 'Túmulos'),
+  (1, 'users', 'fa-users', 'Usuários')
 ] -%}
 <div class="col-lg-auto col-xs-12 pr-0">
   <div class="list-group shadow py-0">
-    {% for view, icon, label in navbar %}
-    <a class="list-group-item list-group-item-action {% if request.blueprint == view %}bg-dark active{% endif %}" href="{{ url_for(view + '.index') }}">
+    {% for admin, view, icon, label in navbar %}
+    <a class="list-group-item list-group-item-action {% if request.blueprint == view %}bg-dark active{% endif %}{% if admin and not current_user.is_admin() %}d-none{% endif %}" href="{{ url_for(view + '.index') }}">
       <i class="fas {{ icon }} {% if request.blueprint != view %}text-primary{% else %}text-info{% endif %}"></i> {{ label }}
     </a>
     {% endfor %}
