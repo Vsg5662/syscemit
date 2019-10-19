@@ -13,7 +13,6 @@ bp = Blueprint('graves', __name__, url_prefix='/tumulos')
 
 @bp.route('/')
 @login_required
-@permission_required('admin')
 def index():
     form = GraveSearchForm(request.args)
     joins = filters = orders = ()
@@ -62,7 +61,8 @@ def create():
 
     if form.zone_id.data:
         zone = Zone.get_or_404(form.zone_id.data)
-        form.zone_id.choices = [(zone.id, f'{zone.description} - {zone.complement}')]
+        form.zone_id.choices = [(zone.id,
+                                 f'{zone.description} - {zone.complement}')]
 
     if form.validate() and request.method == 'POST':
         grave = Grave()
@@ -80,14 +80,14 @@ def create():
 
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
 @login_required
-@permission_required('admin')
 def edit(id):
     grave = Grave.get_or_404(id)
     form = GraveForm(request.form, obj=grave)
 
     if form.zone_id.data:
         zone = Zone.get_or_404(form.zone_id.data)
-        form.zone_id.choices = [(zone.id, f'{zone.description} - {zone.complement}')]
+        form.zone_id.choices = [(zone.id,
+                                 f'{zone.description} - {zone.complement}')]
 
     if request.args.get('format', '', type=str) == 'view':
         return render_template('graves/view.html',
@@ -96,7 +96,7 @@ def edit(id):
                                form=form,
                                view=True)
 
-    if form.validate() and request.method == 'PUT':
+    if form.validate() and current_user.is_admin and request.method == 'PUT':
         form.populate_obj(grave)
         grave.update()
         return jsonify({'redirect': url_for('graves.index')})

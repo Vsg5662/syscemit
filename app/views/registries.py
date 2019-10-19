@@ -2,7 +2,7 @@
 
 from flask import (Blueprint, current_app, jsonify, render_template, request,
                    url_for)
-from flask_login import login_required
+from flask_login import current_user, login_required
 
 from ..decorators import permission_required
 from ..forms.registries import COLUMNS, RegistryForm, RegistrySearchForm
@@ -13,7 +13,6 @@ bp = Blueprint('registries', __name__, url_prefix='/cartorios')
 
 @bp.route('/')
 @login_required
-@permission_required('admin')
 def index():
     form = RegistrySearchForm(request.args)
     joins = filters = orders = ()
@@ -95,7 +94,7 @@ def edit(id):
                                form=form,
                                view=True)
 
-    if form.validate() and request.method == 'PUT':
+    if form.validate() and current_user.is_admin and request.method == 'PUT':
         form.populate_obj(registry)
         registry.update()
         return jsonify({'redirect': url_for('registries.index')})

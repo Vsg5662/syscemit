@@ -7,27 +7,41 @@
   <div class="row">
     {% include "sidebar.html" %}
     <div class="col">
+      {% if not view and current_user.is_admin %}
       <form class="needs-validation" action="" data-method="{{ method }}" novalidate>
+      {% endif %}
         <div class="card">
           <div class="card-header">
             <h3>
               <i class="fas {{ icon }} text-primary"></i> {{ title }}
             </h3>
           </div>
+          {% if not view and current_user.is_admin %}
           <div class="card-body">
             <div class="form-row">
               {% block editor -%}{%- endblock %}
             </div>
           </div>
+          {% else %}
+          {% block report -%}{%- endblock %}
+          {% endif %}
           <div class="card-footer bg-dark">
+            {% if not view and current_user.is_admin %}
             <button id="submit" name="submit" class="btn btn-raised btn-{{ color }}" type="submit">
               <i class="fas fa-save"></i> Salvar
             </button>
             <button class="btn btn-raised btn-info" type="button" onclick="app.methods.cancel()">
               <i class="fas fa-ban"></i> Cancelar
             </button>
+            {% else %}
+            <button class="btn btn-raised btn-info" type="button" onclick="app.methods.cancel()">
+              <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            {% endif %}
           </div>
+      {% if not view and current_user.is_admin %}
       </form>
+      {% endif %}
     </div>
   </div>
 </div>

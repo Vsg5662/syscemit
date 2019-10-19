@@ -2,7 +2,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, SelectField, StringField, SubmitField
-from wtforms.validators import InputRequired, Optional, Length
+from wtforms.validators import InputRequired, Length, Optional
 
 from ..utils.forms import MultiCheckboxField, SearchField
 
@@ -15,10 +15,7 @@ class ZoneForm(FlaskForm):
         'Descricao',
         [InputRequired(message='Insira o nome do area!'),
          Length(1, 255)])
-    complement = StringField('Complemento', [
-        Optional(),
-        Length(1, 20)
-    ])
+    complement = StringField('Complemento', [Optional(), Length(1, 20)])
     submit = SubmitField('Salvar')
 
 

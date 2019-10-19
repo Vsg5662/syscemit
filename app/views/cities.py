@@ -9,6 +9,7 @@ from ..models import City
 
 bp = Blueprint('Cities', __name__, url_prefix='/cidades')
 
+
 @bp.route('/')
 @login_required
 def cities():
@@ -17,11 +18,9 @@ def cities():
     search = request.args.get('search')
     filters = ()
     if search:
-        filters += (City.name.like('%'+search+'%'),)
-    cities = City.query.filter(*filters).order_by(
-        City.name.asc()).paginate(1,
-            per_page=current_app.config['PER_PAGE'],
-            error_out=False)
+        filters += (City.name.like('%' + search + '%'), )
+    cities = City.query.filter(*filters).order_by(City.name.asc()).paginate(
+        1, per_page=current_app.config['PER_PAGE'], error_out=False)
     cities = cities.items
 
     return jsonify({

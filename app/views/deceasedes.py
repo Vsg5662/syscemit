@@ -2,11 +2,11 @@
 
 from flask import (Blueprint, current_app, jsonify, render_template, request,
                    url_for)
-from flask_login import login_required
+from flask_login import current_user, login_required
 
 from ..decorators import permission_required
-from ..forms.deceasedes import COLUMNS, DeceasedForm, DeceasedSearchForm
 from ..forms.addresses import AddressForm
+from ..forms.deceasedes import COLUMNS, DeceasedForm, DeceasedSearchForm
 from ..models import Deceased
 
 bp = Blueprint('deceasedes', __name__, url_prefix='/falecidos')
@@ -14,7 +14,6 @@ bp = Blueprint('deceasedes', __name__, url_prefix='/falecidos')
 
 @bp.route('/')
 @login_required
-@permission_required('admin')
 def index():
     form = DeceasedSearchForm(request.args)
     joins = filters = orders = ()
@@ -83,7 +82,6 @@ def create():
 
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
 @login_required
-@permission_required('admin')
 def edit(id):
     deceased = Deceased.get_or_404(id)
     form = DeceasedForm(request.form, obj=deceased)
@@ -95,7 +93,7 @@ def edit(id):
                                form=form,
                                view=True)
 
-    if form.validate() and request.method == 'PUT':
+    if form.validate() and current_user.is_admin and request.method == 'PUT':
         form.populate_obj(deceased)
         deceased.update()
         return jsonify({'redirect': url_for('deceasedes.index')})

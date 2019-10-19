@@ -2,7 +2,7 @@
 
 from flask import (Blueprint, current_app, jsonify, render_template, request,
                    url_for)
-from flask_login import login_required
+from flask_login import current_user, login_required
 
 from ..decorators import permission_required
 from ..forms.addresses import COLUMNS, AddressForm, AddressSearchForm
@@ -13,7 +13,6 @@ bp = Blueprint('addresses', __name__, url_prefix='/enderecos')
 
 @bp.route('/')
 @login_required
-@permission_required('admin')
 def index():
     form = AddressSearchForm(request.args)
     joins = filters = orders = ()
@@ -54,10 +53,13 @@ def index():
     if request.is_xhr:
         return jsonify({
             'result': [{
-                'id': a.id,
-                'name': f'{a.street} - {a.district}, {a.city.name} - {a.city.state.name}, {a.cep}'
+                'id':
+                a.id,
+                'name':
+                f'{a.street} - {a.district}, {a.city.name} - {a.city.state.name}, {a.cep}'
             } for a in addresses]
         })
+
     return render_template('addresses/index.html',
                            icon='fa-map-signs',
                            title='Endereços',
@@ -78,7 +80,6 @@ def index():
 @permission_required('admin')
 def create():
     form = AddressForm()
-    modal = request.args.get('modal', 0, type=bool)
 
     if form.city_id.data:
         city = City.get_or_404(form.city_id.data)
@@ -88,9 +89,8 @@ def create():
         address = Address()
         form.populate_obj(address)
         address.save()
-        if modal:
-            return jsonify({})
         return jsonify({'redirect': url_for('addresses.index')})
+
     return render_template('addresses/view.html',
                            icon='fa-map-signs',
                            title='Adicionar Endereço',
@@ -101,7 +101,6 @@ def create():
 
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
 @login_required
-@permission_required('admin')
 def edit(id):
     address = Address.get_or_404(id)
     form = AddressForm(request.form, obj=address)
@@ -117,10 +116,11 @@ def edit(id):
                                form=form,
                                view=True)
 
-    if form.validate() and request.method == 'PUT':
+    if form.validate() and current_user.is_admin and request.method == 'PUT':
         form.populate_obj(address)
         address.update()
         return jsonify({'redirect': url_for('addresses.index')})
+
     return render_template('addresses/view.html',
                            icon='fa-map-signs',
                            title='Editar Endereço',

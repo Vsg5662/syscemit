@@ -13,7 +13,6 @@ bp = Blueprint('zones', __name__, url_prefix='/regioes')
 
 @bp.route('/')
 @login_required
-@permission_required('admin')
 def index():
     form = ZoneSearchForm(request.args)
     joins = filters = orders = ()
@@ -47,6 +46,10 @@ def index():
         })
 
     return render_template('zones/index.html',
+                           icon='fa-map-marked-alt',
+                           title='Regiões',
+                           clean_url=url_for('addresses.index'),
+                           create_url=url_for('addresses.create'),
                            form=form,
                            search=search,
                            filters=filters_,
@@ -70,28 +73,36 @@ def create():
         return jsonify({'redirect': url_for('zones.index')})
 
     return render_template('zones/view.html',
+                           icon='fa-map-marked-alt',
+                           title='Adicionar Região',
                            form=form,
                            method='post',
-                           label='Adicionar Região',
                            color='success')
 
 
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
 @login_required
-@permission_required('admin')
 def edit(id):
     doctor = Zone.get_or_404(id)
     form = ZoneForm(request.form, obj=doctor)
 
-    if form.validate() and request.method == 'PUT':
+    if request.args.get('format', '', type=str) == 'view':
+        return render_template('zones/view.html',
+                               icon='fa-map-marked-alt',
+                               title='Região',
+                               form=form,
+                               view=True)
+
+    if form.validate() and current_user.is_admin and request.method == 'PUT':
         form.populate_obj(doctor)
         doctor.update()
         return jsonify({'redirect': url_for('zones.index')})
 
     return render_template('zones/view.html',
+                           icon='fa-map-marked-alt',
+                           title='Editar Região',
                            form=form,
                            method='put',
-                           label='Editar Região',
                            color='warning')
 
 

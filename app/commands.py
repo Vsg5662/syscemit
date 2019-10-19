@@ -5,8 +5,8 @@ import subprocess
 import click
 from flask.cli import AppGroup
 
-from .models import (Address, Filiation, City, CivilStates, Deceased, Doctor,
-                     Ethnicity, Grave, Registry, State, User, UserType, Zone,
+from .models import (Address, City, CivilStates, Deceased, Doctor, Ethnicity,
+                     Filiation, Grave, Registry, State, User, UserType, Zone,
                      db)
 from .utils.helpers import shell_context
 

@@ -13,7 +13,6 @@ bp = Blueprint('filiations', __name__, url_prefix='/filiacao')
 
 @bp.route('/')
 @login_required
-@permission_required('admin')
 def index():
     form = FiliationSearchForm(request.args)
     joins = filters = orders = ()
@@ -76,25 +75,24 @@ def create():
 
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
 @login_required
-@permission_required('admin')
 def edit(id):
     filiation = Filiation.get_or_404(id)
     form = FiliationForm(request.form, obj=filiation)
 
     if request.args.get('format', '', type=str) == 'view':
         return render_template('filiations/view.html',
-                               icon='fa-child'
+                               icon='fa-child',
                                title='Filiação',
                                form=form,
                                view=True)
 
-    if form.validate() and request.method == 'PUT':
+    if form.validate() and current_user.is_admin and request.method == 'PUT':
         form.populate_obj(filiation)
         filiation.update()
         return jsonify({'redirect': url_for('filiations.index')})
 
         return render_template('filiations/view.html',
-                               icon='fa-child'
+                               icon='fa-child',
                                title='Editar Filiação',
                                form=form,
                                method='put',

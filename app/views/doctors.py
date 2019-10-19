@@ -13,7 +13,6 @@ bp = Blueprint('doctors', __name__, url_prefix='/medicos')
 
 @bp.route('/')
 @login_required
-@permission_required('admin')
 def index():
     form = DoctorSearchForm(request.args)
     joins = filters = orders = ()
@@ -68,7 +67,7 @@ def create():
 
     return render_template('doctors/view.html',
                            icon='fa-user-md',
-                           title='Adicionar Médico'
+                           title='Adicionar Médico',
                            form=form,
                            method='post',
                            color='success')
@@ -76,19 +75,25 @@ def create():
 
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
 @login_required
-@permission_required('admin')
 def edit(id):
     doctor = Doctor.get_or_404(id)
     form = DoctorForm(request.form, obj=doctor)
 
-    if form.validate() and request.method == 'PUT':
+    if request.args.get('format', '', type=str) == 'view':
+        return render_template('doctors/view.html',
+                               icon='fa-user-md',
+                               title='Médico',
+                               form=form,
+                               view=True)
+
+    if form.validate() and current_user.is_admin and request.method == 'PUT':
         form.populate_obj(doctor)
         doctor.update()
         return jsonify({'redirect': url_for('doctors.index')})
 
     return render_template('doctors/view.html',
                            icon='fa-user-md',
-                           title='Editar Médico'
+                           title='Editar Médico',
                            form=form,
                            method='put',
                            color='warning')

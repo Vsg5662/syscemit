@@ -54,7 +54,7 @@
         </div>
           </form>
           <div class="card-body bg-secondary">
-            {% if current_user.has_permissions('admin') %}
+            {% if current_user.is_admin() %}
             <a class="btn btn-raised btn-success" href="{{ create_url }}">
               <i class="fas fa-plus"></i> Adicionar
             </a>
