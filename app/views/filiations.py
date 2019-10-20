@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from flask import (Blueprint, current_app, jsonify, render_template, request,
-                   url_for)
-from flask_login import login_required
+from flask import Blueprint, jsonify, render_template, request, url_for
+from flask_login import current_user, login_required
 
 from ..decorators import permission_required
 from ..forms.filiations import COLUMNS, FiliationForm, FiliationSearchForm
@@ -15,27 +14,11 @@ bp = Blueprint('filiations', __name__, url_prefix='/filiacao')
 @login_required
 def index():
     form = FiliationSearchForm(request.args)
-    joins = filters = orders = ()
     search = form.search.data
-    filters_ = form.filters.data
-    clause = form.clause.data
+    criteria = form.criteria.data
     order = form.order.data
 
-    if filters_ and search:
-        filters += tuple(
-            getattr(Filiation, f).ilike('%' + search + '%') for f in filters_)
-    elif search:
-        filters += (Filiation.name.ilike('%' + search + '%'), )
-
-    if order and clause:
-        orders += (getattr(getattr(Filiation, clause), order)(), )
-
-    if not orders:
-        orders += (Filiation.name.asc(), )
-    pagination = Filiation.query.join(*joins).filter(*filters).order_by(
-        *orders).paginate(form.page.data,
-                          per_page=current_app.config['PER_PAGE'],
-                          error_out=False)
+    pagination = Filiation.fetch(search, criteria, order, form.page.data)
     filiations = pagination.items
 
     return render_template('filiations/index.html',
@@ -45,8 +28,7 @@ def index():
                            create_url=url_for('filiations.create'),
                            form=form,
                            search=search,
-                           filters=filters_,
-                           clause=clause,
+                           criteria=criteria,
                            order=order,
                            pagination=pagination,
                            headers=COLUMNS,

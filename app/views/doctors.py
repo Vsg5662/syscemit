@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from flask import (Blueprint, current_app, jsonify, render_template, request,
-                   url_for)
-from flask_login import login_required
+from flask import Blueprint, jsonify, render_template, request, url_for
+from flask_login import current_user, login_required
 
 from ..decorators import permission_required
 from ..forms.doctors import COLUMNS, DoctorForm, DoctorSearchForm
@@ -15,30 +14,15 @@ bp = Blueprint('doctors', __name__, url_prefix='/medicos')
 @login_required
 def index():
     form = DoctorSearchForm(request.args)
-    joins = filters = orders = ()
+    grid = request.args.get('grid', 0, type=bool)
     search = form.search.data
-    filters_ = form.filters.data
-    clause = form.clause.data
+    criteria = form.criteria.data
     order = form.order.data
 
-    if filters_ and search:
-        filters += tuple(
-            getattr(Doctor, f).ilike('%' + search + '%') for f in filters_)
-    elif search:
-        filters += (Doctor.name.ilike('%' + search + '%'), )
-
-    if order and clause:
-        orders += (getattr(getattr(Doctor, clause), order)(), )
-
-    if not orders:
-        orders += (Doctor.name.asc(), )
-    pagination = Doctor.query.join(*joins).filter(*filters).order_by(
-        *orders).paginate(form.page.data,
-                          per_page=current_app.config['PER_PAGE'],
-                          error_out=False)
+    pagination = Doctor.fetch(search, criteria, order, form.page.data)
     doctors = pagination.items
 
-    if request.is_xhr:
+    if request.is_xhr and not grid:
         return jsonify({
             'result': [{
                 'id': d.id,
@@ -53,8 +37,7 @@ def index():
                            create_url=url_for('doctors.create'),
                            form=form,
                            search=search,
-                           filters=filters_,
-                           clause=clause,
+                           criteria=criteria,
                            order=order,
                            pagination=pagination,
                            headers=COLUMNS,

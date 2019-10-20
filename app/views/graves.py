@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from flask import (Blueprint, current_app, jsonify, render_template, request,
-                   url_for)
-from flask_login import login_required
+from flask import Blueprint, jsonify, render_template, request, url_for
+from flask_login import current_user, login_required
 
 from ..decorators import permission_required
 from ..forms.graves import COLUMNS, GraveForm, GraveSearchForm
@@ -15,34 +14,21 @@ bp = Blueprint('graves', __name__, url_prefix='/tumulos')
 @login_required
 def index():
     form = GraveSearchForm(request.args)
-    joins = filters = orders = ()
+    grid = request.args.get('grid', 0, type=bool)
     search = form.search.data
-    filters_ = form.filters.data
-    clause = form.clause.data
+    criteria = form.criteria.data
     order = form.order.data
 
-    if filters_ and search:
-        filters += tuple(
-            getattr(Grave, f).ilike('%' + search + '%') for f in filters_)
-    elif search:
-        filters += (Grave.street.ilike('%' + search + '%'), )
-
-    if order and clause:
-        orders += (getattr(getattr(Grave, clause), order)(), )
-
-    if not orders:
-        orders += (Grave.street.asc(), )
-    pagination = Grave.query.join(*joins).filter(*filters).order_by(
-        *orders).paginate(form.page.data,
-                          per_page=current_app.config['PER_PAGE'],
-                          error_out=False)
+    pagination = Grave.fetch(search, criteria, order, form.page.data)
     graves = pagination.items
 
-    if request.is_xhr:
+    if request.is_xhr and not grid:
         return jsonify({
             'result': [{
-                'id': g.id,
-                'name': f'{g.street}, {g.number}, {g.zone.description} - {g.zone.complement}'
+                'id':
+                g.id,
+                'name': (f'{g.street}, {g.number},'
+                         ' {g.zone.description} - {g.zone.complement}')
             } for g in graves]
         })
 
@@ -53,8 +39,7 @@ def index():
                            create_url=url_for('graves.create'),
                            form=form,
                            search=search,
-                           filters=filters_,
-                           clause=clause,
+                           criteria=criteria,
                            order=order,
                            pagination=pagination,
                            headers=COLUMNS,

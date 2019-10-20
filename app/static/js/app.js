@@ -61,6 +61,29 @@ var app = {
       });
     },
 
+    search: function() {
+      var $clean = $('#clean'),
+        $search = $('#search');
+      if ($search.val()) {
+        $clean.removeClass('d-none');
+      }
+
+      $search.on('keyup', function() {
+        var url = new URL(window.location.origin + window.location.pathname),
+          params = new URLSearchParams($(this).parents('form').serialize());
+
+        if (this.value.length) {
+          $clean.removeClass('d-none');
+          params.set('search', this.value);
+        } else if(!params.has('criteria') || !params.has('order')) {
+          $clean.addClass('d-none');
+        }
+        params.set('grid', 1);
+        url.search = params.toString();
+        $('#result').load(url.toString().concat(' #grid'));
+      });
+    },
+
     selectors: function() {
       $('.address').selectize({
         valueField: 'id',
@@ -265,6 +288,8 @@ var app = {
   init: function() {
     // Init bootstrap-material-design
     $('body').bootstrapMaterialDesign();
+    $('input[autofocus]').focus();
+    this.methods.search();
     this.methods.selectors();
     this.methods.mask();
     this.methods.submit();

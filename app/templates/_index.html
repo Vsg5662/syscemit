@@ -17,12 +17,12 @@
             <div class="input-group">
               {% block search -%}{%- endblock %}
               <div class="input-group-append">
-                <a class="btn btn-warning btn-raised" href="{{ clean_url }}" title="Limpar">
+                <a id="clean" class="btn btn-warning btn-raised d-none" href="{{ clean_url }}" title="Limpar">
                   <i class="fas fa-times"></i>
                 </a>
               </div>
               <div class="input-group-append">
-                <a class="btn btn-info btn-raised" href="#Filters" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="Filters" title="Filtrar">
+                <a class="btn btn-info btn-raised" href="#filters" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="filters" title="Filtrar">
                   <i class="fas fa-filter"></i>
                 </a>
               </div>
@@ -32,49 +32,49 @@
                 </button>
               </div>
             </div>
-            <div id="Filters" class="mt-2 collapse">
-              <div class="card card-body">
-                <div class="row">
-                  <div class="col-md-1">Filtrar por:</div>
-                  <div class="col-md-11">
-                    {% block filters -%}{%- endblock %}
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="col-md-1">Ordenar por:</div>
-                  <div class="col-md-1">
-                    {% block clause -%}{%- endblock %}
-                  </div>
-                  <div class="col-md-1">
-                    {% block order -%}{%- endblock %}
+            <div id="filters" class="mt-2 collapse">
+              <div class="card">
+                <h6 class="card-header"><i class="fas fa-filter text-primary"></i> Filtros</h6>
+                <div class="card-body py-0">
+                  <div class="row">
+                    <div class="col-md-1">
+                      {% block filters -%}{%- endblock %}
+                    </div>
+                    <div class="col-md-1">
+                      {% block order -%}{%- endblock %}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-        </div>
           </form>
-          <div class="card-body bg-secondary">
-            {% if current_user.is_admin() %}
-            <a class="btn btn-raised btn-success" href="{{ create_url }}">
-              <i class="fas fa-plus"></i> Adicionar
-            </a>
-            {% endif %}
-          </div>
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
-                <tr class="thead-dark">
-                {% block headers -%}{%- endblock %}
-                </tr>
-              </thead>
-              <tbody>
-              {% block result -%}{%- endblock %}
-              </tbody>
-            </table>
-          </div>
-          <div class="card-footer bg-light">
-          {% block paginator -%}{%- endblock %}
-          </div>
+        </div>
+        <div class="card-body bg-secondary">
+          {% if current_user.is_admin() %}
+          <a class="btn btn-raised btn-success" href="{{ create_url }}">
+            <i class="fas fa-plus"></i> Adicionar
+          </a>
+          {% endif %}
+        </div>
+        <div id="result" class="table-responsive">
+          <table id="grid" class="table table-hover mb-0">
+            <thead>
+              <tr class="thead-dark">
+              {% block headers -%}{%- endblock %}
+              </tr>
+            </thead>
+            <tbody>
+            {% block result -%}{%- endblock %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="20" class="table-secondary">
+                  {% block paginator -%}{%- endblock %}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
     </div>
   </div>

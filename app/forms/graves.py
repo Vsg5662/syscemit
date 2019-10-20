@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import IntegerField, SelectField, StringField, SubmitField
 from wtforms.validators import InputRequired, Length
 
-from ..utils.forms import MultiCheckboxField, SearchField
+from ..utils.forms import SearchField
 
 COLUMNS = [('street', 'Rua'), ('number', 'Número'), ('zone', 'Região')]
 ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
@@ -27,8 +27,5 @@ class GraveForm(FlaskForm):
 class GraveSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
     search = SearchField('Buscar túmulo ...')
-    filters = MultiCheckboxField('Filtros',
-                                 choices=COLUMNS,
-                                 default=['street'])
-    clause = SelectField('Critério', choices=COLUMNS, default='street')
+    criteria = SelectField('Filtrar por', choices=COLUMNS, default='street')
     order = SelectField('Ordem', choices=ORDERS, default='asc')

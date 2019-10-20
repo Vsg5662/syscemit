@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from flask import (Blueprint, current_app, jsonify, render_template, request,
-                   url_for)
+from flask import Blueprint, jsonify, render_template, request, url_for
 from flask_login import login_required
 
 from ..decorators import permission_required
 from ..forms.users import COLUMNS, UserForm, UserSearchForm
-from ..models import User, UserType
+from ..models import User
 
 bp = Blueprint('users', __name__, url_prefix='/usuarios')
 
@@ -16,39 +15,11 @@ bp = Blueprint('users', __name__, url_prefix='/usuarios')
 @permission_required('admin')
 def index():
     form = UserSearchForm(request.args)
-    joins = filters = orders = ()
     search = form.search.data
-    filters_ = form.filters.data
-    clause = form.clause.data
+    criteria = form.criteria.data
     order = form.order.data
 
-    if 'type' in filters or clause == 'type':
-        joins += (UserType, )
-
-    if filters_ and search:
-        filters += tuple(
-            getattr(User, f).ilike('%' + search + '%') for f in filters_
-            if f != 'type')
-        if 'type' in filters_:
-            filters += (
-                User.user_type_id == UserType.id,
-                UserType.description.ilike('%' + search + '%'),
-            )
-    elif search:
-        filters += (User.name.ilike('%' + search + '%'), )
-
-    if order and clause:
-        if clause != 'type':
-            orders += (getattr(getattr(User, clause), order)(), )
-        else:
-            orders += (getattr(UserType.description, order)(), )
-
-    if not orders:
-        orders += (User.name.asc(), )
-    pagination = User.query.join(*joins).filter(*filters).order_by(
-        *orders).paginate(form.page.data,
-                          per_page=current_app.config['PER_PAGE'],
-                          error_out=False)
+    pagination = User.fetch(search, criteria, order, form.page.data)
     users = pagination.items
 
     return render_template('users/index.html',
@@ -58,8 +29,7 @@ def index():
                            create_url=url_for('users.create'),
                            form=form,
                            search=search,
-                           filters=filters_,
-                           clause=clause,
+                           criteria=criteria,
                            order=order,
                            pagination=pagination,
                            headers=COLUMNS,

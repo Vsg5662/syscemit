@@ -20,7 +20,7 @@ Jinja2
 lml
 Mako
 MarkupSafe
-openpyxl
+openpyxl==2.5.14
 parso
 pexpect
 pickleshare

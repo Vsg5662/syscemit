@@ -6,7 +6,7 @@ from wtforms import (IntegerField, PasswordField, SelectField, StringField,
 from wtforms.validators import InputRequired, Length, Required
 
 from ..models import UserType
-from ..utils.forms import MultiCheckboxField, SearchField
+from ..utils.forms import SearchField
 
 COLUMNS = [('name', 'Nome'), ('login', 'Login'), ('type', 'Tipo')]
 ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
@@ -38,6 +38,5 @@ class UserForm(FlaskForm):
 class UserSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
     search = SearchField('Buscar usuários ...')
-    filters = MultiCheckboxField('Filtros', choices=COLUMNS, default=['name'])
-    clause = SelectField('Critério', choices=COLUMNS, default='name')
+    criteria = SelectField('Filtrar por', choices=COLUMNS, default='name')
     order = SelectField('Ordem', choices=ORDERS, default='asc')

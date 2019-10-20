@@ -3,6 +3,7 @@
 import csv
 import os
 
+from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -69,6 +70,31 @@ class User(CRUDMixin, UserMixin, db.Model):
     user_type_id = db.Column(db.Integer,
                              db.ForeignKey('user_types.id'),
                              nullable=False)
+
+    @classmethod
+    def fetch(cls, search, criteria, order, page):
+        joins = filters_ = orders = ()
+
+        if criteria and search:
+            if criteria == 'type':
+                joins += (UserType, )
+                filters_ += (
+                    cls.user_type_id == UserType.id,
+                    UserType.description.ilike('%' + search + '%'),
+                )
+                orders += (getattr(UserType.description, order)(), )
+            else:
+                filters_ = (getattr(cls, criteria).ilike('%' + search + '%'), )
+                orders += (getattr(getattr(cls, criteria), order)(), )
+        elif search:
+            filters_ += (cls.name.ilike('%' + search + '%'), )
+
+        if not orders:
+            orders += (cls.name.asc(), )
+        return cls.query.join(*joins).filter(*filters_).order_by(
+            *orders).paginate(page,
+                              per_page=current_app.config['PER_PAGE'],
+                              error_out=False)
 
     @property
     def password(self):
@@ -161,6 +187,31 @@ class Address(CRUDMixin, db.Model):
                                     backref='address_death',
                                     lazy='dynamic')
 
+    @classmethod
+    def fetch(cls, search, criteria, order, page):
+        joins = filters_ = orders = ()
+
+        if criteria and search:
+            if criteria == 'city':
+                joins += (City, )
+                filters_ += (
+                    cls.city_id == City.id,
+                    City.name.ilike('%' + search + '%'),
+                )
+                orders += (getattr(City.name, order)(), )
+            else:
+                filters_ = (getattr(cls, criteria).ilike('%' + search + '%'), )
+                orders += (getattr(getattr(cls, criteria), order)(), )
+        elif search:
+            filters_ += (cls.street.ilike('%' + search + '%'), )
+
+        if not orders:
+            orders += (cls.street.asc(), )
+        return cls.query.join(*joins).filter(*filters_).order_by(
+            *orders).paginate(page,
+                              per_page=current_app.config['PER_PAGE'],
+                              error_out=False)
+
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.number)
 
@@ -171,6 +222,24 @@ class Doctor(CRUDMixin, db.Model):
     crm = db.Column(db.String(20), nullable=False)
     deceased = db.relationship('Deceased', backref='doctors', lazy='dynamic')
 
+    @classmethod
+    def fetch(cls, search, criteria, order, page):
+        joins = filters_ = orders = ()
+
+        if criteria and search:
+            filters_ += (getattr(cls, criteria).ilike('%' + search + '%'), )
+        elif search:
+            filters_ += (cls.name.ilike('%' + search + '%'), )
+
+        if criteria and order:
+            orders += (getattr(getattr(cls, criteria), order)(), )
+        else:
+            orders += (cls.name.asc(), )
+        return cls.query.join(*joins).filter(*filters_).order_by(
+            *orders).paginate(page,
+                              per_page=current_app.config['PER_PAGE'],
+                              error_out=False)
+
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.name)
 
@@ -180,6 +249,31 @@ class Registry(CRUDMixin, db.Model):
     name = db.Column(db.String(255), nullable=False)
     city_id = db.Column(db.Integer, db.ForeignKey('cities.id'), nullable=False)
     deceased = db.relationship('Deceased', backref='registry', lazy='dynamic')
+
+    @classmethod
+    def fetch(cls, search, criteria, order, page):
+        joins = filters_ = orders = ()
+
+        if criteria and search:
+            if criteria == 'city':
+                joins += (City, )
+                filters_ += (
+                    cls.city_id == City.id,
+                    City.name.ilike('%' + search + '%'),
+                )
+                orders += (getattr(City.name, order)(), )
+            else:
+                filters_ = (getattr(cls, criteria).ilike('%' + search + '%'), )
+                orders += (getattr(getattr(cls, criteria), order)(), )
+        elif search:
+            filters_ += (cls.name.ilike('%' + search + '%'), )
+
+        if not orders:
+            orders += (cls.name.asc(), )
+        return cls.query.join(*joins).filter(*filters_).order_by(
+            *orders).paginate(page,
+                              per_page=current_app.config['PER_PAGE'],
+                              error_out=False)
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.name)
@@ -228,6 +322,24 @@ class Zone(CRUDMixin, db.Model):
     complement = db.Column(db.String(10))
     graves = db.relationship('Grave', backref='zone', lazy='dynamic')
 
+    @classmethod
+    def fetch(cls, search, criteria, order, page):
+        joins = filters_ = orders = ()
+
+        if criteria and search:
+            filters_ += (getattr(cls, criteria).ilike('%' + search + '%'), )
+        elif search:
+            filters_ += (cls.description.ilike('%' + search + '%'), )
+
+        if criteria and order:
+            orders += (getattr(getattr(cls, criteria), order)(), )
+        else:
+            orders += (cls.description.asc(), )
+        return cls.query.join(*joins).filter(*filters_).order_by(
+            *orders).paginate(page,
+                              per_page=current_app.config['PER_PAGE'],
+                              error_out=False)
+
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.description)
 
@@ -238,6 +350,31 @@ class Grave(CRUDMixin, db.Model):
     number = db.Column(db.String(5), nullable=False)
     zone_id = db.Column(db.Integer, db.ForeignKey('zones.id'), nullable=False)
     deceased = db.relationship('Deceased', backref='grave', lazy='dynamic')
+
+    @classmethod
+    def fetch(cls, search, criteria, order, page):
+        joins = filters_ = orders = ()
+
+        if criteria and search:
+            if criteria == 'zone':
+                joins += (Zone, )
+                filters_ += (
+                    cls.zone_id == Zone.id,
+                    Zone.description.ilike('%' + search + '%'),
+                )
+                orders += (getattr(Zone.description, order)(), )
+            else:
+                filters_ = (getattr(cls, criteria).ilike('%' + search + '%'), )
+                orders += (getattr(getattr(cls, criteria), order)(), )
+        elif search:
+            filters_ += (cls.street.ilike('%' + search + '%'), )
+
+        if not orders:
+            orders += (cls.street.asc(), )
+        return cls.query.join(*joins).filter(*filters_).order_by(
+            *orders).paginate(page,
+                              per_page=current_app.config['PER_PAGE'],
+                              error_out=False)
 
     def __repr__(self):
         return '{0}({1} {2})'.format(self.__class__.__name__, self.street,
@@ -291,6 +428,27 @@ class Deceased(CRUDMixin, db.Model):
                                  lazy='subquery',
                                  backref=db.backref('deceased', lazy=True))
 
+    @classmethod
+    def fetch(cls, search, criteria, order, page):
+        """
+        TODO: Refactor queries and include another fields to search.
+        """
+        joins = filters_ = orders = ()
+
+        if criteria and search:
+            filters_ += (getattr(cls, criteria).ilike('%' + search + '%'), )
+        elif search:
+            filters_ += (cls.name.ilike('%' + search + '%'), )
+
+        if criteria and order:
+            orders += (getattr(getattr(cls, criteria), order)(), )
+        else:
+            orders += (cls.name.asc(), )
+        return cls.query.join(*joins).filter(*filters_).order_by(
+            *orders).paginate(page,
+                              per_page=current_app.config['PER_PAGE'],
+                              error_out=False)
+
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.name)
 
@@ -298,6 +456,24 @@ class Deceased(CRUDMixin, db.Model):
 class Filiation(CRUDMixin, db.Model):
     __tablename__ = 'filiations'
     name = db.Column(db.String(255), nullable=False)
+
+    @classmethod
+    def fetch(cls, search, criteria, order, page):
+        joins = filters_ = orders = ()
+
+        if criteria and search:
+            filters_ += (getattr(cls, criteria).ilike('%' + search + '%'), )
+        elif search:
+            filters_ += (cls.name.ilike('%' + search + '%'), )
+
+        if criteria and order:
+            orders += (getattr(getattr(cls, criteria), order)(), )
+        else:
+            orders += (cls.name.asc(), )
+        return cls.query.join(*joins).filter(*filters_).order_by(
+            *orders).paginate(page,
+                              per_page=current_app.config['PER_PAGE'],
+                              error_out=False)
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.name)

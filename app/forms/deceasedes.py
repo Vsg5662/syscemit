@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import (DateField, FormField, IntegerField, RadioField,
-                     SelectField, StringField, SubmitField)
+from wtforms import (DateField, IntegerField, RadioField, SelectField,
+                     StringField, SubmitField)
 from wtforms.validators import InputRequired, Length, Optional
 from wtforms.widgets import TextArea, html5
 
 from ..models import CivilStates, Ethnicity
-from ..utils.forms import MultiCheckboxField, SearchField
-from .addresses import AddressForm
+from ..utils.forms import SearchField
 
 COLUMNS = [('name', 'Nome'), ('age', 'Idade'),
            ('birth_date', 'Data de Nascimento'),
@@ -27,10 +26,12 @@ ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
 class DeceasedForm(FlaskForm):
     name = StringField('Nome', [Optional(), Length(1, 255)])
     age = IntegerField('Idade', [Optional()], widget=html5.NumberInput(min=0))
-    birth_date = DateField('Data de Nascimento', [Optional()], format='%d/%m/%Y')
+    birth_date = DateField('Data de Nascimento', [Optional()],
+                           format='%d/%m/%Y')
     death_datetime = DateField('Data de Falecimento', [
         InputRequired(message='Insira a Data de Falecimento!'),
-    ], format='%d/%m/%Y %H:%M')
+    ],
+                               format='%d/%m/%Y %H:%M')
     gender = RadioField('Genêro', [InputRequired(message='Insira o Genêro!')],
                         choices=[(0, 'Masculino'), (1, 'Feminino')])
     cause = StringField(
@@ -97,6 +98,5 @@ class DeceasedForm(FlaskForm):
 class DeceasedSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
     search = SearchField('Buscar falecido ...')
-    filters = MultiCheckboxField('Filtros', choices=COLUMNS, default=['name'])
-    clause = SelectField('Critério', choices=COLUMNS, default='name')
+    criteria = SelectField('Filtrar por', choices=COLUMNS, default='name')
     order = SelectField('Ordem', choices=ORDERS, default='asc')

@@ -6,11 +6,7 @@
 {% endblock %}
 
 {% block filters %}
-{{ render_multi_field(form.filters) }}
-{% endblock %}
-
-{% block clause %}
-{{ render_field(form.clause, class='form-control') }}
+{{ render_field(form.criteria, class='form-control') }}
 {% endblock %}
 
 {% block order %}
