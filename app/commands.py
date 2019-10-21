@@ -5,9 +5,19 @@ import subprocess
 import click
 from flask.cli import AppGroup
 
-from .models import (Address, City, CivilStates, Deceased, Doctor, Ethnicity,
-                     Filiation, Grave, Registry, State, User, UserType, Zone,
-                     db)
+from .extensions import db
+from .models.addresses import Address
+from .models.cities import City
+from .models.civil_states import CivilState
+from .models.deceased import Deceased
+from .models.doctors import Doctor
+from .models.ethnicities import Ethnicity
+from .models.graves import Grave
+from .models.registries import Registry
+from .models.states import State
+from .models.user_types import UserType
+from .models.users import User
+from .models.zones import Zone
 from .utils.helpers import shell_context
 
 
@@ -16,9 +26,9 @@ def init_app(app):
 
     @app.shell_context_processor
     def make_shell_context():
-        return shell_context(app, db, Address, Filiation, City, CivilStates,
-                             Deceased, Doctor, Ethnicity, Grave, Registry,
-                             State, User, UserType, Zone)
+        return shell_context(app, db, Address, City, CivilState, Deceased,
+                             Doctor, Ethnicity, Grave, Registry, State, User,
+                             UserType, Zone)
 
     @app.cli.command()
     def initdb():
@@ -26,7 +36,7 @@ def init_app(app):
         UserType.populate()
         State.populate()
         City.populate()
-        CivilStates.populate()
+        CivilState.populate()
         Ethnicity.populate()
 
     @user_cli.command()

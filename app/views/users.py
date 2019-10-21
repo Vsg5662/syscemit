@@ -5,7 +5,7 @@ from flask_login import login_required
 
 from ..decorators import permission_required
 from ..forms.users import COLUMNS, UserForm, UserSearchForm
-from ..models import User
+from ..models.users import User
 
 bp = Blueprint('users', __name__, url_prefix='/usuarios')
 

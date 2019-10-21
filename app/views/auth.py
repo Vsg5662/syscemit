@@ -5,7 +5,7 @@ from flask import (Blueprint, flash, jsonify, redirect, render_template,
 from flask_login import current_user, login_required, login_user, logout_user
 
 from ..forms.auth import AuthLoginForm
-from ..models import User
+from ..models.users import User
 
 bp = Blueprint('auth', __name__, url_prefix='/conta')
 
@@ -20,13 +20,13 @@ def login():
         user = User.query.filter_by(login=form.login.data).first()
         if user is not None and user.check_password(form.password.data):
             login_user(user)
-            redirect = {
+            data = {
                 'redirect': request.args.get('next') or url_for('main.index')
             }
         else:
-            redirect = {'redirect': request.url}
+            data = {'redirect': request.url}
             flash('Usuário ou senha inválida', 'danger')
-        return jsonify(redirect)
+        return jsonify(data)
 
     return render_template('auth/login.html', form=form, method='post')
 

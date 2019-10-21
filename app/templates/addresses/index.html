@@ -23,23 +23,23 @@
 {% block result %}
 {% for a in addresses %}
 <tr>
-    <td>{{ a.street }}</td>
-    <td>{{ a.cep }}</td>
-    <td>{{ a.district }}</td>
-    <td>{{ a.city.name }}</td>
-    <td>
-      <a href="{{ url_for('addresses.edit', id=a.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
-        <i class="fas fa-eye"></i>
-      </a>
-      {% if current_user.is_admin() %}
-      <a href="{{ url_for('addresses.edit', id=a.id) }}" class="btn btn-raised btn-warning" title="Editar">
-          <i class="fas fa-edit"></i>
-      </a>
-      <a class="btn btn-raised btn-danger" data-action="{{ url_for('addresses.delete', id=a.id) }}" onclick="app.methods.remove(this)" title="Remover">
-          <i class="fas fa-trash"></i>
-      </a>
-      {% endif %}
-    </td>
+  <td>{{ a.street }}</td>
+  <td>{{ a.cep }}</td>
+  <td>{{ a.district }}</td>
+  <td>{{ a.city.name }}</td>
+  <td>
+    <a href="{{ url_for('addresses.edit', id=a.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
+      <i class="fas fa-eye"></i>
+    </a>
+    {% if current_user.is_admin() %}
+    <a href="{{ url_for('addresses.edit', id=a.id) }}" class="btn btn-raised btn-warning" title="Editar">
+      <i class="fas fa-edit"></i>
+    </a>
+    <a class="btn btn-raised btn-danger" data-action="{{ url_for('addresses.delete', id=a.id) }}" onclick="app.methods.remove(this)" title="Remover">
+      <i class="fas fa-trash"></i>
+    </a>
+    {% endif %}
+  </td>
 </tr>
 {% endfor %}
 {% endblock %}

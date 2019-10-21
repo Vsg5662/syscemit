@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 
 from ..decorators import permission_required
 from ..forms.doctors import COLUMNS, DoctorForm, DoctorSearchForm
-from ..models import Doctor
+from ..models.doctors import Doctor
 
 bp = Blueprint('doctors', __name__, url_prefix='/medicos')
 

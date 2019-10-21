@@ -5,7 +5,8 @@ from flask_login import current_user, login_required
 
 from ..decorators import permission_required
 from ..forms.registries import COLUMNS, RegistryForm, RegistrySearchForm
-from ..models import City, Registry
+from ..models.cities import City
+from ..models.registries import Registry
 
 bp = Blueprint('registries', __name__, url_prefix='/cartorios')
 

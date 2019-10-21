@@ -21,23 +21,23 @@
 {% endblock %}
 
 {% block result %}
-{% for a in zones %}
+{% for z in zones %}
 <tr>
-      <td>{{ a.description }}</td>
-      <td>{{ a.complement }}</td>
-      <td>
-<a href="{{ url_for('zones.edit', id=a.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
-<i class="fas fa-eye"></i>
-</a>
-{% if current_user.is_admin() %}
-<a href="{{ url_for('zones.edit', id=a.id) }}" class="btn btn-raised btn-warning" title="Editar">
-<i class="fas fa-edit"></i>
-</a>
-<a class="btn btn-raised btn-danger" data-action="{{ url_for('zones.delete', id=a.id) }}" onclick="app.methods.remove(this)" title="Remover">
-<i class="fas fa-trash"></i>
-</a>
-{% endif %}
-</td>
+  <td>{{ z.description }}</td>
+  <td>{{ z.complement }}</td>
+  <td>
+    <a href="{{ url_for('zones.edit', id=z.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
+      <i class="fas fa-eye"></i>
+    </a>
+    {% if current_user.is_admin() %}
+    <a href="{{ url_for('zones.edit', id=z.id) }}" class="btn btn-raised btn-warning" title="Editar">
+      <i class="fas fa-edit"></i>
+    </a>
+    <a class="btn btn-raised btn-danger" data-action="{{ url_for('zones.delete', id=z.id) }}" onclick="app.methods.remove(this)" title="Remover">
+      <i class="fas fa-trash"></i>
+    </a>
+    {% endif %}
+  </td>
 </tr>
 {% endfor %}
 {% endblock %}

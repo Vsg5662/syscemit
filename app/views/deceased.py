@@ -4,10 +4,15 @@ from flask import Blueprint, jsonify, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from ..decorators import permission_required
-from ..forms.deceasedes import DeceasedForm, DeceasedSearchForm
-from ..models import Address, City, Deceased, Doctor, Grave, Registry
+from ..forms.deceased import DeceasedForm, DeceasedSearchForm
+from ..models.addresses import Address
+from ..models.cities import City
+from ..models.deceased import Deceased
+from ..models.doctors import Doctor
+from ..models.graves import Grave
+from ..models.registries import Registry
 
-bp = Blueprint('deceasedes', __name__, url_prefix='/falecidos')
+bp = Blueprint('deceased', __name__, url_prefix='/falecidos')
 
 
 @bp.route('/')
@@ -20,22 +25,22 @@ def index():
     order = form.order.data
 
     pagination = Deceased.fetch(search, criteria, order, form.page.data)
-    deceasedes = pagination.items
+    deceased = pagination.items
     headers = [('name', 'Nome'), ('city', 'Cidade'),
                ('death_datetime', 'Data de Falecimento'), ('grave', 'Túmulo')]
 
-    return render_template('deceasedes/index.html',
+    return render_template('deceased/index.html',
                            icon='fa-coffin',
                            title='Falecidos',
-                           clean_url=url_for('deceasedes.index'),
-                           create_url=url_for('deceasedes.create'),
+                           clean_url=url_for('deceased.index'),
+                           create_url=url_for('deceased.create'),
                            form=form,
                            search=search,
                            criteria=criteria,
                            order=order,
                            pagination=pagination,
                            headers=headers,
-                           deceasedes=deceasedes)
+                           deceased=deceased)
 
 
 @bp.route('/adicionar', methods=['GET', 'POST'])
@@ -87,13 +92,13 @@ def create():
         deceased = Deceased()
         form.populate_obj(deceased)
         deceased.save()
-        return jsonify({'redirect': url_for('deceasedes.index')})
+        return jsonify({'redirect': url_for('deceased.index')})
 
     print('#' * 100)
     print(form.errors)
     print('#' * 100)
 
-    return render_template('deceasedes/view.html',
+    return render_template('deceased/view.html',
                            icon='fa-coffin',
                            title='Adicionar Falecido',
                            form=form,
@@ -146,7 +151,7 @@ def edit(id):
         ]
 
     if request.args.get('format', '', type=str) == 'view':
-        return render_template('deceasedes/view.html',
+        return render_template('deceased/view.html',
                                icon='fa-coffin',
                                title='Falecido',
                                form=form,
@@ -155,9 +160,9 @@ def edit(id):
     if form.validate() and current_user.is_admin and request.method == 'PUT':
         form.populate_obj(deceased)
         deceased.update()
-        return jsonify({'redirect': url_for('deceasedes.index')})
+        return jsonify({'redirect': url_for('deceased.index')})
 
-    return render_template('deceasedes/view.html',
+    return render_template('deceased/view.html',
                            icon='fa-coffin',
                            title='Editar Falecido',
                            form=form,

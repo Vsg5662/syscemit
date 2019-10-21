@@ -21,24 +21,24 @@
 {% endblock %}
 
 {% block result %}
-{% for a in users %}
+{% for u in users %}
 <tr>
-<td>{{ a.name }}</td>
-<td>{{ a.login }}</td>
-<td>{{ a.user_type.description }}</td>
-<td>
-<a href="{{ url_for('users.edit', id=a.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
-<i class="fas fa-eye"></i>
-</a>
-{% if current_user.is_admin() %}
-<a href="{{ url_for('users.edit', id=a.id) }}" class="btn btn-raised btn-warning" title="Editar">
-<i class="fas fa-edit"></i>
-</a>
-<a class="btn btn-raised btn-danger" data-action="{{ url_for('users.delete', id=a.id) }}" onclick="app.methods.remove(this)" title="Remover">
-<i class="fas fa-trash"></i>
-</a>
-{% endif %}
-</td>
+  <td>{{ u.name }}</td>
+  <td>{{ u.login }}</td>
+  <td>{{ u.user_type.description }}</td>
+  <td>
+    <a href="{{ url_for('users.edit', id=u.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
+      <i class="fas fa-eye"></i>
+    </a>
+    {% if current_user.is_admin() %}
+    <a href="{{ url_for('users.edit', id=u.id) }}" class="btn btn-raised btn-warning" title="Editar">
+      <i class="fas fa-edit"></i>
+    </a>
+    <a class="btn btn-raised btn-danger" data-action="{{ url_for('users.delete', id=u.id) }}" onclick="app.methods.remove(this)" title="Remover">
+      <i class="fas fa-trash"></i>
+    </a>
+    {% endif %}
+  </td>
 </tr>
 {% endfor %}
 {% endblock %}

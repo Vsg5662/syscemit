@@ -21,19 +21,21 @@
 {% endblock %}
 
 {% block result %}
-{% for r in registries %}
+{% for d in deceased %}
 <tr>
-  <td>{{ r.name }}</td>
-  <td>{{ r.city.name }}</td>
+  <td>{{ d.name }}</td>
+  <td>{{ d.city }}</td>
+  <td>{{ d.death_datetime }}</td>
+  <td>{{ d.grave.street }} - {{ d.grave.number }}</td>
   <td>
-    <a href="{{ url_for('registries.edit', id=r.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
+    <a href="{{ url_for('deceased.edit', id=d.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
       <i class="fas fa-eye"></i>
     </a>
     {% if current_user.is_admin() %}
-    <a href="{{ url_for('registries.edit', id=r.id) }}" class="btn btn-raised btn-warning" title="Editar">
+    <a href="{{ url_for('deceased.edit', id=d.id) }}" class="btn btn-raised btn-warning" title="Editar">
       <i class="fas fa-edit"></i>
     </a>
-    <a class="btn btn-raised btn-danger" data-action="{{ url_for('registries.delete', id=r.id) }}" onclick="app.methods.remove(this)" title="Remover">
+    <a class="btn btn-raised btn-danger" data-action="{{ url_for('deceased.delete', id=d.id) }}" onclick="app.methods.remove(this)" title="Remover">
       <i class="fas fa-trash"></i>
     </a>
     {% endif %}
@@ -43,11 +45,11 @@
 {% endblock %}
 
 {% block paginator %}
-{{ render_pagination(pagination, 'registries.index', search=search, filters=filters, clause=clause, order=order) }}
+{{ render_pagination(pagination, 'deceased.index', search=search, filters=filters, clause=clause, order=order) }}
 {% endblock %}
 
 {% block dialog %}
-{% call render_modal('modal-delete', 'Remover Cartório', yes_text='Remover', yes_icon='trash', yes_color='danger') %}
-<p>Deseja realmente remover o Cartório?</p>
+{% call render_modal('modal-delete', 'Remover Falecido', yes_text='Remover', yes_icon='trash', yes_color='danger') %}
+<p>Deseja realmente remover o Falecido?</p>
 {% endcall %}
 {% endblock %}

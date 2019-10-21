@@ -5,7 +5,7 @@ from wtforms import (IntegerField, PasswordField, SelectField, StringField,
                      SubmitField)
 from wtforms.validators import InputRequired, Length, Required
 
-from ..models import UserType
+from ..models.user_types import UserType
 from ..utils.forms import SearchField
 
 COLUMNS = [('name', 'Nome'), ('login', 'Login'), ('type', 'Tipo')]

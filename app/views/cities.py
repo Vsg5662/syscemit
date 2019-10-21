@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import json
-
 from flask import Blueprint, abort, current_app, jsonify, request
 from flask_login import login_required
 
-from ..models import City
+from ..models.cities import City
 
 bp = Blueprint('Cities', __name__, url_prefix='/cidades')
 

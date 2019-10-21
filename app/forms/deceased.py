@@ -6,7 +6,8 @@ from wtforms import (DateField, IntegerField, RadioField, SelectField,
 from wtforms.validators import InputRequired, Length, Optional
 from wtforms.widgets import TextArea, html5
 
-from ..models import CivilStates, Ethnicity
+from ..models.civil_states import CivilState
+from ..models.ethnicities import Ethnicity
 from ..utils.forms import SearchField
 
 COLUMNS = [('name', 'Nome'), ('age', 'Idade'),
@@ -79,7 +80,7 @@ class DeceasedForm(FlaskForm):
                               [InputRequired(message='Insira o Cartório!')],
                               choices=(),
                               coerce=int)
-    filiation = StringField('Filiação', [Optional(), Length(1, 255)])
+    filiations = StringField('Filiação', [Optional(), Length(1, 255)])
     submit = SubmitField('Salvar')
 
     def __init__(self, *args, **kwargs):
@@ -88,10 +89,9 @@ class DeceasedForm(FlaskForm):
                                      for e in Ethnicity.query.order_by(
                                          Ethnicity.description.asc()).all()]
         self.ethnicity_id.choices.insert(0, (0, ''))
-        self.civil_state_id.choices = [
-            (e.id, e.description) for e in CivilStates.query.order_by(
-                CivilStates.description.asc()).all()
-        ]
+        self.civil_state_id.choices = [(e.id, e.description)
+                                       for e in CivilState.query.order_by(
+                                           CivilState.description.asc()).all()]
         self.civil_state_id.choices.insert(0, (0, ''))
 
 

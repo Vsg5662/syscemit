@@ -5,7 +5,8 @@ from flask_login import current_user, login_required
 
 from ..decorators import permission_required
 from ..forms.graves import COLUMNS, GraveForm, GraveSearchForm
-from ..models import Grave, Zone
+from ..models.graves import Grave
+from ..models.zones import Zone
 
 bp = Blueprint('graves', __name__, url_prefix='/tumulos')
 

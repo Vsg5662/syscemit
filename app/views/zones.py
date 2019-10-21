@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 
 from ..decorators import permission_required
 from ..forms.zones import COLUMNS, ZoneForm, ZoneSearchForm
-from ..models import Zone
+from ..models.zones import Zone
 
 bp = Blueprint('zones', __name__, url_prefix='/regioes')
 

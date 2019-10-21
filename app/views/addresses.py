@@ -5,7 +5,8 @@ from flask_login import current_user, login_required
 
 from ..decorators import permission_required
 from ..forms.addresses import COLUMNS, AddressForm, AddressSearchForm
-from ..models import Address, City
+from ..models.addresses import Address
+from ..models.cities import City
 
 bp = Blueprint('addresses', __name__, url_prefix='/enderecos')
 
