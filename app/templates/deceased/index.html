@@ -24,7 +24,7 @@
 {% for d in deceased %}
 <tr>
   <td>{{ d.name }}</td>
-  <td>{{ d.city }}</td>
+  <td>{{ d.city.name }}</td>
   <td>{{ d.death_datetime }}</td>
   <td>{{ d.grave.street }} - {{ d.grave.number }}</td>
   <td>

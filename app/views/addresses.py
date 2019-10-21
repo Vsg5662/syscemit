@@ -28,8 +28,8 @@ def index():
             'result': [{
                 'id':
                 a.id,
-                'name': (f'{a.street} - {a.district},'
-                         ' {a.city.name} - {a.city.state.name}, {a.cep}')
+                'name': ('{i.street} - {i.district}, {i.city.name} - '
+                         '{i.city.state.name}, {i.cep}').format(i=a)
             } for a in addresses]
         })
 

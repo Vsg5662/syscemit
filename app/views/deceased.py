@@ -58,18 +58,14 @@ def create():
     if form.home_address_id.data:
         address = Address.get_or_404(form.home_address_id.data)
         form.home_address_id.choices = [
-            (address.id, (f'{address.street} - {address.district},'
-                          ' {address.city.name} - {address.city.state.name},'
-                          '{address.cep}'))
-        ]
+            (address.id, ('{a.street} - {a.district}, {a.city.name} - '
+                          '{a.city.state.name}, {a.cep}').format(a=address))]
 
     if form.death_address_id.data:
         address = Address.get_or_404(form.death_address_id.data)
         form.death_address_id.choices = [
-            (address.id, (f'{address.street} - {address.district},'
-                          ' {address.city.name} - {address.city.state.name},'
-                          '{address.cep}'))
-        ]
+            (address.id, ('{a.street} - {a.district}, {a.city.name} - '
+                          '{a.city.state.name}, {a.cep}').format(a=address))]
 
     if form.doctor_id.data:
         doctor = Doctor.get_or_404(form.doctor_id.data)
@@ -78,9 +74,8 @@ def create():
     if form.grave_id.data:
         grave = Grave.get_or_404(form.grave_id.data)
         form.grave_id.choices = [
-            (grave.id, (f'{grave.street} - {grave.number},'
-                        ' {grave.zone.description} - {grave.zone.complement}'))
-        ]
+            (grave.id, ('{g.street} - {g.number}, {g.zone.description} - '
+                        '{g.zone.complement}').format(g=grave))]
 
     if form.registry_id.data:
         registry = Registry.get_or_404(form.registry_id.data)
@@ -93,10 +88,6 @@ def create():
         form.populate_obj(deceased)
         deceased.save()
         return jsonify({'redirect': url_for('deceased.index')})
-
-    print('#' * 100)
-    print(form.errors)
-    print('#' * 100)
 
     return render_template('deceased/view.html',
                            icon='fa-coffin',
@@ -120,18 +111,14 @@ def edit(id):
     if form.home_address_id.data:
         address = Address.get_or_404(form.home_address_id.data)
         form.home_address_id.choices = [
-            (address.id, (f'{address.street} - {address.district},'
-                          ' {address.city.name} - {address.city.state.name},'
-                          '{address.cep}'))
-        ]
+            (address.id, ('{a.street} - {a.district}, {a.city.name} - '
+                          '{a.city.state.name}, {a.cep}').format(a=address))]
 
     if form.death_address_id.data:
         address = Address.get_or_404(form.death_address_id.data)
         form.death_address_id.choices = [
-            (address.id, (f'{address.street} - {address.district},'
-                          ' {address.city.name} - {address.city.state.name},'
-                          '{address.cep}'))
-        ]
+            (address.id, ('{a.street} - {a.district}, {a.city.name} - '
+                          '{a.city.state.name}, {a.cep}').format(a=address))]
 
     if form.doctor_id.data:
         doctor = Doctor.get_or_404(form.doctor_id.data)
@@ -140,9 +127,8 @@ def edit(id):
     if form.grave_id.data:
         grave = Grave.get_or_404(form.grave_id.data)
         form.grave_id.choices = [
-            (grave.id, (f'{grave.street} - {grave.number},'
-                        ' {grave.zone.description} - {grave.zone.complement}'))
-        ]
+            (grave.id, ('{g.street} - {g.number}, {g.zone.description} - '
+                        '{g.zone.complement}').format(g=grave))]
 
     if form.registry_id.data:
         registry = Registry.get_or_404(form.registry_id.data)

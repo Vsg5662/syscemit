@@ -62,12 +62,16 @@
       <td>{{ form.birthplace_id.choices[0][1] }}</td>
     </tr>
     <tr>
-      <th class="col-md-1">{{ form.filiation.label }}</th>
-      <td>{{ form.filiation.data }}</td>
+      <th class="col-md-1">{{ form.filiations.label }}</th>
+      <td>{{ form.filiations.data }}</td>
     </tr>
     <tr>
       <th class="col-md-1">{{ form.home_address_id.label }}</th>
-      <td>{{ form.home_address_id.choices[0][1] }}</td>
+      <td>
+        {% if form.home_address_id.data %}
+        {{ form.home_address_id.choices[0][1] }}
+        {% endif %}
+      </td>
     </tr>
     <tr>
       <th class="col-md-1">{{ form.home_address_number.label }}</th>
