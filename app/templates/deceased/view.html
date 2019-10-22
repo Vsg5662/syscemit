@@ -47,7 +47,7 @@
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.gender.label.text }}:</th>
-      <td>{{ form.gender.data }}</td>
+      <td>{{ dict(form.gender.choices).get(form.gender.data) }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.ethnicity_id.label.text }}:</th>
