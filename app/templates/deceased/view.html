@@ -59,7 +59,7 @@
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.birth_date.label.text }}:</th>
-      <td>{{ form.birth_date.data }}</td>
+      <td>{{ form.birth_date.data | strftime('%d/%m/%Y') }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.age.label.text }}:</th>
@@ -80,6 +80,10 @@
         {{ dict(form.home_address_id.choices).get(form.home_address_id.data) }}, Nº {{ form.home_address_number.data }} {% if form.home_address_complement.data %}- {{ form.home_address_complement.data }}{% endif %}</td>
         {% endif %}
       </td>
+    </tr>
+    <tr>
+      <th class="col-md-auto">{{ form.death_datetime.label.text }}:</th>
+      <td>{{ form.death_datetime.data | strftime }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.death_address_id.label.text }}:</th>

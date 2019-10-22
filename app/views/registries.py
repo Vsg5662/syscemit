@@ -68,7 +68,6 @@ def edit(id):
     title = 'Cartório' if view == 'view' else 'Editar Cartório'
     form.refill()
 
-
     if form.validate() and current_user.is_admin and request.method == 'PUT':
         form.populate_obj(registry)
         registry.update()

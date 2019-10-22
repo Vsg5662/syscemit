@@ -47,7 +47,7 @@ def create():
     if form.validate() and request.method == 'POST':
         zone = Zone()
         form.populate_obj(zone)
-        doctor.save()
+        zone.save()
         return jsonify({'redirect': url_for('zones.index')})
 
     return render_template('zones/view.html',
@@ -61,19 +61,19 @@ def create():
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
 @login_required
 def edit(id):
-    doctor = Zone.get_or_404(id)
-    form = ZoneForm(request.form, obj=doctor)
+    zone = Zone.get_or_404(id)
+    form = ZoneForm(request.form, obj=zone)
     view = request.args.get('format', '', type=str)
     title = 'Região' if view == 'view' else 'Editar Região'
 
     if form.validate() and current_user.is_admin and request.method == 'PUT':
-        form.populate_obj(doctor)
-        doctor.update()
+        form.populate_obj(zone)
+        zone.update()
         return jsonify({'redirect': url_for('zones.index')})
 
     return render_template('zones/view.html',
                            icon='fa-map-marked-alt',
-                           title=view,
+                           title=title,
                            form=form,
                            method='put',
                            color='warning',

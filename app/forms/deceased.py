@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import (DateField, IntegerField, RadioField, SelectField,
-                     StringField, SubmitField)
+from wtforms import (DateField, DateTimeField, IntegerField, RadioField,
+                     SelectField, StringField, SubmitField)
 from wtforms.validators import InputRequired, Length, Optional
-from wtforms.widgets import TextArea, html5
+from wtforms.widgets import TextArea
+from wtforms.widgets.html5 import NumberInput
 
 from ..models.addresses import Address
 from ..models.cities import City
@@ -17,29 +18,29 @@ from ..utils.forms import SearchField
 
 COLUMNS = [('name', 'Nome'), ('age', 'Idade'),
            ('birth_date', 'Data de Nascimento'),
-           ('death_datetime', 'Data de Falecimento'), ('gender', 'Genero'),
+           ('death_datetime', 'Data de Falecimento'), ('gender', 'Genêro'),
            ('cause', 'Causa da Morte'), ('registration', 'Matrícula do Óbito'),
-           ('number', 'Numero'), ('complement', 'Complemento'),
+           ('number', 'Número'), ('complement', 'Complemento'),
            ('birthplace', 'Local de Nascimento'),
            ('civil_state', 'Estado Civil'),
-           ('home_address', 'Endereço da Casa'),
-           ('death_address', 'Local do falecimento'), ('doctor', 'Medico'),
+           ('home_address', 'Endereço da Residência'),
+           ('death_address', 'Local do falecimento'), ('doctor', 'Médico'),
            ('ethnicity', 'Etnia'), ('grave', 'Tumulo'),
-           ('registry', 'Cartorio'), ('filiations', 'Filiação')]
+           ('registry', 'Cartório'), ('filiations', 'Filiação')]
 ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
 
 
 class DeceasedForm(FlaskForm):
     name = StringField('Nome', [Optional(), Length(1, 255)])
-    age = IntegerField('Idade', [Optional()], widget=html5.NumberInput(min=0))
+    age = IntegerField('Idade', [Optional()], widget=NumberInput(min=0))
     birth_date = DateField('Data de Nascimento', [Optional()],
                            format='%d/%m/%Y')
-    death_datetime = DateField('Data de Falecimento', [
-        InputRequired(message='Insira a Data de Falecimento!'),
-    ],
-                               format='%d/%m/%Y %H:%M')
+    death_datetime = DateTimeField(
+        'Data de Falecimento',
+        [InputRequired(message='Insira a Data de Falecimento!')],
+        format='%d/%m/%Y %H:%M')
     gender = RadioField('Genêro', [InputRequired(message='Insira o Genêro!')],
-                        choices=[(0, 'Masculino'), (1, 'Feminino')])
+                        choices=[('M', 'Masculino'), ('F', 'Feminino')])
     cause = StringField(
         'Causa da Morte',
         [InputRequired(message='Insira a Causa da Morte!'),
@@ -103,7 +104,7 @@ class DeceasedForm(FlaskForm):
         if cls.birthplace_id.data:
             city = City.get_or_404(cls.birthplace_id.data)
             cls.birthplace_id.choices = [(city.id,
-                                           f'{city.name} - {city.state.uf}')]
+                                          f'{city.name} - {city.state.uf}')]
 
         if cls.home_address_id.data:
             address = Address.get_or_404(cls.home_address_id.data)
@@ -122,7 +123,7 @@ class DeceasedForm(FlaskForm):
         if cls.doctor_id.data:
             doctor = Doctor.get_or_404(cls.doctor_id.data)
             cls.doctor_id.choices = [(doctor.id,
-                                       f'{doctor.name} - CRM {doctor.crm}')]
+                                      f'{doctor.name} - CRM {doctor.crm}')]
 
         if cls.grave_id.data:
             grave = Grave.get_or_404(cls.grave_id.data)
@@ -137,7 +138,6 @@ class DeceasedForm(FlaskForm):
             cls.registry_id.choices = [
                 (registry.id, f'{registry.name} - {registry.city.name}')
             ]
-
 
 
 class DeceasedSearchForm(FlaskForm):

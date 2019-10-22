@@ -66,7 +66,12 @@ def init_app(app):
     def format():
         formaters = ['isort -vb -rc *.py app/', 'yapf -vv -r -i *.py app/']
         for f in formaters:
-            print('Running {}'.format(f.split()[0]))
+            print('[*] Running {}'.format(f.split()[0]))
             subprocess.call(f, shell=True)
+
+    @app.cli.command()
+    def lint():
+        print('[*] Running Flake8')
+        subprocess.call('flake8 *.py app/', shell=True)
 
     app.cli.add_command(user_cli)

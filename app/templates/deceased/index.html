@@ -25,8 +25,8 @@
 <tr>
   <td>{{ d.name }}</td>
   <td>{{ d.city.name }}</td>
-  <td>{{ d.death_datetime }}</td>
-  <td>{{ d.grave.street }} - {{ d.grave.number }}</td>
+  <td>{{ d.death_datetime | strftime }}</td>
+  <td>Rua {{ d.grave.street }} - {{ d.grave.number }}</td>
   <td>
     <a href="{{ url_for('deceased.edit', id=d.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
       <i class="fas fa-eye"></i>

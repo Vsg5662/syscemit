@@ -4,6 +4,7 @@ import csv
 import os
 
 from flask import current_app
+
 from config import basedir
 
 from ..extensions import db
@@ -53,10 +54,7 @@ class City(CRUDMixin, db.Model):
         db.session.commit()
 
     def serialize(self):
-        return {
-            'id': self.id,
-            'name': f'{self.name} - {self.state.uf}'
-        }
+        return {'id': self.id, 'name': f'{self.name} - {self.state.uf}'}
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.name)

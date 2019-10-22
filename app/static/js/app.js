@@ -195,7 +195,7 @@ var app = {
           },
         },
         load: function(query, callback) {
-          if (!query.length || query.length < 2) return callback();
+          if (!query.length) return callback();
           $.get('/tumulos?search=' + query)
             .done(function(data) {
               callback(data.result);

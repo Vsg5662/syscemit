@@ -43,9 +43,8 @@ class Grave(CRUDMixin, db.Model):
         return {
             'id':
             self.id,
-            'name':
-            ('{g.street}, {g.number}, {g.zone.description}'
-             ' - {g.zone.complement}').format(g=self)
+            'name': ('Rua {g.street}, {g.number}, Região {g.zone.description}'
+                     ' - {g.zone.complement}').format(g=self)
         }
 
     def __repr__(self):
