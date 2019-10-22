@@ -18,17 +18,11 @@ def index():
     search = form.search.data
     criteria = form.criteria.data
     order = form.order.data
-
     pagination = Doctor.fetch(search, criteria, order, form.page.data)
     doctors = pagination.items
 
     if request.is_xhr and not grid:
-        return jsonify({
-            'result': [{
-                'id': d.id,
-                'name': f'{d.name} - {d.crm}'
-            } for d in doctors]
-        })
+        return jsonify({'result': [d.serialize() for d in doctors]})
 
     return render_template('doctors/index.html',
                            icon='fa-user-md',
@@ -69,13 +63,8 @@ def create():
 def edit(id):
     doctor = Doctor.get_or_404(id)
     form = DoctorForm(request.form, obj=doctor)
-
-    if request.args.get('format', '', type=str) == 'view':
-        return render_template('doctors/view.html',
-                               icon='fa-user-md',
-                               title='Médico',
-                               form=form,
-                               view=True)
+    view = request.args.get('format', '', type=str)
+    title = 'Médico' if view == 'view' else 'Editar Médico'
 
     if form.validate() and current_user.is_admin and request.method == 'PUT':
         form.populate_obj(doctor)
@@ -84,10 +73,11 @@ def edit(id):
 
     return render_template('doctors/view.html',
                            icon='fa-user-md',
-                           title='Editar Médico',
+                           title=title,
                            form=form,
                            method='put',
-                           color='warning')
+                           color='warning',
+                           view=bool(view))
 
 
 @bp.route('/<int:id>', methods=['DELETE'])

@@ -6,8 +6,13 @@ from wtforms import (DateField, IntegerField, RadioField, SelectField,
 from wtforms.validators import InputRequired, Length, Optional
 from wtforms.widgets import TextArea, html5
 
+from ..models.addresses import Address
+from ..models.cities import City
 from ..models.civil_states import CivilState
+from ..models.doctors import Doctor
 from ..models.ethnicities import Ethnicity
+from ..models.graves import Grave
+from ..models.registries import Registry
 from ..utils.forms import SearchField
 
 COLUMNS = [('name', 'Nome'), ('age', 'Idade'),
@@ -93,6 +98,46 @@ class DeceasedForm(FlaskForm):
                                        for e in CivilState.query.order_by(
                                            CivilState.description.asc()).all()]
         self.civil_state_id.choices.insert(0, (0, ''))
+
+    def refill(cls):
+        if cls.birthplace_id.data:
+            city = City.get_or_404(cls.birthplace_id.data)
+            cls.birthplace_id.choices = [(city.id,
+                                           f'{city.name} - {city.state.uf}')]
+
+        if cls.home_address_id.data:
+            address = Address.get_or_404(cls.home_address_id.data)
+            cls.home_address_id.choices = [
+                (address.id, ('{a.street}, {a.district}, {a.city.name} - '
+                              '{a.city.state.uf}, {a.cep}').format(a=address))
+            ]
+
+        if cls.death_address_id.data:
+            address = Address.get_or_404(cls.death_address_id.data)
+            cls.death_address_id.choices = [
+                (address.id, ('{a.street}, {a.district}, {a.city.name} - '
+                              '{a.city.state.uf}, {a.cep}').format(a=address))
+            ]
+
+        if cls.doctor_id.data:
+            doctor = Doctor.get_or_404(cls.doctor_id.data)
+            cls.doctor_id.choices = [(doctor.id,
+                                       f'{doctor.name} - CRM {doctor.crm}')]
+
+        if cls.grave_id.data:
+            grave = Grave.get_or_404(cls.grave_id.data)
+            cls.grave_id.choices = [
+                (grave.id,
+                 ('Rua {g.street} - {g.number}, Região {g.zone.description} - '
+                  '{g.zone.complement}').format(g=grave))
+            ]
+
+        if cls.registry_id.data:
+            registry = Registry.get_or_404(cls.registry_id.data)
+            cls.registry_id.choices = [
+                (registry.id, f'{registry.name} - {registry.city.name}')
+            ]
+
 
 
 class DeceasedSearchForm(FlaskForm):

@@ -22,7 +22,7 @@
     </tr>
     <tr>
       <th class="col-md-1">{{ form.zone_id.label }}</th>
-      <td>{{ form.zone_id.choices[0][1] }}</td>
+      <td>{{ dict(form.zone_id.choices).get(form.zone_id.data) }}</td>
     </tr>
   </table>
 </div>

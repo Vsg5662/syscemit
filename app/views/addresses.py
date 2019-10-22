@@ -6,7 +6,6 @@ from flask_login import current_user, login_required
 from ..decorators import permission_required
 from ..forms.addresses import COLUMNS, AddressForm, AddressSearchForm
 from ..models.addresses import Address
-from ..models.cities import City
 
 bp = Blueprint('addresses', __name__, url_prefix='/enderecos')
 
@@ -19,19 +18,11 @@ def index():
     search = form.search.data
     criteria = form.criteria.data
     order = form.order.data
-
     pagination = Address.fetch(search, criteria, order, form.page.data)
     addresses = pagination.items
 
     if request.is_xhr and not grid:
-        return jsonify({
-            'result': [{
-                'id':
-                a.id,
-                'name': ('{i.street} - {i.district}, {i.city.name} - '
-                         '{i.city.state.name}, {i.cep}').format(i=a)
-            } for a in addresses]
-        })
+        return jsonify({'result': [a.serialize() for a in addresses]})
 
     return render_template('addresses/index.html',
                            icon='fa-map-signs',
@@ -52,10 +43,7 @@ def index():
 @permission_required('admin')
 def create():
     form = AddressForm()
-
-    if form.city_id.data:
-        city = City.get_or_404(form.city_id.data)
-        form.city_id.choices = [(city.id, f'{city.name} - {city.state.name}')]
+    form.refill()
 
     if form.validate() and request.method == 'POST':
         address = Address()
@@ -76,17 +64,9 @@ def create():
 def edit(id):
     address = Address.get_or_404(id)
     form = AddressForm(request.form, obj=address)
-
-    if form.city_id.data:
-        city = City.get_or_404(form.city_id.data)
-        form.city_id.choices = [(city.id, f'{city.name} - {city.state.name}')]
-
-    if request.args.get('format', '', type=str) == 'view':
-        return render_template('addresses/view.html',
-                               icon='fa-map-signs',
-                               title='Endereço',
-                               form=form,
-                               view=True)
+    view = request.args.get('format', '', type=str)
+    title = 'Endereço' if view == 'view' else 'Editar Endereço'
+    form.refill()
 
     if form.validate() and current_user.is_admin and request.method == 'PUT':
         form.populate_obj(address)
@@ -95,10 +75,11 @@ def edit(id):
 
     return render_template('addresses/view.html',
                            icon='fa-map-signs',
-                           title='Editar Endereço',
+                           title=title,
                            form=form,
                            method='put',
-                           color='warning')
+                           color='warning',
+                           view=bool(view))
 
 
 @bp.route('/<int:id>', methods=['DELETE'])

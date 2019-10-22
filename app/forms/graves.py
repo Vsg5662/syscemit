@@ -4,6 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import IntegerField, SelectField, StringField, SubmitField
 from wtforms.validators import InputRequired, Length
 
+from ..models.zones import Zone
 from ..utils.forms import SearchField
 
 COLUMNS = [('street', 'Rua'), ('number', 'Número'), ('zone', 'Região')]
@@ -22,6 +23,12 @@ class GraveForm(FlaskForm):
                           choices=(),
                           coerce=int)
     submit = SubmitField('Salvar')
+
+    def refill(cls):
+        if cls.zone_id.data:
+            zone = Zone.get(cls.zone_id.data)
+            cls.zone_id.choices = [(zone.id,
+                                    f'{zone.description} - {zone.complement}')]
 
 
 class GraveSearchForm(FlaskForm):

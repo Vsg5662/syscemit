@@ -3,6 +3,7 @@
 import csv
 import os
 
+from flask import current_app
 from config import basedir
 
 from ..extensions import db
@@ -21,6 +22,24 @@ class City(CRUDMixin, db.Model):
     addresses = db.relationship('Address', backref='city', lazy='dynamic')
 
     @classmethod
+    def fetch(cls, search, criteria, order, page):
+        joins = filters_ = orders = ()
+
+        if criteria and search:
+            filters_ += (getattr(cls, criteria).ilike('%' + search + '%'), )
+        elif search:
+            filters_ += (cls.name.ilike('%' + search + '%'), )
+
+        if criteria and order:
+            orders += (getattr(getattr(cls, criteria), order)(), )
+        else:
+            orders += (cls.name.asc(), )
+        return cls.query.join(*joins).filter(*filters_).order_by(
+            *orders).paginate(page,
+                              per_page=current_app.config['PER_PAGE'],
+                              error_out=False)
+
+    @classmethod
     def populate(cls):
         states = {s.name: int(s.id) for s in State.query.all()}
         path = os.path.join(basedir, 'seeds', 'cities.tsv')
@@ -32,6 +51,12 @@ class City(CRUDMixin, db.Model):
             ]
         db.session.bulk_save_objects(cities)
         db.session.commit()
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': f'{self.name} - {self.state.uf}'
+        }
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.name)

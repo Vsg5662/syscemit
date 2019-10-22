@@ -10,7 +10,7 @@ class Deceased(CRUDMixin, db.Model):
     age = db.Column(db.Integer)
     birth_date = db.Column(db.Date)
     death_datetime = db.Column(db.DateTime, nullable=False)
-    gender = db.Column(db.Boolean, nullable=False)
+    gender = db.Column(db.String(9), nullable=False)
     home_address_number = db.Column(db.String(5))
     home_address_complement = db.Column(db.String(255))
     filiations = db.Column(db.String(512))

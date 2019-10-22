@@ -17,7 +17,7 @@
     </tr>
     <tr>
       <th class="col-md-1">{{ form.city_id.label }}</th>
-      <td>{{ form.city_id.choices[0][1] }}</td>
+      <td>{{ dict(form.city_id.choices).get(form.city_id.data) }}</td>
     </tr>
   </table>
 </div>

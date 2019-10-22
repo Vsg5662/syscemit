@@ -6,7 +6,6 @@ from flask_login import current_user, login_required
 from ..decorators import permission_required
 from ..forms.graves import COLUMNS, GraveForm, GraveSearchForm
 from ..models.graves import Grave
-from ..models.zones import Zone
 
 bp = Blueprint('graves', __name__, url_prefix='/tumulos')
 
@@ -19,19 +18,11 @@ def index():
     search = form.search.data
     criteria = form.criteria.data
     order = form.order.data
-
     pagination = Grave.fetch(search, criteria, order, form.page.data)
     graves = pagination.items
 
     if request.is_xhr and not grid:
-        return jsonify({
-            'result': [{
-                'id':
-                g.id,
-                'name': (f'{g.street}, {g.number},'
-                         ' {g.zone.description} - {g.zone.complement}')
-            } for g in graves]
-        })
+        return jsonify({'result': [g.serialize() for g in graves]})
 
     return render_template('graves/index.html',
                            icon='fa-tombstone',
@@ -52,11 +43,7 @@ def index():
 @permission_required('admin')
 def create():
     form = GraveForm()
-
-    if form.zone_id.data:
-        zone = Zone.get_or_404(form.zone_id.data)
-        form.zone_id.choices = [(zone.id,
-                                 f'{zone.description} - {zone.complement}')]
+    form.refill()
 
     if form.validate() and request.method == 'POST':
         grave = Grave()
@@ -77,18 +64,9 @@ def create():
 def edit(id):
     grave = Grave.get_or_404(id)
     form = GraveForm(request.form, obj=grave)
-
-    if form.zone_id.data:
-        zone = Zone.get_or_404(form.zone_id.data)
-        form.zone_id.choices = [(zone.id,
-                                 f'{zone.description} - {zone.complement}')]
-
-    if request.args.get('format', '', type=str) == 'view':
-        return render_template('graves/view.html',
-                               icon='fa-tombstone',
-                               title='Túmulo',
-                               form=form,
-                               view=True)
+    view = request.args.get('format', '', type=str)
+    title = 'Túmulo' if view == 'view' else 'Editar Túmulo'
+    form.refill()
 
     if form.validate() and current_user.is_admin and request.method == 'PUT':
         form.populate_obj(grave)
@@ -97,10 +75,11 @@ def edit(id):
 
     return render_template('graves/view.html',
                            icon='fa-tombstone',
-                           title='Editar Túmulo',
+                           title=title,
                            form=form,
                            method='put',
-                           color='warning')
+                           color='warning',
+                           view=bool(view))
 
 
 @bp.route('/<int:id>', methods=['DELETE'])

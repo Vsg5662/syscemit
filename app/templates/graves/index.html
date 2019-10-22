@@ -25,7 +25,7 @@
 <tr>
   <td>{{ g.street }}</td>
   <td>{{ g.number }}</td>
-  <td>{{ g.zone.description }}</td>
+  <td>{{ g.zone.description }} - {{ g.zone.complement }}</td>
   <td>
     <a href="{{ url_for('graves.edit', id=g.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
       <i class="fas fa-eye"></i>

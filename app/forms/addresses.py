@@ -4,6 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import IntegerField, SelectField, StringField, SubmitField
 from wtforms.validators import InputRequired, Length
 
+from ..models.cities import City
 from ..utils.forms import SearchField
 
 COLUMNS = [('street', 'Rua'), ('cep', 'CEP'), ('district', 'Bairro'),
@@ -26,6 +27,11 @@ class AddressForm(FlaskForm):
                       [InputRequired(message='Insira a CEP!'),
                        Length(1, 255)])
     submit = SubmitField('Salvar')
+
+    def refill(cls):
+        if cls.city_id.data:
+            city = City.get(cls.city_id.data)
+            cls.city_id.choices = [(city.id, f'{city.name} - {city.state.uf}')]
 
 
 class AddressSearchForm(FlaskForm):

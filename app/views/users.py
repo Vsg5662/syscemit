@@ -18,7 +18,6 @@ def index():
     search = form.search.data
     criteria = form.criteria.data
     order = form.order.data
-
     pagination = User.fetch(search, criteria, order, form.page.data)
     users = pagination.items
 
@@ -62,13 +61,8 @@ def create():
 def edit(id):
     user = User.get_or_404(id)
     form = UserForm(request.form, obj=user)
-
-    if request.args.get('format', '', type=str) == 'view':
-        return render_template('users/view.html',
-                               icon='fa-users',
-                               title='Usuário',
-                               form=form,
-                               view=True)
+    view = request.args.get('format', '', type=str)
+    title = 'Usuário' if view == 'view' else 'Editar Usuário'
 
     if form.validate() and request.method == 'PUT':
         form.populate_obj(user)
@@ -77,10 +71,11 @@ def edit(id):
 
     return render_template('users/view.html',
                            icon='fa-users',
-                           title='Editar Usuário',
+                           title=title,
                            form=form,
                            method='put',
-                           color='warning')
+                           color='warning',
+                           view=bool(view))
 
 
 @bp.route('/<int:id>', methods=['DELETE'])

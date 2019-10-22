@@ -27,11 +27,7 @@
     </tr>
     <tr>
       <th class="col-md-1">{{ form.user_type_id.label }}</th>
-      {% for value, label in form.user_type_id.choices %}
-      {% if value == form.user_type_id.data %}
-      <td>{{ label }}</td>
-      {% endif %}
-      {% endfor %}
+      <td>{{ dict(form.user_type_id.choices).get(form.user_type_id.data) }}</td>
     </tr>
   </table>
 </div>

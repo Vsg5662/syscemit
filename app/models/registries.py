@@ -38,5 +38,11 @@ class Registry(CRUDMixin, db.Model):
                               per_page=current_app.config['PER_PAGE'],
                               error_out=False)
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': f'{self.name} - {self.city.name}'
+        }
+
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.name)
