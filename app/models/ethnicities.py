@@ -11,7 +11,7 @@ class Ethnicity(CRUDMixin, db.Model):
 
     @classmethod
     def populate(cls):
-        ethnicities = ['Brancos', 'Pardos', 'Negros', 'Indígenas', 'Amarelos']
+        ethnicities = ['Branca', 'Parda', 'Negra', 'Indígena', 'Amarela']
         ethnicities = [cls(description=e) for e in ethnicities]
         db.session.bulk_save_objects(ethnicities)
         db.session.commit()
