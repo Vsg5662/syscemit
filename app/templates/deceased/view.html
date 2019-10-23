@@ -32,50 +32,50 @@
 
 {% block report %}
 <div class="table-responsive">
-  <table class="table table-striped">
+  <table class="table table-striped table-dark lead">
     <tr>
       <th class="col-md-auto">{{ form.name.label.text }}:</th>
-      <td>{{ form.name.data }}</td>
+      <td class="text-warning font-weight-bold">{{ form.name.data }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.registration.label.text }}:</th>
-      <td>{{ form.registration.data }}</td>
+      <td class="text-warning font-weight-bold">{{ form.registration.data }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.grave_id.label.text }}:</th>
-      <td>{{ dict(form.grave_id.choices).get(form.grave_id.data) }}</td>
+      <td class="text-warning font-weight-bold">{{ dict(form.grave_id.choices).get(form.grave_id.data) }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.gender.label.text }}:</th>
-      <td>{{ dict(form.gender.choices).get(form.gender.data) }}</td>
+      <td class="text-warning font-weight-bold">{{ dict(form.gender.choices).get(form.gender.data) }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.ethnicity_id.label.text }}:</th>
-      <td>{{ dict(form.ethnicity_id.choices).get(form.ethnicity_id.data) }}</td>
+      <td class="text-warning font-weight-bold">{{ dict(form.ethnicity_id.choices).get(form.ethnicity_id.data) }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.civil_state_id.label.text }}:</th>
-      <td>{{ dict(form.civil_state_id.choices).get(form.civil_state_id.data) }}</td>
+      <td class="text-warning font-weight-bold">{{ dict(form.civil_state_id.choices).get(form.civil_state_id.data) }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.birth_date.label.text }}:</th>
-      <td>{{ form.birth_date.data | strftime('%d/%m/%Y') }}</td>
+      <td class="text-warning font-weight-bold">{{ form.birth_date.data | strftime('%d/%m/%Y') }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.age.label.text }}:</th>
-      <td>{{ form.age.data }}</td>
+      <td class="text-warning font-weight-bold">{{ form.age.data }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.birthplace_id.label.text }}:</th>
-      <td>{{ dict(form.birthplace_id.choices).get(form.birthplace_id.data) }}</td>
+      <td class="text-warning font-weight-bold">{{ dict(form.birthplace_id.choices).get(form.birthplace_id.data) }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.filiations.label.text }}:</th>
-      <td>{{ form.filiations.data }}</td>
+      <td class="text-warning font-weight-bold">{{ form.filiations.data }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.home_address_id.label.text }}:</th>
-      <td>
+      <td class="text-warning font-weight-bold">
         {% if form.home_address_id.data %}
         {{ dict(form.home_address_id.choices).get(form.home_address_id.data) }}, Nº {{ form.home_address_number.data }} {% if form.home_address_complement.data %}- {{ form.home_address_complement.data }}{% endif %}</td>
         {% endif %}
@@ -83,24 +83,24 @@
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.death_datetime.label.text }}:</th>
-      <td>{{ form.death_datetime.data | strftime }}</td>
+      <td class="text-warning font-weight-bold">{{ form.death_datetime.data | strftime }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.death_address_id.label.text }}:</th>
-      <td>
+      <td class="text-warning font-weight-bold">
         {{ dict(form.death_address_id.choices).get(form.death_address_id.data) }}, Nº {{ form.death_address_number.data }} {% if form.death_address_complement.data %}- {{ form.death_address_complement.data }}{% endif %}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.cause.label.text }}:</th>
-      <td>{{ form.cause.data }}</td>
+      <td class="text-warning font-weight-bold">{{ form.cause.data }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.doctor_id.label.text }}:</th>
-      <td>{{ dict(form.doctor_id.choices).get(form.doctor_id.data) }}</td>
+      <td class="text-warning font-weight-bold">{{ dict(form.doctor_id.choices).get(form.doctor_id.data) }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.registry_id.label.text }}:</th>
-      <td>{{ dict(form.registry_id.choices).get(form.registry_id.data) }}</td>
+      <td class="text-warning font-weight-bold">{{ dict(form.registry_id.choices).get(form.registry_id.data) }}</td>
     </tr>
   </table>
 </div>
