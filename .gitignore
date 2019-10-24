@@ -15,6 +15,7 @@
 # Folders
 __pycache__/
 migrations
+whooshee
 node_modules
 bower_components
 

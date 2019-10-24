@@ -9,7 +9,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or \
         'KTpSJi2F8Ry!wxOnzw7{f1ON0Qdvq@yG'
     PER_PAGE = 10
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
 class Development(Config):
