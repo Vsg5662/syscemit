@@ -33,7 +33,7 @@ class Zone(CRUDMixin, db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'name': f'{self.description} - {self.complement}'
+            'name': '{s.description} - {s.complement}'.format(s=self)
         }
 
     def __repr__(self):

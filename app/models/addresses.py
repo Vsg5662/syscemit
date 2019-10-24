@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import csv
+import os
+
 from flask import current_app
+
+from config import basedir
 
 from ..extensions import db
 from ..mixins import CRUDMixin
@@ -47,6 +52,25 @@ class Address(CRUDMixin, db.Model):
             *orders).paginate(page,
                               per_page=current_app.config['PER_PAGE'],
                               error_out=False)
+
+    @classmethod
+    def populate(cls):
+        cities = {
+            c.name + ' - ' + c.state.uf: int(c.id)
+            for c in City.query.all()
+        }
+        path = os.path.join(basedir, 'seeds', 'streets.tsv')
+        with open(path) as f:
+            reader = csv.DictReader(f, delimiter='\t')
+            cities = [
+                cls(street=row['RUA'],
+                    district=row['BAIRRO'],
+                    cep=row['CEP'],
+                    city_id=cities[row['CIDADE'] + ' - ' + row['ESTADO']])
+                for row in reader
+            ]
+        db.session.bulk_save_objects(cities)
+        db.session.commit()
 
     def serialize(self):
         return {

@@ -43,7 +43,11 @@
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.grave_id.label.text }}:</th>
-      <td class="text-warning font-weight-bold">{{ dict(form.grave_id.choices).get(form.grave_id.data) }}</td>
+      <td class="text-warning font-weight-bold">
+        {% for l in dict(form.grave_id.choices).get(form.grave_id.data).split(',')  %}
+        <p>{{ l }}</p>
+        {% endfor %}
+      </td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.gender.label.text }}:</th>
@@ -71,7 +75,7 @@
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.filiations.label.text }}:</th>
-      <td class="text-warning font-weight-bold">{{ form.filiations.data }}</td>
+      <td class="text-warning font-weight-bold">{{ form.filiations.data.replace(',', ' e ') }}</td>
     </tr>
     <tr>
       <th class="col-md-auto">{{ form.home_address_id.label.text }}:</th>

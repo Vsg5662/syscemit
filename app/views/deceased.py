@@ -21,7 +21,8 @@ def index():
     pagination = Deceased.fetch(search, criteria, order, form.page.data)
     deceased = pagination.items
     headers = [('name', 'Nome'), ('city', 'Cidade'),
-               ('death_datetime', 'Data de Falecimento'), ('grave', 'Túmulo')]
+               ('death_datetime', 'Data de Falecimento'),
+               ('grave_id', 'Túmulo')]
 
     return render_template('deceased/index.html',
                            icon='fa-coffin',

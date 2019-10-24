@@ -25,7 +25,8 @@ class RegistryForm(FlaskForm):
     def refill(cls):
         if cls.city_id.data:
             city = City.get(cls.city_id.data)
-            cls.city_id.choices = [(city.id, f'{city.name} - {city.state.uf}')]
+            cls.city_id.choices = [(city.id,
+                                    '{c.name} - {c.state.uf}'.format(c=city))]
 
 
 class RegistrySearchForm(FlaskForm):

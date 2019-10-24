@@ -43,7 +43,7 @@
 {% endblock %}
 
 {% block paginator %}
-{{ render_pagination(pagination, 'registries.index', search=search, filters=filters, clause=clause, order=order) }}
+{{ render_pagination(pagination, 'registries.index', search=search, criteria=criteria, order=order) }}
 {% endblock %}
 
 {% block dialog %}

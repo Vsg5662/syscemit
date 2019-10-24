@@ -27,12 +27,13 @@ class GraveForm(FlaskForm):
     def refill(cls):
         if cls.zone_id.data:
             zone = Zone.get(cls.zone_id.data)
-            cls.zone_id.choices = [(zone.id,
-                                    f'{zone.description} - {zone.complement}')]
+            cls.zone_id.choices = [
+                (zone.id, '{z.description} - {z.complement}'.format(z=zone))
+            ]
 
 
 class GraveSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
     search = SearchField('Buscar túmulo ...')
-    criteria = SelectField('Filtrar por', choices=COLUMNS, default='street')
+    criteria = SelectField('Filtrar por', choices=COLUMNS, default='')
     order = SelectField('Ordem', choices=ORDERS, default='asc')

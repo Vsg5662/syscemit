@@ -21,12 +21,13 @@ COLUMNS = [('name', 'Nome'), ('age', 'Idade'),
            ('death_datetime', 'Data de Falecimento'), ('gender', 'Genêro'),
            ('cause', 'Causa da Morte'), ('registration', 'Matrícula do Óbito'),
            ('number', 'Número'), ('complement', 'Complemento'),
-           ('birthplace', 'Local de Nascimento'),
-           ('civil_state', 'Estado Civil'),
-           ('home_address', 'Endereço da Residência'),
-           ('death_address', 'Local do falecimento'), ('doctor', 'Médico'),
-           ('ethnicity', 'Etnia'), ('grave', 'Tumulo'),
-           ('registry', 'Cartório'), ('filiations', 'Filiação')]
+           ('birthplace_id', 'Local de Nascimento'),
+           ('civil_state_id', 'Estado Civil'),
+           ('home_address_id', 'Endereço da Residência'),
+           ('death_address_id', 'Local do falecimento'),
+           ('doctor_id', 'Médico'), ('ethnicity_id', 'Etnia'),
+           ('grave_id', 'Túmulo'), ('registry_id', 'Cartório'),
+           ('filiations', 'Filiação')]
 ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
 
 
@@ -103,41 +104,29 @@ class DeceasedForm(FlaskForm):
     def refill(cls):
         if cls.birthplace_id.data:
             city = City.get_or_404(cls.birthplace_id.data)
-            cls.birthplace_id.choices = [(city.id,
-                                          f'{city.name} - {city.state.uf}')]
+            cls.birthplace_id.choices = [tuple(city.serialize().values())]
 
         if cls.home_address_id.data:
             address = Address.get_or_404(cls.home_address_id.data)
             cls.home_address_id.choices = [
-                (address.id, ('{a.street}, {a.district}, {a.city.name} - '
-                              '{a.city.state.uf}, {a.cep}').format(a=address))
-            ]
+                tuple(address.serialize().values())]
 
         if cls.death_address_id.data:
             address = Address.get_or_404(cls.death_address_id.data)
             cls.death_address_id.choices = [
-                (address.id, ('{a.street}, {a.district}, {a.city.name} - '
-                              '{a.city.state.uf}, {a.cep}').format(a=address))
-            ]
+                tuple(address.serialize().values())]
 
         if cls.doctor_id.data:
             doctor = Doctor.get_or_404(cls.doctor_id.data)
-            cls.doctor_id.choices = [(doctor.id,
-                                      f'{doctor.name} - CRM {doctor.crm}')]
+            cls.doctor_id.choices = [tuple(doctor.serialize().values())]
 
         if cls.grave_id.data:
             grave = Grave.get_or_404(cls.grave_id.data)
-            cls.grave_id.choices = [
-                (grave.id,
-                 ('Rua {g.street} - {g.number}, Região {g.zone.description} - '
-                  '{g.zone.complement}').format(g=grave))
-            ]
+            cls.grave_id.choices = [tuple(grave.serialize().values())]
 
         if cls.registry_id.data:
             registry = Registry.get_or_404(cls.registry_id.data)
-            cls.registry_id.choices = [
-                (registry.id, f'{registry.name} - {registry.city.name}')
-            ]
+            cls.registry_id.choices = [tuple(registry.serialize().values())]
 
 
 class DeceasedSearchForm(FlaskForm):

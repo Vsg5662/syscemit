@@ -54,7 +54,10 @@ class City(CRUDMixin, db.Model):
         db.session.commit()
 
     def serialize(self):
-        return {'id': self.id, 'name': f'{self.name} - {self.state.uf}'}
+        return {
+            'id': self.id,
+            'name': '{s.name} - {s.state.uf}'.format(s=self)
+        }
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.name)

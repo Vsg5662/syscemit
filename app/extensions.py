@@ -21,6 +21,7 @@ def init_app(app):
     app.jinja_env.filters['strftime'] = strftime
 
     from .models.users import User
+
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))

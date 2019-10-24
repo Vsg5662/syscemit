@@ -36,6 +36,7 @@ def init_app(app):
         UserType.populate()
         State.populate()
         City.populate()
+        Address.populate()
         CivilState.populate()
         Ethnicity.populate()
 

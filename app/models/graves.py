@@ -17,6 +17,9 @@ class Grave(CRUDMixin, db.Model):
     @classmethod
     def fetch(cls, search, criteria, order, page):
         joins = filters_ = orders = ()
+        print('#'*50)
+        print(search, criteria, order, page)
+        print('#'*50)
 
         if criteria and search:
             if criteria == 'zone':
@@ -30,7 +33,13 @@ class Grave(CRUDMixin, db.Model):
                 filters_ = (getattr(cls, criteria).ilike('%' + search + '%'), )
                 orders += (getattr(getattr(cls, criteria), order)(), )
         elif search:
-            filters_ += (cls.street.ilike('%' + search + '%'), )
+            search = search.lower().split()
+            joins += (Zone, )
+            filters_ += (cls.zone_id == Zone.id, db.or_(
+                db.func.lower(Grave.street).in_(search),
+                db.func.lower(Grave.number).in_(search),
+                db.func.lower(Zone.description).in_(search),
+                db.func.lower(Zone.complement).in_(search)), )
 
         if not orders:
             orders += (cls.street.asc(), )
@@ -43,8 +52,8 @@ class Grave(CRUDMixin, db.Model):
         return {
             'id':
             self.id,
-            'name': ('Rua {g.street}, {g.number}, Região {g.zone.description}'
-                     ' - {g.zone.complement}').format(g=self)
+            'name': ('{g.zone.description} - {g.zone.complement}, '
+                     'Rua {g.street} - Túmulo {g.number}').format(g=self)
         }
 
     def __repr__(self):
