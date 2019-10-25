@@ -64,9 +64,10 @@ def edit(id):
     zone = Zone.get_or_404(id)
     form = ZoneForm(request.form, obj=zone)
     view = request.args.get('format', '', type=str)
+    view = True if not current_user.is_admin() else view
     title = 'Região' if view == 'view' else 'Editar Região'
 
-    if form.validate() and current_user.is_admin and request.method == 'PUT':
+    if form.validate() and current_user.is_admin() and request.method == 'PUT':
         form.populate_obj(zone)
         zone.update()
         return jsonify({'redirect': url_for('zones.index')})

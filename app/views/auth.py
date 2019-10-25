@@ -31,12 +31,6 @@ def login():
     return render_template('auth/login.html', form=form, method='post')
 
 
-@bp.route('/redefinir_senha', methods=['GET', 'POST'])
-@login_required
-def reset():
-    return 'Pão de batata'
-
-
 @bp.route('/logout')
 @login_required
 def logout():

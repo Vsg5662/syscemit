@@ -3,11 +3,9 @@
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from flask_whooshee import Whooshee
 
 db = SQLAlchemy()
 login_manager = LoginManager()
-search = Whooshee()
 
 
 def init_app(app):
@@ -18,7 +16,6 @@ def init_app(app):
     login_manager.login_message = 'Autentique-se para acessar esta página'
     login_manager.login_message_category = 'warning'
     login_manager.init_app(app)
-    search.init_app(app)
 
     from .utils.filters import strftime
     app.jinja_env.filters['strftime'] = strftime

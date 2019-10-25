@@ -65,10 +65,11 @@ def edit(id):
     address = Address.get_or_404(id)
     form = AddressForm(request.form, obj=address)
     view = request.args.get('format', '', type=str)
+    view = True if not current_user.is_admin() else view
     title = 'Endereço' if view == 'view' else 'Editar Endereço'
     form.refill()
 
-    if form.validate() and current_user.is_admin and request.method == 'PUT':
+    if form.validate() and current_user.is_admin() and request.method == 'PUT':
         form.populate_obj(address)
         address.update()
         return jsonify({'redirect': url_for('addresses.index')})

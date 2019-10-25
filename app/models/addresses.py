@@ -3,19 +3,15 @@
 import csv
 import os
 
-import whoosh
-
 from flask import current_app
-from flask_whooshee import AbstractWhoosheer
 
 from config import basedir
 
-from ..extensions import db, search
+from ..extensions import db
 from ..mixins import CRUDMixin
 from .cities import City
 
 
-@search.register_model('street', 'district', 'cep')
 class Address(CRUDMixin, db.Model):
     __tablename__ = 'addresses'
     street = db.Column(db.String(255), nullable=False)
@@ -30,13 +26,6 @@ class Address(CRUDMixin, db.Model):
                                     foreign_keys='Deceased.death_address_id',
                                     backref='address_death',
                                     lazy='dynamic')
-
-    @classmethod
-    def retrieve(cls, search, page):
-        return cls.query.whooshee_search(search).paginate(
-            page,
-            per_page=current_app.config['PER_PAGE'],
-            error_out=False)
 
     @classmethod
     def fetch(cls, search, criteria, order, page):
@@ -93,50 +82,3 @@ class Address(CRUDMixin, db.Model):
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.street)
-
-
-@search.register_whoosheer
-class AddressCityWhoosheer(AbstractWhoosheer):
-    schema = whoosh.fields.Schema(
-        address_id=whoosh.fields.NUMERIC(stored=True, unique=True),
-        city_id=whoosh.fields.NUMERIC(stored=True),
-        cityname=whoosh.fields.TEXT(),
-        street=whoosh.fields.TEXT(),
-        district=whoosh.fields.TEXT(),
-        cep=whoosh.fields.TEXT())
-
-    models = [Address, City]
-
-    @classmethod
-    def update_city(cls, writer, city):
-        pass
-
-    @classmethod
-    def update_address(cls, writer, address):
-        writer.update_document(address_id=address.id,
-                               city_id=address.city.id,
-                               cityname=address.city.name,
-                               street=address.street,
-                               district=address.district,
-                               cep=address.cep)
-
-    @classmethod
-    def insert_city(cls, writer, city):
-        pass
-
-    @classmethod
-    def insert_address(cls, writer, address):
-        writer.add_document(address_id=address.id,
-                            city_id=address.city.id,
-                            cityname=address.city.name,
-                            street=address.street,
-                            district=address.district,
-                            cep=address.cep)
-
-    @classmethod
-    def delete_city(cls, writer, city):
-        pass
-
-    @classmethod
-    def delete_address(cls, writer, address):
-        writer.delete_by_term('address_id', address.id)

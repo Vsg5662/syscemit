@@ -65,10 +65,11 @@ def edit(id):
     deceased = Deceased.get_or_404(id)
     form = DeceasedForm(request.form, obj=deceased)
     view = request.args.get('format', '', type=str)
+    view = True if not current_user.is_admin() else view
     title = 'Falecido' if view == 'view' else 'Editar Falecido'
     form.refill()
 
-    if form.validate() and current_user.is_admin and request.method == 'PUT':
+    if form.validate() and current_user.is_admin() and request.method == 'PUT':
         form.populate_obj(deceased)
         deceased.update()
         return jsonify({'redirect': url_for('deceased.index')})

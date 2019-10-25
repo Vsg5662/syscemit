@@ -65,10 +65,11 @@ def edit(id):
     registry = Registry.get_or_404(id)
     form = RegistryForm(request.form, obj=registry)
     view = request.args.get('format', '', type=str)
+    view = True if not current_user.is_admin() else view
     title = 'Cartório' if view == 'view' else 'Editar Cartório'
     form.refill()
 
-    if form.validate() and current_user.is_admin and request.method == 'PUT':
+    if form.validate() and current_user.is_admin() and request.method == 'PUT':
         form.populate_obj(registry)
         registry.update()
         return jsonify({'redirect': url_for('registries.index')})

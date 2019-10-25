@@ -64,9 +64,10 @@ def edit(id):
     doctor = Doctor.get_or_404(id)
     form = DoctorForm(request.form, obj=doctor)
     view = request.args.get('format', '', type=str)
+    view = True if not current_user.is_admin() else view
     title = 'Médico' if view == 'view' else 'Editar Médico'
 
-    if form.validate() and current_user.is_admin and request.method == 'PUT':
+    if form.validate() and current_user.is_admin() and request.method == 'PUT':
         form.populate_obj(doctor)
         doctor.update()
         return jsonify({'redirect': url_for('doctors.index')})

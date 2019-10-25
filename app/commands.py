@@ -5,7 +5,7 @@ import subprocess
 import click
 from flask.cli import AppGroup
 
-from .extensions import db, search
+from .extensions import db
 from .models.addresses import Address
 from .models.cities import City
 from .models.civil_states import CivilState
@@ -39,7 +39,6 @@ def init_app(app):
         Address.populate()
         CivilState.populate()
         Ethnicity.populate()
-        search.reindex()
 
     @user_cli.command()
     @click.option('-n', '--name', 'name', required=True, help='Your name')

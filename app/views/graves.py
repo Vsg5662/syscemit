@@ -66,9 +66,10 @@ def edit(id):
     form = GraveForm(request.form, obj=grave)
     view = request.args.get('format', '', type=str)
     title = 'Túmulo' if view == 'view' else 'Editar Túmulo'
+    view = True if not current_user.is_admin() else view
     form.refill()
 
-    if form.validate() and current_user.is_admin and request.method == 'PUT':
+    if form.validate() and current_user.is_admin() and request.method == 'PUT':
         form.populate_obj(grave)
         grave.update()
         return jsonify({'redirect': url_for('graves.index')})
