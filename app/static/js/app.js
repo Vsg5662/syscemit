@@ -62,25 +62,19 @@ var app = {
     },
 
     search: function() {
-      var $clean = $('#clean'),
-        $search = $('#search');
-      if ($search.val()) {
-        $clean.removeClass('d-none');
-      }
+      $('#search input, #search select').on('change', function() {
+        var $form = $(this).parents('form'),
+          field = $(this).attr('name'),
+          value = $(this).val(),
+          url = new URL(window.location.origin + window.location.pathname),
+          params = new URLSearchParams($form.serialize());
 
-      $search.on('keyup', function() {
-        var url = new URL(window.location.origin + window.location.pathname),
-          params = new URLSearchParams($(this).parents('form').serialize());
-
-        if (this.value.length) {
-          $clean.removeClass('d-none');
-          params.set('search', this.value);
-        } else if(!params.has('criteria') || !params.has('order')) {
-          $clean.addClass('d-none');
+        if (value.length) {
+          params.set(field, value);
         }
         params.set('grid', 1);
         url.search = params.toString();
-        $('#result').load(url.toString().concat(' #grid'));
+        $('#results').load(url.toString().concat(' #results tr'));
       });
     },
 
@@ -101,7 +95,7 @@ var app = {
         },
         load: function(query, callback) {
           if (!query.length || query.length < 2) return callback();
-          $.get('/enderecos?search=' + query)
+          $.get('/enderecos/?filters-street=' + query)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
@@ -151,7 +145,7 @@ var app = {
         },
         load: function(query, callback) {
           if (!query.length || query.length < 2) return callback();
-          $.get('/medicos?search=' + query)
+          $.get('/medicos?filters-name=' + query)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
@@ -196,7 +190,7 @@ var app = {
         },
         load: function(query, callback) {
           if (!query.length) return callback();
-          $.get('/tumulos?search=' + query)
+          $.get('/tumulos?filters-street=' + query)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
@@ -221,7 +215,7 @@ var app = {
         },
         load: function(query, callback) {
           if (!query.length || query.length < 2) return callback();
-          $.get('/cartorios?search=' + query)
+          $.get('/cartorios?filters-name=' + query)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
@@ -246,7 +240,7 @@ var app = {
         },
         load: function(query, callback) {
           if (!query.length || query.length < 2) return callback();
-          $.get('/regioes?search=' + query)
+          $.get('/regioes?filters-description=' + query)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {

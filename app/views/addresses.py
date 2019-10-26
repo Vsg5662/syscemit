@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from ..decorators import permission_required
-from ..forms.addresses import COLUMNS, AddressForm, AddressSearchForm
+from ..forms.addresses import AddressForm, AddressSearchForm
 from ..models.addresses import Address
 
 bp = Blueprint('addresses', __name__, url_prefix='/enderecos')
@@ -15,26 +15,26 @@ bp = Blueprint('addresses', __name__, url_prefix='/enderecos')
 def index():
     form = AddressSearchForm(request.args)
     grid = request.args.get('grid', 0, type=bool)
-    search = form.search.data
+    filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
-    pagination = Address.fetch(search, criteria, order, form.page.data)
+    pagination = Address.fetch(filters, criteria, order, form.page.data)
     addresses = pagination.items
 
     if request.is_xhr and not grid:
         return jsonify({'result': [a.serialize() for a in addresses]})
 
+    filters = {'filters-' + k: v for k, v in filters.items()}
     return render_template('addresses/index.html',
                            icon='fa-map-signs',
                            title='Endereços',
                            clean_url=url_for('addresses.index'),
                            create_url=url_for('addresses.create'),
                            form=form,
-                           search=search,
+                           filters=filters,
                            criteria=criteria,
                            order=order,
                            pagination=pagination,
-                           headers=COLUMNS,
                            addresses=addresses)
 
 

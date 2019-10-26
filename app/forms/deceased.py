@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import (DateField, DateTimeField, IntegerField, RadioField,
-                     SelectField, StringField, SubmitField)
+from wtforms import (DateField, DateTimeField, FormField, IntegerField,
+                     RadioField, SelectField, StringField, SubmitField)
 from wtforms.validators import InputRequired, Length, Optional
 from wtforms.widgets import TextArea
 from wtforms.widgets.html5 import NumberInput
@@ -14,21 +14,7 @@ from ..models.doctors import Doctor
 from ..models.ethnicities import Ethnicity
 from ..models.graves import Grave
 from ..models.registries import Registry
-from ..utils.forms import SearchField
-
-COLUMNS = [('name', 'Nome'), ('age', 'Idade'),
-           ('birth_date', 'Data de Nascimento'),
-           ('death_datetime', 'Data de Falecimento'), ('gender', 'Genêro'),
-           ('cause', 'Causa da Morte'), ('registration', 'Matrícula do Óbito'),
-           ('number', 'Número'), ('complement', 'Complemento'),
-           ('birthplace_id', 'Local de Nascimento'),
-           ('civil_state_id', 'Estado Civil'),
-           ('home_address_id', 'Endereço da Residência'),
-           ('death_address_id', 'Local do falecimento'),
-           ('doctor_id', 'Médico'), ('ethnicity_id', 'Etnia'),
-           ('grave_id', 'Túmulo'), ('registry_id', 'Cartório'),
-           ('filiations', 'Filiação')]
-ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
+from ..utils.forms import get_fields, ORDERS
 
 
 class DeceasedForm(FlaskForm):
@@ -79,7 +65,7 @@ class DeceasedForm(FlaskForm):
                                [InputRequired(message='Insira a Etnia!')],
                                choices=(),
                                coerce=int)
-    grave_id = SelectField('Tumulo',
+    grave_id = SelectField('Túmulo',
                            [InputRequired(message='Insira o Tumulo!')],
                            choices=(),
                            coerce=int)
@@ -129,8 +115,17 @@ class DeceasedForm(FlaskForm):
             cls.registry_id.choices = [tuple(registry.serialize().values())]
 
 
+class DeceasedHeadersForm(FlaskForm):
+    name = StringField('Nome')
+    birthplace_id = StringField('Naturalidade')
+    death_datetime = StringField('Data de Falecimento')
+    grave_id = StringField('Túmulo')
+
+
 class DeceasedSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
-    search = SearchField('Buscar falecido ...')
-    criteria = SelectField('Filtrar por', choices=COLUMNS, default='name')
+    filters = FormField(DeceasedHeadersForm)
+    criteria = SelectField('Ordenar por',
+                           choices=get_fields(DeceasedHeadersForm),
+                           default='name')
     order = SelectField('Ordem', choices=ORDERS, default='asc')

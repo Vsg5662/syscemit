@@ -14,18 +14,18 @@ class Zone(CRUDMixin, db.Model):
 
     @classmethod
     def fetch(cls, search, criteria, order, page):
-        joins = filters_ = orders = ()
+        filters = ()
+        columns = cls.__table__.columns.keys()
+        orders = ['asc', 'desc']
 
-        if criteria and search:
-            filters_ += (getattr(cls, criteria).ilike('%' + search + '%'), )
-        elif search:
-            filters_ += (cls.description.ilike('%' + search + '%'), )
+        for k, v in search.items():
+            if k in columns and v:
+                filters += (getattr(cls, k).ilike('%' + v + '%'), )
 
-        if criteria and order:
-            orders += (getattr(getattr(cls, criteria), order)(), )
-        else:
-            orders += (cls.description.asc(), )
-        return cls.query.join(*joins).filter(*filters_).order_by(
+        if criteria in columns and order in orders:
+            orders = (getattr(getattr(cls, criteria), order)(), )
+
+        return cls.query.filter(*filters).order_by(
             *orders).paginate(page,
                               per_page=current_app.config['PER_PAGE'],
                               error_out=False)

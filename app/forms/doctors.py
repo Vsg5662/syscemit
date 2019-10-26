@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectField, StringField, SubmitField
+from wtforms import (IntegerField, FormField, SelectField,
+                     StringField, SubmitField)
 from wtforms.validators import InputRequired, Length
 
-from ..utils.forms import SearchField
-
-COLUMNS = [('name', 'Nome'), ('crm', 'CRM')]
-ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
+from ..utils.forms import get_fields, ORDERS
 
 
 class DoctorForm(FlaskForm):
@@ -22,8 +20,15 @@ class DoctorForm(FlaskForm):
     submit = SubmitField('Salvar')
 
 
+class DoctorHeadersForm(FlaskForm):
+    name = StringField('Nome')
+    crm = StringField('CRM')
+
+
 class DoctorSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
-    search = SearchField('Buscar médico ...')
-    criteria = SelectField('Filtrar por', choices=COLUMNS, default='name')
+    filters = FormField(DoctorHeadersForm)
+    criteria = SelectField('Ordenar por',
+                           choices=get_fields(DoctorHeadersForm),
+                           default='name')
     order = SelectField('Ordem', choices=ORDERS, default='asc')

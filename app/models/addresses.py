@@ -29,25 +29,36 @@ class Address(CRUDMixin, db.Model):
 
     @classmethod
     def fetch(cls, search, criteria, order, page):
-        joins = filters_ = orders = ()
+        joins = filters = ()
+        columns = cls.__table__.columns.keys()
+        orders = ['asc', 'desc']
+        items = [criteria]
 
-        if criteria and search:
-            if criteria == 'city':
-                joins += (City, )
-                filters_ += (
-                    cls.city_id == City.id,
-                    City.name.ilike('%' + search + '%'),
-                )
-                orders += (getattr(City.name, order)(), )
+        for k, v in search.items():
+            if k in columns and v:
+                if k == 'city_id':
+                    filters += (City.name.ilike('%' + v + '%'), )
+                    items.append(k)
+                else:
+                    filters += (getattr(cls, k).ilike('%' + v + '%'), )
+
+        if criteria in columns and order in orders:
+            if criteria == 'city_id':
+                orders = (getattr(City.name, order)(), )
             else:
-                filters_ = (getattr(cls, criteria).ilike('%' + search + '%'), )
-                orders += (getattr(getattr(cls, criteria), order)(), )
-        elif search:
-            filters_ += (cls.street.ilike('%' + search + '%'), )
+                orders = (getattr(getattr(cls, criteria), order)(), )
 
-        if not orders:
-            orders += (cls.street.asc(), )
-        return cls.query.join(*joins).filter(*filters_).order_by(
+        if 'city_id' in items:
+            joins += (City, cls.city_id == City.id, )
+        print('#' * 50)
+        print(search)
+        print(items)
+        print(joins)
+        print(filters)
+        print(orders)
+        print('#' * 50)
+
+        return cls.query.join(*joins).filter(*filters).order_by(
             *orders).paginate(page,
                               per_page=current_app.config['PER_PAGE'],
                               error_out=False)

@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from ..decorators import permission_required
-from ..forms.doctors import COLUMNS, DoctorForm, DoctorSearchForm
+from ..forms.doctors import DoctorForm, DoctorSearchForm
 from ..models.doctors import Doctor
 
 bp = Blueprint('doctors', __name__, url_prefix='/medicos')
@@ -15,26 +15,26 @@ bp = Blueprint('doctors', __name__, url_prefix='/medicos')
 def index():
     form = DoctorSearchForm(request.args)
     grid = request.args.get('grid', 0, type=bool)
-    search = form.search.data
+    filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
-    pagination = Doctor.fetch(search, criteria, order, form.page.data)
+    pagination = Doctor.fetch(filters, criteria, order, form.page.data)
     doctors = pagination.items
 
     if request.is_xhr and not grid:
         return jsonify({'result': [d.serialize() for d in doctors]})
 
+    filters = {'filters-' + k: v for k, v in filters.items()}
     return render_template('doctors/index.html',
                            icon='fa-user-md',
                            title='Médicos',
                            clean_url=url_for('doctors.index'),
                            create_url=url_for('doctors.create'),
                            form=form,
-                           search=search,
+                           filters=filters,
                            criteria=criteria,
                            order=order,
                            pagination=pagination,
-                           headers=COLUMNS,
                            doctors=doctors)
 
 

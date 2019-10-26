@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import (IntegerField, PasswordField, SelectField, StringField,
-                     SubmitField)
+from wtforms import (IntegerField, FormField, PasswordField,
+                     SelectField, StringField, SubmitField)
 from wtforms.validators import InputRequired, Length, Required
 
 from ..models.user_types import UserType
-from ..utils.forms import SearchField
-
-COLUMNS = [('name', 'Nome'), ('login', 'Login'), ('type', 'Tipo')]
-ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
+from ..utils.forms import get_fields, ORDERS
 
 
 class UserForm(FlaskForm):
@@ -35,8 +32,16 @@ class UserForm(FlaskForm):
         self.user_type_id.choices.insert(0, (0, ''))
 
 
+class UserHeadersForm(FlaskForm):
+    login = StringField('Login')
+    name = StringField('Nome')
+    user_type_id = StringField('Tipo de Usuário')
+
+
 class UserSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
-    search = SearchField('Buscar usuários ...')
-    criteria = SelectField('Filtrar por', choices=COLUMNS, default='name')
+    filters = FormField(UserHeadersForm)
+    criteria = SelectField('Ordenar por',
+                           choices=get_fields(UserHeadersForm),
+                           default='name')
     order = SelectField('Ordem', choices=ORDERS, default='asc')

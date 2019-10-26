@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from ..decorators import permission_required
-from ..forms.zones import COLUMNS, ZoneForm, ZoneSearchForm
+from ..forms.zones import ZoneForm, ZoneSearchForm
 from ..models.zones import Zone
 
 bp = Blueprint('zones', __name__, url_prefix='/regioes')
@@ -15,26 +15,26 @@ bp = Blueprint('zones', __name__, url_prefix='/regioes')
 def index():
     form = ZoneSearchForm(request.args)
     grid = request.args.get('grid', 0, type=bool)
-    search = form.search.data
+    filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
-    pagination = Zone.fetch(search, criteria, order, form.page.data)
+    pagination = Zone.fetch(filters, criteria, order, form.page.data)
     zones = pagination.items
 
     if request.is_xhr and not grid:
         return jsonify({'result': [z.serialize() for z in zones]})
 
+    filters = {'filters-' + k: v for k, v in filters.items()}
     return render_template('zones/index.html',
                            icon='fa-map-marked-alt',
                            title='Regiões',
                            clean_url=url_for('zones.index'),
                            create_url=url_for('zones.create'),
                            form=form,
-                           search=search,
+                           filters=filters,
                            criteria=criteria,
                            order=order,
                            pagination=pagination,
-                           headers=COLUMNS,
                            zones=zones)
 
 

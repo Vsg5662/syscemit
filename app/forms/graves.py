@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectField, StringField, SubmitField
+from wtforms import (IntegerField, FormField, SelectField,
+                     StringField, SubmitField)
 from wtforms.validators import InputRequired, Length
 
 from ..models.zones import Zone
-from ..utils.forms import SearchField
-
-COLUMNS = [('street', 'Rua'), ('number', 'Número'), ('zone', 'Região')]
-ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
+from ..utils.forms import get_fields, ORDERS
 
 
 class GraveForm(FlaskForm):
@@ -32,8 +30,16 @@ class GraveForm(FlaskForm):
             ]
 
 
+class GraveHeadersForm(FlaskForm):
+    street = StringField('Rua')
+    number = StringField('Número')
+    zone_id = StringField('Região')
+
+
 class GraveSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
-    search = SearchField('Buscar túmulo ...')
-    criteria = SelectField('Filtrar por', choices=COLUMNS, default='')
+    filters = FormField(GraveHeadersForm)
+    criteria = SelectField('Ordenar por',
+                           choices=get_fields(GraveHeadersForm),
+                           default='street')
     order = SelectField('Ordem', choices=ORDERS, default='asc')

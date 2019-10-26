@@ -20,25 +20,28 @@ class User(CRUDMixin, UserMixin, db.Model):
 
     @classmethod
     def fetch(cls, search, criteria, order, page):
-        joins = filters_ = orders = ()
+        joins = filters = ()
+        columns = cls.__table__.columns.keys()
+        orders = ['asc', 'desc']
+        items = list(search.keys()) + [criteria]
 
-        if criteria and search:
-            if criteria == 'type':
-                joins += (UserType, )
-                filters_ += (
-                    cls.user_type_id == UserType.id,
-                    UserType.description.ilike('%' + search + '%'),
-                )
-                orders += (getattr(UserType.description, order)(), )
+        for k, v in search.items():
+            if k in columns and v:
+                if k == 'user_type_id':
+                    filters += (UserType.description.ilike('%' + v + '%'), )
+                else:
+                    filters += (getattr(cls, k).ilike('%' + v + '%'), )
+
+        if criteria in columns and order in orders:
+            if criteria == 'user_type_id':
+                orders = (getattr(UserType.description, order)(), )
             else:
-                filters_ = (getattr(cls, criteria).ilike('%' + search + '%'), )
-                orders += (getattr(getattr(cls, criteria), order)(), )
-        elif search:
-            filters_ += (cls.name.ilike('%' + search + '%'), )
+                orders = (getattr(getattr(cls, criteria), order)(), )
 
-        if not orders:
-            orders += (cls.name.asc(), )
-        return cls.query.join(*joins).filter(*filters_).order_by(
+        if 'user_type_id' in items:
+            joins += (UserType, cls.user_type_id == UserType.id, )
+
+        return cls.query.join(*joins).filter(*filters).order_by(
             *orders).paginate(page,
                               per_page=current_app.config['PER_PAGE'],
                               error_out=False)

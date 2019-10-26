@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectField, StringField, SubmitField
+from wtforms import (IntegerField, FormField, SelectField,
+                     StringField, SubmitField)
 from wtforms.validators import InputRequired, Length, Optional
 
-from ..utils.forms import SearchField
-
-COLUMNS = [('description', 'Descrição'), ('complement', 'Complemento')]
-ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
+from ..utils.forms import get_fields, ORDERS
 
 
 class ZoneForm(FlaskForm):
@@ -19,10 +17,15 @@ class ZoneForm(FlaskForm):
     submit = SubmitField('Salvar')
 
 
+class ZoneHeadersForm(FlaskForm):
+    description = StringField('Descriçao')
+    complement = StringField('Complemento')
+
+
 class ZoneSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
-    search = SearchField('Buscar area ...')
-    criteria = SelectField('Filtrar por',
-                           choices=COLUMNS,
+    filters = FormField(ZoneHeadersForm)
+    criteria = SelectField('Ordenar por',
+                           choices=get_fields(ZoneHeadersForm),
                            default='description')
     order = SelectField('Ordem', choices=ORDERS, default='asc')

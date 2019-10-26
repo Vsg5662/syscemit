@@ -1,54 +1,35 @@
-{% from '_macros.html' import  render_field, render_pagination, render_modal, render_multi_field %}
+{% from '_macros.html' import render_pagination, render_modal %}
 {% extends '_index.html' %}
 
-{% block search %}
-{{ form.search(class='form-control', placeholder=form.search.label.text, autofocus=True) }}
-{% endblock %}
-
-{% block filters %}
-{{ render_field(form.criteria, class='form-control') }}
-{% endblock %}
-
-{% block order %}
-{{ render_field(form.order, class='form-control') }}
-{% endblock %}
-
-{% block headers %}
-{% for _, label in headers %}
-<th scope="col">{{ label }}</th>
-{% endfor %}
-<th scope="col">Ação</th>
-{% endblock %}
-
-{% block result %}
-{% for u in users %}
-<tr>
-  <td>{{ u.name }}</td>
-  <td>{{ u.login }}</td>
-  <td>{{ u.user_type.description }}</td>
-  <td>
-    <a href="{{ url_for('users.edit', id=u.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
-      <i class="fas fa-eye"></i>
-    </a>
-    {% if current_user.is_admin() %}
-    <a href="{{ url_for('users.edit', id=u.id) }}" class="btn btn-raised btn-warning" title="Editar">
-      <i class="fas fa-edit"></i>
-    </a>
-    <a class="btn btn-raised btn-danger" data-action="{{ url_for('users.delete', id=u.id) }}" onclick="app.methods.remove(this)" title="Remover">
-      <i class="fas fa-trash"></i>
-    </a>
-    {% endif %}
-  </td>
-</tr>
-{% endfor %}
+{% block results %}
+  {% for u in users %}
+    <tr>
+      <td>{{ u.name }}</td>
+      <td>{{ u.login }}</td>
+      <td>{{ u.user_type.description }}</td>
+      <td>
+        <a href="{{ url_for('users.edit', id=u.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
+          <i class="fas fa-eye"></i>
+        </a>
+        {% if current_user.is_admin() %}
+          <a href="{{ url_for('users.edit', id=u.id) }}" class="btn btn-raised btn-warning" title="Editar">
+            <i class="fas fa-edit"></i>
+          </a>
+          <a class="btn btn-raised btn-danger" data-action="{{ url_for('users.delete', id=u.id) }}" onclick="app.methods.remove(this)" title="Remover">
+            <i class="fas fa-trash"></i>
+          </a>
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
 {% endblock %}
 
 {% block paginator %}
-{{ render_pagination(pagination, 'users.index', search=search, criteria=criteria, order=order) }}
+{{ render_pagination(pagination, 'users.index', criteria=criteria, order=order, **filters) }}
 {% endblock %}
 
 {% block dialog %}
 {% call render_modal('modal-delete', 'Remover Usuario', yes_text='Remover', yes_icon='trash', yes_color='danger') %}
-<p>Deseja realmente remover o Usuario?</p>
+  <p>Deseja realmente remover o Usuario?</p>
 {% endcall %}
 {% endblock %}

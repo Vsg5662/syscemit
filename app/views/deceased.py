@@ -14,27 +14,23 @@ bp = Blueprint('deceased', __name__, url_prefix='/falecidos')
 @login_required
 def index():
     form = DeceasedSearchForm(request.args)
-    search = form.search.data
-    search = form.search.data
+    filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
-    pagination = Deceased.fetch(search, criteria, order, form.page.data)
+    pagination = Deceased.fetch(filters, criteria, order, form.page.data)
     deceased = pagination.items
-    headers = [('name', 'Nome'), ('city', 'Cidade'),
-               ('death_datetime', 'Data de Falecimento'),
-               ('grave_id', 'Túmulo')]
 
+    filters = {'filters-' + k: v for k, v in filters.items()}
     return render_template('deceased/index.html',
                            icon='fa-coffin',
                            title='Falecidos',
                            clean_url=url_for('deceased.index'),
                            create_url=url_for('deceased.create'),
                            form=form,
-                           search=search,
+                           filters=filters,
                            criteria=criteria,
                            order=order,
                            pagination=pagination,
-                           headers=headers,
                            deceased=deceased)
 
 

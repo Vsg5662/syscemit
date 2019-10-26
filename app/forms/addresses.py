@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectField, StringField, SubmitField
+from wtforms import (IntegerField, FormField, SelectField,
+                     StringField, SubmitField)
 from wtforms.validators import InputRequired, Length
 
 from ..models.cities import City
-from ..utils.forms import SearchField
-
-COLUMNS = [('street', 'Rua'), ('cep', 'CEP'), ('district', 'Bairro'),
-           ('city', 'Cidade')]
-ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
+from ..utils.forms import get_fields, ORDERS
 
 
 class AddressForm(FlaskForm):
@@ -35,8 +32,17 @@ class AddressForm(FlaskForm):
                                     '{c.name} - {c.state.uf}'.format(c=city))]
 
 
+class AddressHeadersForm(FlaskForm):
+    street = StringField('Rua')
+    cep = StringField('CEP')
+    district = StringField('Bairro')
+    city_id = StringField('Cidade')
+
+
 class AddressSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
-    search = SearchField('Buscar endereço ...')
-    criteria = SelectField('Filtrar por', choices=COLUMNS, default='street')
+    filters = FormField(AddressHeadersForm)
+    criteria = SelectField('Ordenar por',
+                           choices=get_fields(AddressHeadersForm),
+                           default='street')
     order = SelectField('Ordem', choices=ORDERS, default='asc')

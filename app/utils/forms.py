@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from wtforms import SelectMultipleField, StringField
-from wtforms.widgets import CheckboxInput, ListWidget, html5
+from wtforms import SelectMultipleField
+from wtforms.widgets import CheckboxInput, ListWidget
 
-
-class SearchField(StringField):
-    widget = html5.SearchInput()
+ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
 
 
 class MultiCheckboxField(SelectMultipleField):
     widget = ListWidget(prefix_label=False)
     option_widget = CheckboxInput()
+
+
+def get_fields(form):
+    return [(k, v) for k in form.__dict__.keys()
+            if not k.startswith('_')
+            for v in [getattr(form, k).args[0]]]

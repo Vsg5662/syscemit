@@ -16,34 +16,30 @@ class Grave(CRUDMixin, db.Model):
 
     @classmethod
     def fetch(cls, search, criteria, order, page):
-        joins = filters_ = orders = ()
-        print('#'*50)
-        print(search, criteria, order, page)
-        print('#'*50)
+        joins = filters = ()
+        columns = cls.__table__.columns.keys()
+        orders = ['asc', 'desc']
+        items = list(search.keys()) + [criteria]
 
-        if criteria and search:
-            if criteria == 'zone':
-                joins += (Zone, )
-                filters_ += (
-                    cls.zone_id == Zone.id,
-                    Zone.description.ilike('%' + search + '%'),
-                )
-                orders += (getattr(Zone.description, order)(), )
+        for k, v in search.items():
+            if k in columns and v:
+                if k == 'zone_id':
+                    filters += (
+                        db.or_(Zone.description.ilike('%' + v + '%'),
+                               Zone.complement.ilike('%' + v + '%')), )
+                else:
+                    filters += (getattr(cls, k).ilike('%' + v + '%'), )
+
+        if criteria in columns and order in orders:
+            if criteria == 'zone_id':
+                orders = (getattr(Zone.description, order)(), )
             else:
-                filters_ = (getattr(cls, criteria).ilike('%' + search + '%'), )
-                orders += (getattr(getattr(cls, criteria), order)(), )
-        elif search:
-            search = search.lower().split()
-            joins += (Zone, )
-            filters_ += (cls.zone_id == Zone.id, db.or_(
-                db.func.lower(Grave.street).in_(search),
-                db.func.lower(Grave.number).in_(search),
-                db.func.lower(Zone.description).in_(search),
-                db.func.lower(Zone.complement).in_(search)), )
+                orders = (getattr(getattr(cls, criteria), order)(), )
 
-        if not orders:
-            orders += (cls.street.asc(), )
-        return cls.query.join(*joins).filter(*filters_).order_by(
+        if 'zone_id' in items:
+            joins += (Zone, cls.zone_id == Zone.id, )
+
+        return cls.query.join(*joins).filter(*filters).order_by(
             *orders).paginate(page,
                               per_page=current_app.config['PER_PAGE'],
                               error_out=False)

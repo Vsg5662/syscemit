@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from ..decorators import permission_required
-from ..forms.graves import COLUMNS, GraveForm, GraveSearchForm
+from ..forms.graves import GraveForm, GraveSearchForm
 from ..models.graves import Grave
 
 bp = Blueprint('graves', __name__, url_prefix='/tumulos')
@@ -15,26 +15,26 @@ bp = Blueprint('graves', __name__, url_prefix='/tumulos')
 def index():
     form = GraveSearchForm(request.args)
     grid = request.args.get('grid', 0, type=bool)
-    search = form.search.data
+    filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
-    pagination = Grave.fetch(search, criteria, order, form.page.data)
+    pagination = Grave.fetch(filters, criteria, order, form.page.data)
     graves = pagination.items
 
     if request.is_xhr and not grid:
         return jsonify({'result': [g.serialize() for g in graves]})
 
+    filters = {'filters-' + k: v for k, v in filters.items()}
     return render_template('graves/index.html',
                            icon='fa-tombstone',
                            title='Túmulos',
                            clean_url=url_for('graves.index'),
                            create_url=url_for('graves.create'),
                            form=form,
-                           search=search,
+                           filters=filters,
                            criteria=criteria,
                            order=order,
                            pagination=pagination,
-                           headers=COLUMNS,
                            graves=graves)
 
 

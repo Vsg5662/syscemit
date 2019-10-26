@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from ..decorators import permission_required
-from ..forms.registries import COLUMNS, RegistryForm, RegistrySearchForm
+from ..forms.registries import RegistryForm, RegistrySearchForm
 from ..models.registries import Registry
 
 bp = Blueprint('registries', __name__, url_prefix='/cartorios')
@@ -15,26 +15,26 @@ bp = Blueprint('registries', __name__, url_prefix='/cartorios')
 def index():
     form = RegistrySearchForm(request.args)
     grid = request.args.get('grid', 0, type=bool)
-    search = form.search.data
+    filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
-    pagination = Registry.fetch(search, criteria, order, form.page.data)
+    pagination = Registry.fetch(filters, criteria, order, form.page.data)
     registries = pagination.items
 
     if request.is_xhr and not grid:
         return jsonify({'result': [r.serialize() for r in registries]})
 
+    filters = {'filters-' + k: v for k, v in filters.items()}
     return render_template('registries/index.html',
                            icon='fa-books',
                            title='Cartórios',
                            clean_url=url_for('registries.index'),
                            create_url=url_for('registries.create'),
                            form=form,
-                           search=search,
+                           filters=filters,
                            criteria=criteria,
                            order=order,
                            pagination=pagination,
-                           headers=COLUMNS,
                            registries=registries)
 
 

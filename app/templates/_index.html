@@ -1,4 +1,8 @@
+{% from '_macros.html' import  render_field %}
+
 {% extends 'base.html' %}
+
+{% set formsize = form.filters.data.keys()|length - 1 %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -10,70 +14,82 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          <form class="form">
-            <h3>
-              <i class="fas {{ icon }} text-primary"></i> {{ title }}
-            </h3>
-            <div class="input-group">
-              {% block search -%}{%- endblock %}
-              <div class="input-group-append">
-                <a id="clean" class="btn btn-warning btn-raised d-none" href="{{ clean_url }}" title="Limpar">
-                  <i class="fas fa-times"></i>
-                </a>
-              </div>
-              <div class="input-group-append">
-                <a class="btn btn-info btn-raised" href="#filters" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="filters" title="Filtrar">
-                  <i class="fas fa-filter"></i>
-                </a>
-              </div>
-              <div class="input-group-append">
-                <button class="btn btn-primary btn-raised" type="submit" title="Buscar">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
-            </div>
-            <div id="filters" class="mt-2 collapse">
-              <div class="card">
-                <h6 class="card-header"><i class="fas fa-filter text-primary"></i> Filtros</h6>
-                <div class="card-body py-0">
-                  <div class="row">
-                    <div class="col-md-3">
-                      {% block filters -%}{%- endblock %}
-                    </div>
-                    <div class="col-md-2">
-                      {% block order -%}{%- endblock %}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
+          <h3>
+            <i class="fas {{ icon }} text-primary"></i> {{ title }}
+          </h3>
         </div>
         <div class="card-body bg-secondary">
           {% if current_user.is_admin() %}
-          <a class="btn btn-raised btn-success" href="{{ create_url }}">
-            <i class="fas fa-plus"></i> Adicionar
-          </a>
+            <a class="btn btn-raised btn-success" href="{{ create_url }}">
+              <i class="fas fa-plus"></i> Adicionar
+            </a>
           {% endif %}
         </div>
-        <div id="result" class="table-responsive">
-          <table id="grid" class="table table-hover mb-0">
-            <thead>
-              <tr class="thead-dark">
-              {% block headers -%}{%- endblock %}
-              </tr>
-            </thead>
-            <tbody>
-            {% block result -%}{%- endblock %}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="20" class="table-secondary">
-                  {% block paginator -%}{%- endblock %}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+        <div class="table-responsive">
+          <form id="search" action="" method="get" accept-charset="utf-8">
+            <table class="table table-hover mb-0">
+              <thead>
+                </tr>
+                <tr class="thead-dark">
+                  <th colspan="{{ formsize }}">
+                    <i class="fas fa-filter text-warning"></i> Filtros
+                  </th>
+                  <th class="col-md-2">
+                    <i class="fas fa-wrench text-warning"></i> Ações
+                  </th>
+                </tr>
+                <tr id="filters" class="thead-light">
+                  {% for field in form.filters -%}
+                    {% if field.type != 'CSRFTokenField' -%}
+                      <th scope="col">
+                        <div class="input-group">
+                          {{ field(class="form-control", placeholder=field.label.text) }}
+                        </div>
+                      </th>
+                    {%- endif %}
+                  {%- endfor %}
+                  <th scope="col" class="col-md-2 px-0">
+                    <div class="btn-group" role="group">
+                      <a class="btn btn-primary btn-raised" href="#order" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="order" title="Ordenação">
+                        <i class="fas fa-sort"></i>
+                      </a>
+                      <a id="clean" class="btn btn-warning btn-raised" href="{{ clean_url }}" title="Limpar">
+                        <i class="fas fa-times"></i>
+                      </a>
+                      <button class="btn btn-dark btn-raised" type="submit" title="Buscar">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </th>
+                </tr>
+                <tr id="order" class="collapse table-secondary">
+                  <td colspan="{{ formsize + 1 }}">
+                    <div class="card">
+                      <h6 class="card-header"><i class="fas fa-sort text-primary"></i> Ordenação</h6>
+                      <div class="card-body py-0">
+                        <div class="row">
+                          <div class="col-md-3">
+                            {{ render_field(form.criteria, class='form-control') }}
+                          </div>
+                          <div class="col-md-2">
+                            {{ render_field(form.order, class='form-control') }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </thead>
+              <tbody id="results">
+                {% block results -%}{%- endblock %}
+                <tr>
+                  <td colspan="{{ formsize + 1 }}" class="table-secondary">
+                    {% block paginator -%}{%- endblock %}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
         </div>
       </div>
     </div>

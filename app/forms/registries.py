@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectField, StringField, SubmitField
+from wtforms import (IntegerField, FormField, SelectField,
+                     StringField, SubmitField)
 from wtforms.validators import InputRequired, Length
 
 from ..models.cities import City
-from ..utils.forms import SearchField
-
-COLUMNS = [('name', 'Nome'), ('city', 'Cidade')]
-ORDERS = [('asc', 'Ascendente'), ('desc', 'Descente')]
+from ..utils.forms import get_fields, ORDERS
 
 
 class RegistryForm(FlaskForm):
@@ -29,8 +27,15 @@ class RegistryForm(FlaskForm):
                                     '{c.name} - {c.state.uf}'.format(c=city))]
 
 
+class RegistryHeadersForm(FlaskForm):
+    name = StringField('Nome')
+    city_id = StringField('Cidade')
+
+
 class RegistrySearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
-    search = SearchField('Buscar cartório ...')
-    criteria = SelectField('Filtrar por', choices=COLUMNS, default='name')
+    filters = FormField(RegistryHeadersForm)
+    criteria = SelectField('Ordenar por',
+                           choices=get_fields(RegistryHeadersForm),
+                           default='name')
     order = SelectField('Ordem', choices=ORDERS, default='asc')
