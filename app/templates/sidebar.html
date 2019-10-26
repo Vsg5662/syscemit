@@ -9,7 +9,7 @@
   (1, 'users', 'fa-users', 'Usuários')
 ] -%}
 <div class="col-lg-auto col-xs-12 pr-0">
-  <div class="list-group shadow py-0">
+  <div class="list-group border shadow-sm py-0">
     {% for admin, view, icon, label in navbar %}
     <a class="list-group-item list-group-item-action {% if request.blueprint == view %}bg-dark active{% endif %}{% if admin and not current_user.is_admin() %}d-none{% endif %}" href="{{ url_for(view + '.index') }}">
       <i class="fas {{ icon }} {% if request.blueprint != view %}text-primary{% else %}text-info{% endif %}"></i> {{ label }}

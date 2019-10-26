@@ -22,7 +22,7 @@ from .utils.helpers import shell_context
 
 
 def init_app(app):
-    user_cli = AppGroup('user')
+    user_cli = AppGroup('user', help='Perform user management.')
 
     @app.shell_context_processor
     def make_shell_context():
@@ -32,6 +32,7 @@ def init_app(app):
 
     @app.cli.command()
     def initdb():
+        '''Initialize and populate the database.'''
         db.create_all()
         UserType.populate()
         State.populate()
@@ -58,13 +59,31 @@ def init_app(app):
                   type=int,
                   help='Your user type: 1 (admin), 2(employee)')
     def create(name, login, password, type):
+        '''Create a new user.'''
         User.create(name=name,
                     login=login,
                     password=password,
                     user_type_id=type)
 
+    @user_cli.command()
+    def list():
+        '''List all users.'''
+        print('{:<20}{:<20}{:<20}'.format('LOGIN', 'NAME', 'TYPE'))
+        for u in User.query.all():
+            print('{:<20}{:<20}{:<20}'.format(
+                u.login, u.name, u.user_type.role))
+
+    @user_cli.command()
+    @click.confirmation_option(prompt='Do you really want to delete the user?')
+    @click.option('-l', '--login', 'login', required=True, help='User login')
+    def delete(login):
+        '''Delete a user.'''
+        u = User.query.filter_by(login=login).first()
+        u.delete()
+
     @app.cli.command()
     def format():
+        '''Format and organize code according to pep 8'''
         formaters = ['isort -vb -rc *.py app/', 'yapf -vv -r -i *.py app/']
         for f in formaters:
             print('[*] Running {}'.format(f.split()[0]))
@@ -72,6 +91,7 @@ def init_app(app):
 
     @app.cli.command()
     def lint():
+        '''Verify the code quality.'''
         print('[*] Running Flake8')
         subprocess.call('flake8 *.py app/', shell=True)
 

@@ -30,22 +30,16 @@ var app = {
       });
 
       $('.date').inputmask({
-        'alias': 'datetime',
+        'mask': '99/99/9999',
         'clearIncomplete': true,
-        'displayFormat': true,
-        'inputFormat': 'dd/mm/yyyy',
-        'jitMasking': true
       });
 
       $('.datetime').inputmask({
-        'alias': 'datetime',
+        'mask': '99/99/9999[ 99:99]',
         'clearIncomplete': true,
-        'displayFormat': true,
-        'inputFormat': 'dd/mm/yyyy HH:MM',
-        'jitMasking': true
       });
 
-      $('.number').inputmask({'regex': "\\d*"});
+      $('.number').inputmask({'regex': "[\\d\\.\\- ]*"});
     },
 
     remove: function(button) {

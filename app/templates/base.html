@@ -8,11 +8,7 @@
     <meta name="author" content="Tibério Augusto dos Santos">
     <title>SYSCEMIT - {% block title %}{% endblock %}</title>
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.png') }}" type="image/png">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-material-design.min.css') }}" type="text/css" media="all">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap4-card-tables.min.css') }}" type="text/css" media="all">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome.min.css') }}" type="text/css" media="all">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/quicksand.min.css') }}" type="text/css" media="all">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" media="all">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/syscemit.min.css') }}" type="text/css" media="all">
     {% block css %}{% endblock %}
   </head>
   <body>
@@ -29,11 +25,6 @@
       {% endif %}
     {% endwith %}
     {% block body %}{% endblock %}
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}" charset="utf-8"></script>
-    <script src="{{ url_for('static', filename='js/jquery.inputmask.min.js') }}" charset="utf-8"></script>
-    <script src="{{ url_for('static', filename='js/selectize.min.js') }}" charset="utf-8"></script>
-    <script src="{{ url_for('static', filename='js/popper.min.js') }}" charset="utf-8"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap-material-design.min.js') }}" charset="utf-8"></script>
-    <script src="{{ url_for('static', filename='js/app.js') }}" charset="utf-8"></script>
+    <script src="{{ url_for('static', filename='js/syscemit.min.js') }}" charset="utf-8"></script>
   </body>
 </html>

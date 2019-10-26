@@ -11,14 +11,14 @@ from ..utils.forms import get_fields, ORDERS
 class ZoneForm(FlaskForm):
     description = StringField(
         'Descricao',
-        [InputRequired(message='Insira o nome do area!'),
+        [InputRequired(message='Insira o nome da região!'),
          Length(1, 255)])
     complement = StringField('Complemento', [Optional(), Length(1, 20)])
     submit = SubmitField('Salvar')
 
 
 class ZoneHeadersForm(FlaskForm):
-    description = StringField('Descriçao')
+    description = StringField('Descrição')
     complement = StringField('Complemento')
 
 

@@ -37,7 +37,7 @@ class DeceasedForm(FlaskForm):
         'Matrícula do Óbito',
         [InputRequired(message='Insira a Matrícula!'),
          Length(1, 40)])
-    birthplace_id = SelectField('Local de Nascimento', [Optional()],
+    birthplace_id = SelectField('Naturalidade', [Optional()],
                                 choices=(),
                                 coerce=int)
     civil_state_id = SelectField('Estado Civil', [Optional()],

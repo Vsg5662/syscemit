@@ -1655,7 +1655,7 @@
 					self.advanceSelection(1, e);
 					return;
 				case KEY_TAB:
-					if (self.settings.selectOnTab && self.isOpen && self.$activeOption) {
+					if (self.settings.selectOnTab && self.isOpen && self.$activeOption && (self.lastValue !== '')) {
 						self.onOptionSelect({currentTarget: self.$activeOption});
 	
 						// Default behaviour is to jump to the next field, we only want this

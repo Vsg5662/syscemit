@@ -26,7 +26,7 @@
           {% endif %}
         </div>
         <div class="table-responsive">
-          <form id="search" action="" method="get" accept-charset="utf-8">
+          <form id="search" class="mb-0" action="" method="get" accept-charset="utf-8">
             <table class="table table-hover mb-0">
               <thead>
                 </tr>
@@ -38,23 +38,23 @@
                     <i class="fas fa-wrench text-warning"></i> Ações
                   </th>
                 </tr>
-                <tr id="filters" class="thead-light">
+                <tr id="filters" class="bg-light">
                   {% for field in form.filters -%}
                     {% if field.type != 'CSRFTokenField' -%}
                       <th scope="col">
                         <div class="input-group">
-                          {{ field(class="form-control", placeholder=field.label.text) }}
+                          {{ field(class="form-control font-weight-bold", placeholder=field.label.text) }}
                         </div>
                       </th>
                     {%- endif %}
                   {%- endfor %}
-                  <th scope="col" class="col-md-2 px-0">
+                  <th scope="col" class="col-md-2">
                     <div class="btn-group" role="group">
-                      <a class="btn btn-primary btn-raised" href="#order" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="order" title="Ordenação">
-                        <i class="fas fa-sort"></i>
-                      </a>
                       <a id="clean" class="btn btn-warning btn-raised" href="{{ clean_url }}" title="Limpar">
                         <i class="fas fa-times"></i>
+                      </a>
+                      <a class="btn btn-secondary btn-raised" href="#order" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="order" title="Ordenação">
+                        <i class="fas fa-sort"></i>
                       </a>
                       <button class="btn btn-dark btn-raised" type="submit" title="Buscar">
                         <i class="fas fa-search"></i>
@@ -62,7 +62,7 @@
                     </div>
                   </th>
                 </tr>
-                <tr id="order" class="collapse table-secondary">
+                <tr id="order" class="collapse bg-light">
                   <td colspan="{{ formsize + 1 }}">
                     <div class="card">
                       <h6 class="card-header"><i class="fas fa-sort text-primary"></i> Ordenação</h6>
@@ -82,8 +82,8 @@
               </thead>
               <tbody id="results">
                 {% block results -%}{%- endblock %}
-                <tr>
-                  <td colspan="{{ formsize + 1 }}" class="table-secondary">
+                <tr class="bg-white">
+                  <td colspan="{{ formsize + 1 }}">
                     {% block paginator -%}{%- endblock %}
                   </td>
                 </tr>
