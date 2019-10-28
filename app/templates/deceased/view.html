@@ -25,6 +25,7 @@
   {{ render_field(form.death_address_complement, class_="col-md-2")}}
 </div>
 {{ render_field(form.cause, class_="col-md-12", maxlength=1500, required=True, rows=4)}}
+{{ render_field(form.zone_id, class="zone", class_="col-md-6", required=True)}}
 {{ render_field(form.grave_id, class="grave", class_="col-md-6", required=True)}}
 {{ render_field(form.doctor_id, class="doctor", class_="col-md-6", required=True)}}
 {{ render_field(form.registry_id, class="registry", class_="col-md-6", required=True)}}
@@ -44,9 +45,8 @@
     <tr>
       <th class="col-md-auto">{{ form.grave_id.label.text }}:</th>
       <td class="text-warning font-weight-bold">
-        {% for l in dict(form.grave_id.choices).get(form.grave_id.data).split(',')  %}
-        <p>{{ l }}</p>
-        {% endfor %}
+        <p>{{ dict(form.zone_id.choices).get(form.zone_id.data) }}</p>
+        <p>{{ dict(form.grave_id.choices).get(form.grave_id.data) }}</p>
       </td>
     </tr>
     <tr>

@@ -25,7 +25,7 @@ class Doctor(CRUDMixin, db.Model):
         if criteria in columns and order in orders:
             orders = (getattr(getattr(cls, criteria), order)(), )
 
-        return cls.query.filter(*filters).order_by(
+        return cls.query.filter(db.or_(*filters)).order_by(
             *orders).paginate(page,
                               per_page=current_app.config['PER_PAGE'],
                               error_out=False)

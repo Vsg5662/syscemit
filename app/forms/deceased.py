@@ -65,6 +65,10 @@ class DeceasedForm(FlaskForm):
                                [InputRequired(message='Insira a Etnia!')],
                                choices=(),
                                coerce=int)
+    zone_id = SelectField('Região',
+                          [InputRequired('Insira a região')],
+                          choices=(),
+                          coerce=int)
     grave_id = SelectField('Túmulo',
                            [InputRequired(message='Insira o Tumulo!')],
                            choices=(),
@@ -109,6 +113,9 @@ class DeceasedForm(FlaskForm):
         if cls.grave_id.data:
             grave = Grave.get_or_404(cls.grave_id.data)
             cls.grave_id.choices = [tuple(grave.serialize().values())]
+            if grave.zone_id:
+                cls.zone_id.data = grave.zone.id
+                cls.zone_id.choices = [tuple(grave.zone.serialize().values())]
 
         if cls.registry_id.data:
             registry = Registry.get_or_404(cls.registry_id.data)

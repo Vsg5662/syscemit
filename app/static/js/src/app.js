@@ -114,7 +114,7 @@ var app = {
         },
         load: function(query, callback) {
           if (!query.length || query.length < 2) return callback();
-          $.get('/cidades?search=' + query)
+          $.get('/cidades/?search=' + query)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
@@ -139,7 +139,7 @@ var app = {
         },
         load: function(query, callback) {
           if (!query.length || query.length < 2) return callback();
-          $.get('/medicos?filters-name=' + query)
+          $.get('/medicos/?filters-name=' + query + '&filters-crm=' + query)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
@@ -183,8 +183,9 @@ var app = {
           },
         },
         load: function(query, callback) {
-          if (!query.length) return callback();
-          $.get('/tumulos?filters-street=' + query)
+          var zone = $('.zone').val();
+          if (!query.length || !zone.length) return callback();
+          $.get('/tumulos/?filters-street=' + query + '&filters-zone_id=' + zone)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
@@ -209,7 +210,7 @@ var app = {
         },
         load: function(query, callback) {
           if (!query.length || query.length < 2) return callback();
-          $.get('/cartorios?filters-name=' + query)
+          $.get('/cartorios/?filters-name=' + query)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
@@ -234,7 +235,7 @@ var app = {
         },
         load: function(query, callback) {
           if (!query.length || query.length < 2) return callback();
-          $.get('/regioes?filters-description=' + query)
+          $.get('/regioes/?filters-description=' + query)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
