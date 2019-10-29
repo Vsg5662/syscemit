@@ -7,7 +7,8 @@
       <td>{{ d.name }}</td>
       <td>{{ d.city.name }}</td>
       <td>{{ d.death_datetime | strftime }}</td>
-      <td>{{ d.grave.zone.description }} {% if d.grave.zone.complement %} - {{ d.grave.zone.complement }}{% endif %}<br>Rua {{ d.grave.street }} - Túmulo {{ d.grave.number }}</td>
+      <td>{{ d.grave.zone.description }} {% if d.grave.zone.complement %} - {{ d.grave.zone.complement }}{% endif %}</td>
+      <td>Rua {{ d.grave.street }} - Túmulo {{ d.grave.number }}</td>
       <td>
         <a href="{{ url_for('deceased.edit', id=d.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
           <i class="fas fa-eye"></i>

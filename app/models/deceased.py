@@ -1,7 +1,11 @@
+from datetime import datetime
+from re import findall, DOTALL
+
 from flask import current_app
 
 from .cities import City
 from .graves import Grave
+from .zones import Zone
 
 from ..extensions import db
 from ..mixins import CRUDMixin
@@ -43,25 +47,40 @@ class Deceased(CRUDMixin, db.Model):
     @classmethod
     def fetch(cls, search, criteria, order, page):
         joins = filters = ()
-        columns = cls.__table__.columns.keys()
+        columns = cls.__table__.columns.keys() + ['zone_id']
         orders = ['asc', 'desc']
         items = list(search.keys()) + [criteria]
 
         if 'birthplace_id' in items:
             joins += (City, )
 
-        if 'grave_id' in items:
+        if 'grave_id' in items or 'zone_id' in items:
             joins += (Grave, )
+
+        if 'zone_id' in items:
+            joins += (Zone, )
 
         for k, v in search.items():
             if k in columns and v:
                 if k == 'birthplace_id':
                     filters += (cls.birthplace_id == City.id,
                                 City.name.ilike('%' + v + '%'), )
+                elif (k == 'death_datetime' and
+                      findall(r'^\d{4} \d{4}$', v, flags=DOTALL)):
+                    v = list(map(int, v.split()))
+                    v[0] = datetime(v[0], 1, 1)
+                    v[1] = datetime(v[1], 12, 31)
+                    filters += (Deceased.death_datetime >= v[0],
+                                Deceased.death_datetime <= v[1], )
                 elif k == 'grave_id':
                     filters += (cls.grave_id == Grave.id,
                                 db.or_(Grave.street.ilike('%' + v + '%'),
                                        Grave.number.ilike('%' + v + '%')), )
+                elif k == 'zone_id':
+                    filters += (cls.grave_id == Grave.id,
+                                Grave.zone_id == Zone.id,
+                                db.or_(Zone.description.ilike('%' + v + '%'),
+                                       Zone.complement.ilike('%' + v + '%')), )
                 else:
                     filters += (getattr(cls, k).ilike('%' + v + '%'), )
 
@@ -70,6 +89,8 @@ class Deceased(CRUDMixin, db.Model):
                 orders = (getattr(City.name, order)(), )
             elif criteria == 'grave_id':
                 orders = (getattr(Grave.number, order)(), )
+            elif criteria == 'zone_id':
+                orders = (getattr(Zone.description, order)(), )
             else:
                 orders = (getattr(getattr(cls, criteria), order)(), )
 

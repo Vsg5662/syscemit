@@ -126,6 +126,7 @@ class DeceasedHeadersForm(FlaskForm):
     name = StringField('Nome')
     birthplace_id = StringField('Naturalidade')
     death_datetime = StringField('Data de Falecimento')
+    zone_id = StringField('Região')
     grave_id = StringField('Túmulo')
 
 
