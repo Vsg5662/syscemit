@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from re import findall, DOTALL
+
 from flask import current_app
 
 from ..extensions import db
@@ -21,12 +23,26 @@ class Grave(CRUDMixin, db.Model):
         orders = ['asc', 'desc']
         items = list(search.keys()) + [criteria]
 
+        if 'zone_id' in items:
+            joins += (Zone, )
+            filters += (cls.zone_id == Zone.id, )
+
         for k, v in search.items():
             if k in columns and v:
-                if k == 'zone_id':
-                    filters += (
-                        db.or_(Zone.description.ilike('%' + v + '%'),
-                               Zone.complement.ilike('%' + v + '%')), )
+                if (k == 'street' and
+                        findall(r'^\w+ \w+$', v, flags=DOTALL)):
+                    v = v.split()
+                    filters += (cls.street.ilike('%' + v[0] + '%'),
+                                cls.number.ilike('%' + v[1] + '%'), )
+                elif k == 'zone_id':
+                    if v.isnumeric():
+                        filters += (cls.zone_id == v, )
+                    elif findall(r'^\w+ \w+$', v, flags=DOTALL):
+                        v = v.split()
+                        filters += (Zone.description.ilike('%' + v[0] + '%'),
+                                    Zone.complement.ilike('%' + v[1] + '%'), )
+                    else:
+                        filters += (Zone.description.ilike('%' + v + '%'), )
                 else:
                     filters += (getattr(cls, k).ilike('%' + v + '%'), )
 
@@ -36,20 +52,19 @@ class Grave(CRUDMixin, db.Model):
             else:
                 orders = (getattr(getattr(cls, criteria), order)(), )
 
-        if 'zone_id' in items:
-            joins += (Zone, cls.zone_id == Zone.id, )
-
         return cls.query.join(*joins).filter(*filters).order_by(
             *orders).paginate(page,
                               per_page=current_app.config['PER_PAGE'],
                               error_out=False)
 
     def serialize(self):
-        return {
-            'id':
-            self.id,
-            'name': ('Rua {g.street} - Túmulo {g.number}').format(g=self)
-        }
+        name = []
+        if self.street:
+            name.append('Rua ' + self.street)
+        if self.number:
+            name.append('Túmulo ' + self.number)
+
+        return {'id': self.id, 'name': ' - '.join(name)}
 
     def __repr__(self):
         return '{0}({1} {2})'.format(self.__class__.__name__, self.street,

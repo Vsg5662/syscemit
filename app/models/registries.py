@@ -42,10 +42,8 @@ class Registry(CRUDMixin, db.Model):
                               error_out=False)
 
     def serialize(self):
-        return {
-            'id': self.id,
-            'name': '{s.name} - {s.city.name}'.format(s=self)
-        }
+        name = ' - '.join([self.name, self.city.serialize().get('name')])
+        return {'id': self.id, 'name': name}
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.name)

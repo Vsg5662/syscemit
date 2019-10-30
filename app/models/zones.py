@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from re import findall, DOTALL
+
 from flask import current_app
 
 from ..extensions import db
@@ -20,7 +22,13 @@ class Zone(CRUDMixin, db.Model):
 
         for k, v in search.items():
             if k in columns and v:
-                filters += (getattr(cls, k).ilike('%' + v + '%'), )
+                if (k == 'description' and
+                        findall(r'^\w+ \w+$', v, flags=DOTALL)):
+                    v = v.split()
+                    filters += (cls.description.ilike('%' + v[0] + '%'),
+                                cls.complement.ilike('%' + v[1] + '%'), )
+                else:
+                    filters += (getattr(cls, k).ilike('%' + v + '%'), )
 
         if criteria in columns and order in orders:
             orders = (getattr(getattr(cls, criteria), order)(), )
@@ -31,10 +39,10 @@ class Zone(CRUDMixin, db.Model):
                               error_out=False)
 
     def serialize(self):
-        return {
-            'id': self.id,
-            'name': '{s.description} - {s.complement}'.format(s=self)
-        }
+        name = [self.description]
+        if self.complement:
+            name.append(self.complement)
+        return {'id': self.id, 'name': ' - '.join(name)}
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.description)

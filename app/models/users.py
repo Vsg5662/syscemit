@@ -25,6 +25,10 @@ class User(CRUDMixin, UserMixin, db.Model):
         orders = ['asc', 'desc']
         items = list(search.keys()) + [criteria]
 
+        if 'user_type_id' in items:
+            joins += (UserType, )
+            filters += (cls.user_type_id == UserType.id, )
+
         for k, v in search.items():
             if k in columns and v:
                 if k == 'user_type_id':
@@ -37,9 +41,6 @@ class User(CRUDMixin, UserMixin, db.Model):
                 orders = (getattr(UserType.description, order)(), )
             else:
                 orders = (getattr(getattr(cls, criteria), order)(), )
-
-        if 'user_type_id' in items:
-            joins += (UserType, cls.user_type_id == UserType.id, )
 
         return cls.query.join(*joins).filter(*filters).order_by(
             *orders).paginate(page,

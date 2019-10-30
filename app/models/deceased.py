@@ -53,18 +53,20 @@ class Deceased(CRUDMixin, db.Model):
 
         if 'birthplace_id' in items:
             joins += (City, )
+            filters += (cls.birthplace_id == City.id, )
 
         if 'grave_id' in items or 'zone_id' in items:
             joins += (Grave, )
+            filters += (cls.grave_id == Grave.id, )
 
         if 'zone_id' in items:
             joins += (Zone, )
+            filters += (Grave.zone_id == Zone.id, )
 
         for k, v in search.items():
             if k in columns and v:
                 if k == 'birthplace_id':
-                    filters += (cls.birthplace_id == City.id,
-                                City.name.ilike('%' + v + '%'), )
+                    filters += (City.name.ilike('%' + v + '%'), )
                 elif (k == 'death_datetime' and
                       findall(r'^\d{4} \d{4}$', v, flags=DOTALL)):
                     v = list(map(int, v.split()))
@@ -73,14 +75,19 @@ class Deceased(CRUDMixin, db.Model):
                     filters += (Deceased.death_datetime >= v[0],
                                 Deceased.death_datetime <= v[1], )
                 elif k == 'grave_id':
-                    filters += (cls.grave_id == Grave.id,
-                                db.or_(Grave.street.ilike('%' + v + '%'),
-                                       Grave.number.ilike('%' + v + '%')), )
+                    if findall(r'^\w+ \w+$', v, flags=DOTALL):
+                        v = v.split()
+                        filters += (Grave.street.ilike('%' + v[0] + '%'),
+                                    Grave.number.ilike('%' + v[1] + '%'), )
+                    else:
+                        filters += (Grave.street.ilike('%' + v + '%'), )
                 elif k == 'zone_id':
-                    filters += (cls.grave_id == Grave.id,
-                                Grave.zone_id == Zone.id,
-                                db.or_(Zone.description.ilike('%' + v + '%'),
-                                       Zone.complement.ilike('%' + v + '%')), )
+                    if findall(r'^\w+ \w+$', v, flags=DOTALL):
+                        v = v.split()
+                        filters += (Zone.description.ilike('%' + v[0] + '%'),
+                                    Zone.complement.ilike('%' + v[1] + '%'), )
+                    else:
+                        filters += (Zone.description.ilike('%' + v + '%'), )
                 else:
                     filters += (getattr(cls, k).ilike('%' + v + '%'), )
 

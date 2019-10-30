@@ -31,7 +31,11 @@ class Doctor(CRUDMixin, db.Model):
                               error_out=False)
 
     def serialize(self):
-        return {'id': self.id, 'name': '{s.name} - CRM {s.crm}'.format(s=self)}
+        name = [self.name]
+        if self.crm:
+            name.append('CRM ' + self.crm)
+
+        return {'id': self.id, 'name': ' - '.join(name)}
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.name)
