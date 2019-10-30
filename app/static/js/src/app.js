@@ -241,6 +241,15 @@ var app = {
             }).fail(function() {
               callback();
             });
+        },
+        onChange: function(value) {
+          if (!value) {
+            var grave = $('.grave')[0].selectize;
+            grave.clear();
+            grave.clearOptions();
+            grave.renderCache['item'] = {};
+            grave.renderCache['option'] = {};
+          }
         }
       });
     },
