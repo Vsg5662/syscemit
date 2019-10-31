@@ -20,11 +20,11 @@ def index():
     order = form.order.data
     pagination = Zone.fetch(filters, criteria, order, form.page.data)
     zones = pagination.items
+    filters = {'filters-' + k: v for k, v in filters.items()}
 
     if request.is_xhr and not grid:
         return jsonify({'result': [z.serialize() for z in zones]})
 
-    filters = {'filters-' + k: v for k, v in filters.items()}
     return render_template('zones/index.html',
                            icon='fa-map-marked-alt',
                            title='Regiões',
@@ -61,11 +61,13 @@ def create():
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
 @login_required
 def edit(id):
-    zone = Zone.get_or_404(id)
-    form = ZoneForm(request.form, obj=zone)
     view = request.args.get('format', '', type=str)
     view = True if not current_user.is_admin() else view
     title = 'Região' if view == 'view' else 'Editar Região'
+
+    zone = Zone.get_or_404(id)
+    obj = {'obj': zone} if request.method == 'GET' else {}
+    form = ZoneForm(**obj)
 
     if form.validate() and current_user.is_admin() and request.method == 'PUT':
         form.populate_obj(zone)

@@ -23,6 +23,7 @@ class Deceased(CRUDMixin, db.Model):
     filiations = db.Column(db.String(512))
     registration = db.Column(db.String(40), nullable=False)
     cause = db.Column(db.String(1500), nullable=False)
+    annotation = db.Column(db.String(1500))
     death_address_number = db.Column(db.String(5))
     death_address_complement = db.Column(db.String(255))
     birthplace_id = db.Column(db.Integer, db.ForeignKey('cities.id'))
@@ -49,7 +50,51 @@ class Deceased(CRUDMixin, db.Model):
         joins = filters = ()
         columns = cls.__table__.columns.keys() + ['zone_id']
         orders = ['asc', 'desc']
-        items = list(search.keys()) + [criteria]
+        items = []
+
+        for k, v in search.items():
+            if k in columns and v:
+                if k == 'birthplace_id':
+                    filters += (City.name.ilike('%' + v + '%'), )
+                    items.append(k)
+                elif (k == 'death_datetime' and
+                      findall(r'^\d{4} \d{4}$', v, flags=DOTALL)):
+                    v = list(map(int, v.split()))
+                    v[0] = datetime(v[0], 1, 1)
+                    v[1] = datetime(v[1], 12, 31)
+                    filters += (cls.death_datetime >= v[0],
+                                cls.death_datetime <= v[1], )
+                elif k == 'grave_id':
+                    if findall(r'^\w+ \w+$', v, flags=DOTALL):
+                        v = v.split()
+                        filters += (Grave.street.ilike('%' + v[0] + '%'),
+                                    Grave.number.ilike('%' + v[1] + '%'), )
+                    else:
+                        filters += (Grave.street.ilike('%' + v + '%'), )
+                    items.append(k)
+                elif k == 'zone_id':
+                    if findall(r'^\w+ \w+$', v, flags=DOTALL):
+                        v = v.split()
+                        filters += (Zone.description.ilike('%' + v[0] + '%'),
+                                    Zone.complement.ilike('%' + v[1] + '%'), )
+                    else:
+                        filters += (Zone.description.ilike('%' + v + '%'), )
+                    items.append(k)
+                else:
+                    filters += (getattr(cls, k).ilike('%' + v + '%'), )
+
+        if criteria in columns and order in orders:
+            if criteria == 'birthplace_id':
+                orders = (getattr(City.name, order)(), )
+                items.append(criteria)
+            elif criteria == 'grave_id':
+                orders = (getattr(Grave.number, order)(), )
+                items.append(criteria)
+            elif criteria == 'zone_id':
+                orders = (getattr(Zone.description, order)(), )
+                items.append(criteria)
+            else:
+                orders = (getattr(getattr(cls, criteria), order)(), )
 
         if 'birthplace_id' in items:
             joins += (City, )
@@ -62,44 +107,6 @@ class Deceased(CRUDMixin, db.Model):
         if 'zone_id' in items:
             joins += (Zone, )
             filters += (Grave.zone_id == Zone.id, )
-
-        for k, v in search.items():
-            if k in columns and v:
-                if k == 'birthplace_id':
-                    filters += (City.name.ilike('%' + v + '%'), )
-                elif (k == 'death_datetime' and
-                      findall(r'^\d{4} \d{4}$', v, flags=DOTALL)):
-                    v = list(map(int, v.split()))
-                    v[0] = datetime(v[0], 1, 1)
-                    v[1] = datetime(v[1], 12, 31)
-                    filters += (Deceased.death_datetime >= v[0],
-                                Deceased.death_datetime <= v[1], )
-                elif k == 'grave_id':
-                    if findall(r'^\w+ \w+$', v, flags=DOTALL):
-                        v = v.split()
-                        filters += (Grave.street.ilike('%' + v[0] + '%'),
-                                    Grave.number.ilike('%' + v[1] + '%'), )
-                    else:
-                        filters += (Grave.street.ilike('%' + v + '%'), )
-                elif k == 'zone_id':
-                    if findall(r'^\w+ \w+$', v, flags=DOTALL):
-                        v = v.split()
-                        filters += (Zone.description.ilike('%' + v[0] + '%'),
-                                    Zone.complement.ilike('%' + v[1] + '%'), )
-                    else:
-                        filters += (Zone.description.ilike('%' + v + '%'), )
-                else:
-                    filters += (getattr(cls, k).ilike('%' + v + '%'), )
-
-        if criteria in columns and order in orders:
-            if criteria == 'birthplace_id':
-                orders = (getattr(City.name, order)(), )
-            elif criteria == 'grave_id':
-                orders = (getattr(Grave.number, order)(), )
-            elif criteria == 'zone_id':
-                orders = (getattr(Zone.description, order)(), )
-            else:
-                orders = (getattr(getattr(cls, criteria), order)(), )
 
         return cls.query.join(*joins).filter(*filters).order_by(
             *orders).paginate(page,

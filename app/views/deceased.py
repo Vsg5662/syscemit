@@ -19,8 +19,8 @@ def index():
     order = form.order.data
     pagination = Deceased.fetch(filters, criteria, order, form.page.data)
     deceased = pagination.items
-
     filters = {'filters-' + k: v for k, v in filters.items()}
+
     return render_template('deceased/index.html',
                            icon='fa-coffin',
                            title='Falecidos',
@@ -58,11 +58,13 @@ def create():
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
 @login_required
 def edit(id):
-    deceased = Deceased.get_or_404(id)
-    form = DeceasedForm(request.form, obj=deceased)
     view = request.args.get('format', '', type=str)
     view = True if not current_user.is_admin() else view
     title = 'Falecido' if view == 'view' else 'Editar Falecido'
+
+    deceased = Deceased.get_or_404(id)
+    obj = {'obj': deceased} if request.method == 'GET' else {}
+    form = DeceasedForm(**obj)
     form.refill()
 
     if form.validate() and current_user.is_admin() and request.method == 'PUT':

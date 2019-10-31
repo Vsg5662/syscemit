@@ -19,36 +19,42 @@ from ..utils.forms import get_fields, ORDERS
 
 class DeceasedForm(FlaskForm):
     name = StringField('Nome', [Optional(), Length(1, 255)])
-    age = IntegerField('Idade', [Optional()], widget=NumberInput(min=0))
-    birth_date = DateField('Data de Nascimento', [Optional()],
-                           format='%d/%m/%Y')
-    death_datetime = DateTimeField(
-        'Data de Falecimento',
-        [InputRequired(message='Insira a Data de Falecimento!')],
-        format='%d/%m/%Y %H:%M')
-    gender = RadioField('Genêro', [InputRequired(message='Insira o Genêro!')],
-                        choices=[('M', 'Masculino'), ('F', 'Feminino')])
-    cause = StringField(
-        'Causa da Morte',
-        [InputRequired(message='Insira a Causa da Morte!'),
-         Length(1, 1500)],
-        widget=TextArea())
     registration = StringField(
         'Matrícula do Óbito',
         [InputRequired(message='Insira a Matrícula!'),
          Length(1, 40)])
-    birthplace_id = SelectField('Naturalidade', [Optional()],
-                                choices=(),
-                                coerce=int)
+    gender = RadioField('Genêro', [InputRequired(message='Insira o Genêro!')],
+                        choices=[('M', 'Masculino'), ('F', 'Feminino')])
+    ethnicity_id = SelectField('Etnia',
+                               [InputRequired(message='Insira a Etnia!')],
+                               choices=(),
+                               coerce=int)
     civil_state_id = SelectField('Estado Civil', [Optional()],
                                  choices=(),
                                  coerce=int)
+    age = IntegerField('Idade', [Optional()], widget=NumberInput(min=0))
+    birth_date = DateField('Data de Nascimento', [Optional()],
+                           format='%d/%m/%Y')
+    birthplace_id = SelectField('Naturalidade', [Optional()],
+                                choices=(),
+                                coerce=int)
+    filiations = StringField('Filiação', [Optional(), Length(1, 255)])
+    home_city_id = SelectField('Cidade', [Optional()],
+                               choices=(),
+                               coerce=int)
     home_address_id = SelectField('Endereço Residencial', [Optional()],
                                   choices=(),
                                   coerce=int)
     home_address_number = StringField('Número', [Optional(), Length(1, 5)])
     home_address_complement = StringField(
         'Complemento', [Optional(), Length(1, 255)])
+    death_datetime = DateTimeField(
+        'Data de Falecimento',
+        [InputRequired(message='Insira a Data de Falecimento!')],
+        format='%d/%m/%Y %H:%M')
+    death_city_id = SelectField('Cidade', [Optional()],
+                                choices=(),
+                                coerce=int)
     death_address_id = SelectField(
         'Endereço de Falecimento',
         [InputRequired('Selecione o Endereço de Falecimento')],
@@ -57,14 +63,11 @@ class DeceasedForm(FlaskForm):
     death_address_number = StringField('Número', [Optional(), Length(1, 5)])
     death_address_complement = StringField(
         'Complemento', [Optional(), Length(1, 255)])
-    doctor_id = SelectField(
-        'Médico', [InputRequired(message='Insira o nome do Médico!')],
-        choices=(),
-        coerce=int)
-    ethnicity_id = SelectField('Etnia',
-                               [InputRequired(message='Insira a Etnia!')],
-                               choices=(),
-                               coerce=int)
+    cause = StringField(
+        'Causa da Morte',
+        [InputRequired(message='Insira a Causa da Morte!'),
+         Length(1, 1500)],
+        widget=TextArea())
     zone_id = SelectField('Região',
                           [InputRequired('Insira a região')],
                           choices=(),
@@ -73,11 +76,19 @@ class DeceasedForm(FlaskForm):
                            [InputRequired(message='Insira o Tumulo!')],
                            choices=(),
                            coerce=int)
+    doctor_id = SelectField(
+        'Médico', [InputRequired(message='Insira o nome do Médico!')],
+        choices=(),
+        coerce=int)
     registry_id = SelectField('Cartório',
                               [InputRequired(message='Insira o Cartório!')],
                               choices=(),
                               coerce=int)
-    filiations = StringField('Filiação', [Optional(), Length(1, 255)])
+    annotation = StringField(
+        'Observações / Averbações',
+        [Optional(),
+         Length(1, 1500)],
+        widget=TextArea())
     submit = SubmitField('Salvar')
 
     def __init__(self, *args, **kwargs):
@@ -100,11 +111,17 @@ class DeceasedForm(FlaskForm):
             address = Address.get_or_404(cls.home_address_id.data)
             cls.home_address_id.choices = [
                 tuple(address.serialize().values())]
+            cls.home_city_id.data = address.city.id
+            cls.home_city_id.choices = [
+                tuple(address.city.serialize().values())]
 
         if cls.death_address_id.data:
             address = Address.get_or_404(cls.death_address_id.data)
             cls.death_address_id.choices = [
                 tuple(address.serialize().values())]
+            cls.death_city_id.data = address.city.id
+            cls.death_city_id.choices = [
+                tuple(address.city.serialize().values())]
 
         if cls.doctor_id.data:
             doctor = Doctor.get_or_404(cls.doctor_id.data)

@@ -20,8 +20,8 @@ def index():
     order = form.order.data
     pagination = User.fetch(filters, criteria, order, form.page.data)
     users = pagination.items
-
     filters = {'filters-' + k: v for k, v in filters.items()}
+
     return render_template('users/index.html',
                            icon='fa-users',
                            title='Usuários',
@@ -59,10 +59,12 @@ def create():
 @login_required
 @permission_required('admin')
 def edit(id):
-    user = User.get_or_404(id)
-    form = UserForm(request.form, obj=user)
     view = request.args.get('format', '', type=str)
     title = 'Usuário' if view == 'view' else 'Editar Usuário'
+
+    user = User.get_or_404(id)
+    obj = {'obj': user} if request.method == 'GET' else {}
+    form = UserForm(**obj)
 
     if form.validate() and request.method == 'PUT':
         form.populate_obj(user)

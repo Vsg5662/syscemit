@@ -18,23 +18,26 @@ class Registry(CRUDMixin, db.Model):
         joins = filters = ()
         columns = cls.__table__.columns.keys()
         orders = ['asc', 'desc']
-        items = list(search.keys()) + [criteria]
+        items = []
 
         for k, v in search.items():
             if k in columns and v:
                 if k == 'city_id':
                     filters += (City.name.ilike('%' + v + '%'), )
+                    items.append(k)
                 else:
                     filters += (getattr(cls, k).ilike('%' + v + '%'), )
 
         if criteria in columns and order in orders:
             if criteria == 'city_id':
                 orders = (getattr(City.name, order)(), )
+                items.append(k)
             else:
                 orders = (getattr(getattr(cls, criteria), order)(), )
 
         if 'city_id' in items:
-            joins += (City, cls.city_id == City.id, )
+            joins += (City, )
+            filters += (cls.city_id == City.id, )
 
         return cls.query.join(*joins).filter(*filters).order_by(
             *orders).paginate(page,
@@ -42,7 +45,7 @@ class Registry(CRUDMixin, db.Model):
                               error_out=False)
 
     def serialize(self):
-        name = ' - '.join([self.name, self.city.serialize().get('name')])
+        name = ', '.join([self.name, self.city.serialize().get('name')])
         return {'id': self.id, 'name': name}
 
     def __repr__(self):

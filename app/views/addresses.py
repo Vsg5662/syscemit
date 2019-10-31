@@ -20,11 +20,11 @@ def index():
     order = form.order.data
     pagination = Address.fetch(filters, criteria, order, form.page.data)
     addresses = pagination.items
+    filters = {'filters-' + k: v for k, v in filters.items()}
 
     if request.is_xhr and not grid:
         return jsonify({'result': [a.serialize() for a in addresses]})
 
-    filters = {'filters-' + k: v for k, v in filters.items()}
     return render_template('addresses/index.html',
                            icon='fa-map-signs',
                            title='Endereços',
@@ -62,11 +62,13 @@ def create():
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
 @login_required
 def edit(id):
-    address = Address.get_or_404(id)
-    form = AddressForm(request.form, obj=address)
     view = request.args.get('format', '', type=str)
     view = True if not current_user.is_admin() else view
     title = 'Endereço' if view == 'view' else 'Editar Endereço'
+
+    address = Address.get_or_404(id)
+    obj = {'obj': address} if request.method == 'GET' else {}
+    form = AddressForm(**obj)
     form.refill()
 
     if form.validate() and current_user.is_admin() and request.method == 'PUT':

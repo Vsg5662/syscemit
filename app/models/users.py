@@ -23,24 +23,26 @@ class User(CRUDMixin, UserMixin, db.Model):
         joins = filters = ()
         columns = cls.__table__.columns.keys()
         orders = ['asc', 'desc']
-        items = list(search.keys()) + [criteria]
-
-        if 'user_type_id' in items:
-            joins += (UserType, )
-            filters += (cls.user_type_id == UserType.id, )
+        items = []
 
         for k, v in search.items():
             if k in columns and v:
                 if k == 'user_type_id':
                     filters += (UserType.description.ilike('%' + v + '%'), )
+                    items.append(k)
                 else:
                     filters += (getattr(cls, k).ilike('%' + v + '%'), )
 
         if criteria in columns and order in orders:
             if criteria == 'user_type_id':
                 orders = (getattr(UserType.description, order)(), )
+                items.append(criteria)
             else:
                 orders = (getattr(getattr(cls, criteria), order)(), )
+
+        if 'user_type_id' in items:
+            joins += (UserType, )
+            filters += (cls.user_type_id == UserType.id, )
 
         return cls.query.join(*joins).filter(*filters).order_by(
             *orders).paginate(page,

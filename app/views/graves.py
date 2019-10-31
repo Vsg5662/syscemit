@@ -20,11 +20,11 @@ def index():
     order = form.order.data
     pagination = Grave.fetch(filters, criteria, order, form.page.data)
     graves = pagination.items
+    filters = {'filters-' + k: v for k, v in filters.items()}
 
     if request.is_xhr and not grid:
         return jsonify({'result': [g.serialize() for g in graves]})
 
-    filters = {'filters-' + k: v for k, v in filters.items()}
     return render_template('graves/index.html',
                            icon='fa-tombstone',
                            title='Túmulos',
@@ -62,11 +62,13 @@ def create():
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
 @login_required
 def edit(id):
-    grave = Grave.get_or_404(id)
-    form = GraveForm(request.form, obj=grave)
     view = request.args.get('format', '', type=str)
     title = 'Túmulo' if view == 'view' else 'Editar Túmulo'
     view = True if not current_user.is_admin() else view
+
+    grave = Grave.get_or_404(id)
+    obj = {'obj': grave} if request.method == 'GET' else {}
+    form = GraveForm(**obj)
     form.refill()
 
     if form.validate() and current_user.is_admin() and request.method == 'PUT':

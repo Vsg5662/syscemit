@@ -20,11 +20,11 @@ def index():
     order = form.order.data
     pagination = Registry.fetch(filters, criteria, order, form.page.data)
     registries = pagination.items
+    filters = {'filters-' + k: v for k, v in filters.items()}
 
     if request.is_xhr and not grid:
         return jsonify({'result': [r.serialize() for r in registries]})
 
-    filters = {'filters-' + k: v for k, v in filters.items()}
     return render_template('registries/index.html',
                            icon='fa-books',
                            title='Cartórios',
@@ -62,11 +62,13 @@ def create():
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
 @login_required
 def edit(id):
-    registry = Registry.get_or_404(id)
-    form = RegistryForm(request.form, obj=registry)
     view = request.args.get('format', '', type=str)
     view = True if not current_user.is_admin() else view
     title = 'Cartório' if view == 'view' else 'Editar Cartório'
+
+    registry = Registry.get_or_404(id)
+    obj = {'obj': registry} if request.method == 'GET' else {}
+    form = RegistryForm(**obj)
     form.refill()
 
     if form.validate() and current_user.is_admin() and request.method == 'PUT':

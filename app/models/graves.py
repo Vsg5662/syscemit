@@ -21,11 +21,7 @@ class Grave(CRUDMixin, db.Model):
         joins = filters = ()
         columns = cls.__table__.columns.keys()
         orders = ['asc', 'desc']
-        items = list(search.keys()) + [criteria]
-
-        if 'zone_id' in items:
-            joins += (Zone, )
-            filters += (cls.zone_id == Zone.id, )
+        items = []
 
         for k, v in search.items():
             if k in columns and v:
@@ -43,14 +39,20 @@ class Grave(CRUDMixin, db.Model):
                                     Zone.complement.ilike('%' + v[1] + '%'), )
                     else:
                         filters += (Zone.description.ilike('%' + v + '%'), )
+                    items.append(k)
                 else:
                     filters += (getattr(cls, k).ilike('%' + v + '%'), )
 
         if criteria in columns and order in orders:
             if criteria == 'zone_id':
                 orders = (getattr(Zone.description, order)(), )
+                items.append(criteria)
             else:
                 orders = (getattr(getattr(cls, criteria), order)(), )
+
+        if 'zone_id' in items:
+            joins += (Zone, )
+            filters += (cls.zone_id == Zone.id, )
 
         return cls.query.join(*joins).filter(*filters).order_by(
             *orders).paginate(page,

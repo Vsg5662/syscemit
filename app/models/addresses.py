@@ -32,24 +32,29 @@ class Address(CRUDMixin, db.Model):
         joins = filters = ()
         columns = cls.__table__.columns.keys()
         orders = ['asc', 'desc']
-        items = list(search.keys()) + [criteria]
-
-        if 'city_id' in items:
-            joins += (City, )
-            filters += (cls.city_id == City.id, )
+        items = []
 
         for k, v in search.items():
             if k in columns and v:
                 if k == 'city_id':
-                    filters += (City.name.ilike('%' + v + '%'), )
+                    if v.isnumeric():
+                        filters += (cls.city_id == v, )
+                    else:
+                        filters += (City.name.ilike('%' + v + '%'), )
+                    items.append(k)
                 else:
                     filters += (getattr(cls, k).ilike('%' + v + '%'), )
 
         if criteria in columns and order in orders:
             if criteria == 'city_id':
                 orders = (getattr(City.name, order)(), )
+                items.append(criteria)
             else:
                 orders = (getattr(getattr(cls, criteria), order)(), )
+
+        if 'city_id' in items:
+            joins += (City, )
+            filters += (cls.city_id == City.id, )
 
         return cls.query.join(*joins).filter(*filters).order_by(
             *orders).paginate(page,
@@ -77,7 +82,6 @@ class Address(CRUDMixin, db.Model):
 
     def serialize(self):
         name = ' - '.join([self.street, self.district])
-        name += ', ' + self.city.serialize().get('name')
         if self.cep:
             name += ', CEP ' + self.cep
 
