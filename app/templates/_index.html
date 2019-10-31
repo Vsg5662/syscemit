@@ -43,7 +43,11 @@
                     {% if field.type != 'CSRFTokenField' -%}
                       <th scope="col">
                         <div class="input-group">
-                          {{ field(class="form-control font-weight-bold", placeholder=field.label.text) }}
+                          {% if loop.first %}
+                            {{ field(class="form-control font-weight-bold", placeholder=field.label.text, autofocus=True) }}
+                          {% else %}
+                            {{ field(class="form-control font-weight-bold", placeholder=field.label.text) }}
+                          {% endif %}
                         </div>
                       </th>
                     {%- endif %}

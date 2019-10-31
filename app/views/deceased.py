@@ -71,6 +71,10 @@ def edit(id):
         form.populate_obj(deceased)
         deceased.update()
         return jsonify({'redirect': url_for('deceased.index')})
+    print('-' * 50)
+    print(form.data)
+    print(form.errors)
+    print('-' * 50)
 
     return render_template('deceased/view.html',
                            icon='fa-coffin',

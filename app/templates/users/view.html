@@ -4,7 +4,7 @@
 
 {% block editor %}
 {{ form.csrf_token }}
-{{ render_field(form.login, class_="col-md-6", required=True) }}
+{{ render_field(form.login, class_="col-md-6", autofocus=True, required=True) }}
 {{ render_field(form.name, class_="col-md-6", required=True) }}
 {{ render_field(form.password, class_="col-md-6", required=True) }}
 {{ render_field(form.user_type_id, class_="col-md-6", required=True) }}

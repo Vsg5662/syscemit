@@ -4,7 +4,7 @@
 
 {% block editor %}
 {{ form.csrf_token }}
-{{ render_field(form.name, class_="col-md-12", minlength=1, maxlength=255) }}
+{{ render_field(form.name, class_="col-md-12", minlength=1, maxlength=255, autofocus=True) }}
 {{ render_field(form.registration, class="number", class_="col-md-6", minlength=1, maxlength=40, required=True) }}
 {{ render_multi_field(form.gender, 'radio', class_="col-md-2", required=True) }}
 {{ render_field(form.ethnicity_id, class_="col-md-4", required=True) }}

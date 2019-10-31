@@ -4,7 +4,7 @@
 
 {% block editor %}
 {{ form.csrf_token }}
-{{ render_field(form.name, class_="col-md-6", required=True) }}
+{{ render_field(form.name, class_="col-md-6", autofocus=True, required=True) }}
 {{ render_field(form.city_id, class="city", class_="col-md-6", required=True) }}
 {% endblock %}
 

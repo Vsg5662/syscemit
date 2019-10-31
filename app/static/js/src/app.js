@@ -35,7 +35,7 @@ var app = {
       });
 
       $('.datetime').inputmask({
-        'mask': '99/99/9999[ 99:99]',
+        'mask': '99/99/9999 99:99',
         'clearIncomplete': true,
       });
 
