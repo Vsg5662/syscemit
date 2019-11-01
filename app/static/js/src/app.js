@@ -60,28 +60,33 @@ var app = {
     },
 
     search: function() {
+      var timeout = null;
       $('#search input, #search select').on('change', function() {
-        var $form = $(this).parents('form'),
-          field = $(this).attr('name'),
-          value = $(this).val(),
-          url = new URL(window.location.origin + window.location.pathname),
-          params = new URLSearchParams($form.serialize());
+        var self = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(function() {
+          var $form = $(self).parents('form'),
+            field = $(self).attr('name'),
+            value = $(self).val(),
+            url = new URL(window.location.origin + window.location.pathname),
+            params = new URLSearchParams($form.serialize());
 
-        if (value.length) {
-          params.set(field, value);
-        }
-        params.set('grid', 1);
-        url.search = params.toString();
-        $('#results').load(url.toString().concat(' #results tr'), function() {
-          var state = {};
-          for (var p of params.entries()) {
-            state[p[0]] = p[1];
+          if (value.length) {
+            params.set(field, value);
           }
-          history.pushState(state, document.title, url.toString());
-          params.set('export', 1);
+          params.set('grid', 1);
           url.search = params.toString();
-          $('.export').attr('href', url.toString());
-        });
+          $('#results').load(url.toString().concat(' #results tr'), function() {
+            var state = {};
+            for (var p of params.entries()) {
+              state[p[0]] = p[1];
+            }
+            history.pushState(state, document.title, url.toString());
+            params.set('export', 1);
+            url.search = params.toString();
+            $('.export').attr('href', url.toString());
+          });
+        }, 500);
       });
     },
 
