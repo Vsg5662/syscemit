@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from ..decorators import permission_required
+from ..extensions import excel
 from ..forms.graves import GraveForm, GraveSearchForm
 from ..models.graves import Grave
 
@@ -15,12 +16,19 @@ bp = Blueprint('graves', __name__, url_prefix='/tumulos')
 def index():
     form = GraveSearchForm(request.args)
     grid = request.args.get('grid', 0, type=bool)
+    export = request.args.get('export', 0, type=int)
     filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
     pagination = Grave.fetch(filters, criteria, order, form.page.data)
     graves = pagination.items
     filters = {'filters-' + k: v for k, v in filters.items()}
+
+    if export and current_user.is_admin():
+        export = Grave.dump(pagination)
+        return excel.make_response_from_array(export,
+                                              'xlsx',
+                                              file_name='Túmulos.xlsx')
 
     if request.is_xhr and not grid:
         return jsonify({'result': [g.serialize() for g in graves]})

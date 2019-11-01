@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from ..decorators import permission_required
+from ..extensions import excel
 from ..forms.registries import RegistryForm, RegistrySearchForm
 from ..models.registries import Registry
 
@@ -15,12 +16,19 @@ bp = Blueprint('registries', __name__, url_prefix='/cartorios')
 def index():
     form = RegistrySearchForm(request.args)
     grid = request.args.get('grid', 0, type=bool)
+    export = request.args.get('export', 0, type=int)
     filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
     pagination = Registry.fetch(filters, criteria, order, form.page.data)
     registries = pagination.items
     filters = {'filters-' + k: v for k, v in filters.items()}
+
+    if export and current_user.is_admin():
+        export = Registry.dump(pagination)
+        return excel.make_response_from_array(export,
+                                              'xlsx',
+                                              file_name='Cartórios.xlsx')
 
     if request.is_xhr and not grid:
         return jsonify({'result': [r.serialize() for r in registries]})

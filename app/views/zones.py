@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from ..decorators import permission_required
+from ..extensions import excel
 from ..forms.zones import ZoneForm, ZoneSearchForm
 from ..models.zones import Zone
 
@@ -15,12 +16,19 @@ bp = Blueprint('zones', __name__, url_prefix='/regioes')
 def index():
     form = ZoneSearchForm(request.args)
     grid = request.args.get('grid', 0, type=bool)
+    export = request.args.get('export', 0, type=int)
     filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
     pagination = Zone.fetch(filters, criteria, order, form.page.data)
     zones = pagination.items
     filters = {'filters-' + k: v for k, v in filters.items()}
+
+    if export and current_user.is_admin():
+        export = Zone.dump(pagination)
+        return excel.make_response_from_array(export,
+                                              'xlsx',
+                                              file_name='Regiões.xlsx')
 
     if request.is_xhr and not grid:
         return jsonify({'result': [z.serialize() for z in zones]})

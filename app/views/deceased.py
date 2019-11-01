@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from ..decorators import permission_required
+from ..extensions import excel
 from ..forms.deceased import DeceasedForm, DeceasedSearchForm
 from ..models.deceased import Deceased
 
@@ -14,12 +15,19 @@ bp = Blueprint('deceased', __name__, url_prefix='/falecidos')
 @login_required
 def index():
     form = DeceasedSearchForm(request.args)
+    export = request.args.get('export', 0, type=int)
     filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
     pagination = Deceased.fetch(filters, criteria, order, form.page.data)
     deceased = pagination.items
     filters = {'filters-' + k: v for k, v in filters.items()}
+
+    if export and current_user.is_admin():
+        export = Deceased.dump(pagination)
+        return excel.make_response_from_array(export,
+                                              'xlsx',
+                                              file_name='Falecidos.xlsx')
 
     return render_template('deceased/index.html',
                            icon='fa-coffin',

@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from ..decorators import permission_required
+from ..extensions import excel
 from ..forms.addresses import AddressForm, AddressSearchForm
 from ..models.addresses import Address
 
@@ -14,13 +15,20 @@ bp = Blueprint('addresses', __name__, url_prefix='/enderecos')
 @login_required
 def index():
     form = AddressSearchForm(request.args)
-    grid = request.args.get('grid', 0, type=bool)
+    grid = request.args.get('grid', 0, type=int)
+    export = request.args.get('export', 0, type=int)
     filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
     pagination = Address.fetch(filters, criteria, order, form.page.data)
     addresses = pagination.items
     filters = {'filters-' + k: v for k, v in filters.items()}
+
+    if export and current_user.is_admin():
+        export = Address.dump(pagination)
+        return excel.make_response_from_array(export,
+                                              'xlsx',
+                                              file_name='Endereços.xlsx')
 
     if request.is_xhr and not grid:
         return jsonify({'result': [a.serialize() for a in addresses]})

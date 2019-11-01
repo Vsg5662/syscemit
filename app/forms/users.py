@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import (IntegerField, FormField, PasswordField,
-                     SelectField, StringField, SubmitField)
+from wtforms import (FormField, IntegerField, PasswordField, SelectField,
+                     StringField, SubmitField)
 from wtforms.validators import InputRequired, Length, Required
 
 from ..models.user_types import UserType
-from ..utils.forms import get_fields, ORDERS
+from ..utils.forms import ORDERS, get_fields
 
 
 class UserForm(FlaskForm):

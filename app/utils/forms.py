@@ -12,6 +12,5 @@ class MultiCheckboxField(SelectMultipleField):
 
 
 def get_fields(form):
-    return [(k, v) for k in form.__dict__.keys()
-            if not k.startswith('_')
+    return [(k, v) for k in form.__dict__.keys() if not k.startswith('_')
             for v in [getattr(form, k).args[0]]]

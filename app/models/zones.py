@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from re import findall, DOTALL
+from itertools import chain
+from re import DOTALL, findall
 
 from flask import current_app
 
@@ -22,27 +23,33 @@ class Zone(CRUDMixin, db.Model):
 
         for k, v in search.items():
             if k in columns and v:
-                if (k == 'description' and
-                        findall(r'^\w+ \w+$', v, flags=DOTALL)):
+                if (k == 'description'
+                        and findall(r'^\w+ \w+$', v, flags=DOTALL)):
                     v = v.split()
-                    filters += (cls.description.ilike('%' + v[0] + '%'),
-                                cls.complement.ilike('%' + v[1] + '%'), )
+                    filters += (
+                        cls.description.ilike('%' + v[0] + '%'),
+                        cls.complement.ilike('%' + v[1] + '%'),
+                    )
                 else:
                     filters += (getattr(cls, k).ilike('%' + v + '%'), )
 
         if criteria in columns and order in orders:
             orders = (getattr(getattr(cls, criteria), order)(), )
 
-        return cls.query.filter(*filters).order_by(
-            *orders).paginate(page,
-                              per_page=current_app.config['PER_PAGE'],
-                              error_out=False)
+        return cls.query.filter(*filters).order_by(*orders).paginate(
+            page, per_page=current_app.config['PER_PAGE'], error_out=False)
 
     def serialize(self):
         name = [self.description]
         if self.complement:
             name.append(self.complement)
         return {'id': self.id, 'name': ' - '.join(name)}
+
+    @staticmethod
+    def dump(pagination):
+        headers = iter([('DESCRIÇÃO', 'COMPLEMENTO')])
+        data = ((z.description, z.complement) for z in pagination.query.all())
+        return chain(headers, data)
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.description)

@@ -14,7 +14,7 @@ from ..models.doctors import Doctor
 from ..models.ethnicities import Ethnicity
 from ..models.graves import Grave
 from ..models.registries import Registry
-from ..utils.forms import get_fields, ORDERS
+from ..utils.forms import ORDERS, get_fields
 
 
 class DeceasedForm(FlaskForm):
@@ -39,9 +39,7 @@ class DeceasedForm(FlaskForm):
                                 choices=(),
                                 coerce=int)
     filiations = StringField('Filiação', [Optional(), Length(1, 255)])
-    home_city_id = SelectField('Cidade', [Optional()],
-                               choices=(),
-                               coerce=int)
+    home_city_id = SelectField('Cidade', [Optional()], choices=(), coerce=int)
     home_address_id = SelectField('Endereço Residencial', [Optional()],
                                   choices=(),
                                   coerce=int)
@@ -52,9 +50,7 @@ class DeceasedForm(FlaskForm):
         'Data de Falecimento',
         [InputRequired(message='Insira a Data de Falecimento!')],
         format='%d/%m/%Y %H:%M')
-    death_city_id = SelectField('Cidade', [Optional()],
-                                choices=(),
-                                coerce=int)
+    death_city_id = SelectField('Cidade', [Optional()], choices=(), coerce=int)
     death_address_id = SelectField(
         'Endereço de Falecimento',
         [InputRequired('Selecione o Endereço de Falecimento')],
@@ -68,8 +64,7 @@ class DeceasedForm(FlaskForm):
         [InputRequired(message='Insira a Causa da Morte!'),
          Length(1, 1500)],
         widget=TextArea())
-    zone_id = SelectField('Região',
-                          [InputRequired('Insira a região')],
+    zone_id = SelectField('Região', [InputRequired('Insira a região')],
                           choices=(),
                           coerce=int)
     grave_id = SelectField('Túmulo',
@@ -84,11 +79,9 @@ class DeceasedForm(FlaskForm):
                               [InputRequired(message='Insira o Cartório!')],
                               choices=(),
                               coerce=int)
-    annotation = StringField(
-        'Observações / Averbações',
-        [Optional(),
-         Length(1, 1500)],
-        widget=TextArea())
+    annotation = StringField('Observações / Averbações',
+                             [Optional(), Length(1, 1500)],
+                             widget=TextArea())
     submit = SubmitField('Salvar')
 
     def __init__(self, *args, **kwargs):
@@ -109,19 +102,21 @@ class DeceasedForm(FlaskForm):
 
         if cls.home_address_id.data:
             address = Address.get_or_404(cls.home_address_id.data)
-            cls.home_address_id.choices = [
-                tuple(address.serialize().values())]
+            cls.home_address_id.choices = [tuple(address.serialize().values())]
             cls.home_city_id.data = address.city.id
             cls.home_city_id.choices = [
-                tuple(address.city.serialize().values())]
+                tuple(address.city.serialize().values())
+            ]
 
         if cls.death_address_id.data:
             address = Address.get_or_404(cls.death_address_id.data)
             cls.death_address_id.choices = [
-                tuple(address.serialize().values())]
+                tuple(address.serialize().values())
+            ]
             cls.death_city_id.data = address.city.id
             cls.death_city_id.choices = [
-                tuple(address.city.serialize().values())]
+                tuple(address.city.serialize().values())
+            ]
 
         if cls.doctor_id.data:
             doctor = Doctor.get_or_404(cls.doctor_id.data)

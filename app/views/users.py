@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, render_template, request, url_for
 from flask_login import login_required
 
 from ..decorators import permission_required
+from ..extensions import excel
 from ..forms.users import UserForm, UserSearchForm
 from ..models.users import User
 
@@ -15,12 +16,19 @@ bp = Blueprint('users', __name__, url_prefix='/usuarios')
 @permission_required('admin')
 def index():
     form = UserSearchForm(request.args)
+    export = request.args.get('export', 0, type=int)
     filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
     pagination = User.fetch(filters, criteria, order, form.page.data)
     users = pagination.items
     filters = {'filters-' + k: v for k, v in filters.items()}
+
+    if export:
+        export = User.dump(pagination)
+        return excel.make_response_from_array(export,
+                                              'xlsx',
+                                              file_name='Usuários.xlsx')
 
     return render_template('users/index.html',
                            icon='fa-users',

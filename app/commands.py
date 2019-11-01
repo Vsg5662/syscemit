@@ -70,8 +70,8 @@ def init_app(app):
         '''List all users.'''
         print('{:<20}{:<20}{:<20}'.format('LOGIN', 'NAME', 'TYPE'))
         for u in User.query.all():
-            print('{:<20}{:<20}{:<20}'.format(
-                u.login, u.name, u.user_type.role))
+            print('{:<20}{:<20}{:<20}'.format(u.login, u.name,
+                                              u.user_type.role))
 
     @user_cli.command()
     @click.confirmation_option(prompt='Do you really want to delete the user?')

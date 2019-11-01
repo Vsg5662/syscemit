@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from re import findall, DOTALL
+from itertools import chain
+from re import DOTALL, findall
 
 from flask import current_app
 
@@ -25,18 +26,21 @@ class Grave(CRUDMixin, db.Model):
 
         for k, v in search.items():
             if k in columns and v:
-                if (k == 'street' and
-                        findall(r'^\w+ \w+$', v, flags=DOTALL)):
+                if (k == 'street' and findall(r'^\w+ \w+$', v, flags=DOTALL)):
                     v = v.split()
-                    filters += (cls.street.ilike('%' + v[0] + '%'),
-                                cls.number.ilike('%' + v[1] + '%'), )
+                    filters += (
+                        cls.street.ilike('%' + v[0] + '%'),
+                        cls.number.ilike('%' + v[1] + '%'),
+                    )
                 elif k == 'zone_id':
                     if v.isnumeric():
                         filters += (cls.zone_id == v, )
                     elif findall(r'^\w+ \w+$', v, flags=DOTALL):
                         v = v.split()
-                        filters += (Zone.description.ilike('%' + v[0] + '%'),
-                                    Zone.complement.ilike('%' + v[1] + '%'), )
+                        filters += (
+                            Zone.description.ilike('%' + v[0] + '%'),
+                            Zone.complement.ilike('%' + v[1] + '%'),
+                        )
                     else:
                         filters += (Zone.description.ilike('%' + v + '%'), )
                     items.append(k)
@@ -67,6 +71,14 @@ class Grave(CRUDMixin, db.Model):
             name.append('Túmulo ' + self.number)
 
         return {'id': self.id, 'name': ' - '.join(name)}
+
+    @staticmethod
+    def dump(pagination):
+        headers = iter([('RUA', 'NÚMERO', 'REGIÃO')])
+        data = ((g.street, g.number,
+                 g.zone.serialize().get('name') if g.zone else '')
+                for g in pagination.query.all())
+        return chain(headers, data)
 
     def __repr__(self):
         return '{0}({1} {2})'.format(self.__class__.__name__, self.street,

@@ -22,6 +22,10 @@ var app = {
       window.history.back();
     },
 
+    export: function() {
+      $('.export').attr('href', window.location.href + '?export=1');
+    },
+
     mask: function() {
       // Input field masks
       $('.cep').inputmask({
@@ -43,7 +47,7 @@ var app = {
     },
 
     remove: function(button) {
-      var url = $(button).data('action');
+      var url = $(button).data('delete-href');
       $('.modal-delete').modal('toggle');
       $('.modal-delete').on('shown.bs.modal', function() {
         $('.btn-yes').on('click', function() {
@@ -68,7 +72,16 @@ var app = {
         }
         params.set('grid', 1);
         url.search = params.toString();
-        $('#results').load(url.toString().concat(' #results tr'));
+        $('#results').load(url.toString().concat(' #results tr'), function() {
+          var state = {};
+          for (var p of params.entries()) {
+            state[p[0]] = p[1];
+          }
+          history.pushState(state, document.title, url.toString());
+          params.set('export', 1);
+          url.search = params.toString();
+          $('.export').attr('href', url.toString());
+        });
       });
     },
 
@@ -296,6 +309,7 @@ var app = {
     // Init bootstrap-material-design
     $('body').bootstrapMaterialDesign();
     $('input[autofocus]').focus();
+    this.methods.export();
     this.methods.search();
     this.methods.selectors();
     this.methods.mask();

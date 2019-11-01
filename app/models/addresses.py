@@ -2,6 +2,7 @@
 
 import csv
 import os
+from itertools import chain
 
 from flask import current_app
 
@@ -86,6 +87,13 @@ class Address(CRUDMixin, db.Model):
             name += ', CEP ' + self.cep
 
         return {'id': self.id, 'name': name}
+
+    @staticmethod
+    def dump(pagination):
+        headers = iter([('RUA', 'BAIRRO', 'CEP', 'CIDADE', 'ESTADO')])
+        data = ((a.street, a.district, a.cep, a.city.name, a.city.state.uf)
+                for a in pagination.query.all())
+        return chain(headers, data)
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.street)

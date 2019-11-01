@@ -14,7 +14,7 @@
           <a href="{{ url_for('registries.edit', id=r.id) }}" class="btn btn-raised btn-warning" title="Editar">
             <i class="fas fa-edit"></i>
           </a>
-          <a class="btn btn-raised btn-danger" data-action="{{ url_for('registries.delete', id=r.id) }}" onclick="app.methods.remove(this)" title="Remover">
+          <a class="btn btn-raised btn-danger" data-delete-href="{{ url_for('registries.delete', id=r.id) }}" onclick="app.methods.remove(this)" title="Remover">
             <i class="fas fa-trash"></i>
           </a>
         {% endif %}

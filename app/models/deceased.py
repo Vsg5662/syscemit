@@ -1,14 +1,16 @@
+# -*- coding: utf-8 -*-
+
 from datetime import datetime
-from re import findall, DOTALL
+from itertools import chain
+from re import DOTALL, findall
 
 from flask import current_app
 
+from ..extensions import db
+from ..mixins import CRUDMixin
 from .cities import City
 from .graves import Grave
 from .zones import Zone
-
-from ..extensions import db
-from ..mixins import CRUDMixin
 
 
 class Deceased(CRUDMixin, db.Model):
@@ -57,26 +59,32 @@ class Deceased(CRUDMixin, db.Model):
                 if k == 'birthplace_id':
                     filters += (City.name.ilike('%' + v + '%'), )
                     items.append(k)
-                elif (k == 'death_datetime' and
-                      findall(r'^\d{4} \d{4}$', v, flags=DOTALL)):
+                elif (k == 'death_datetime'
+                      and findall(r'^\d{4} \d{4}$', v, flags=DOTALL)):
                     v = list(map(int, v.split()))
                     v[0] = datetime(v[0], 1, 1)
                     v[1] = datetime(v[1], 12, 31)
-                    filters += (cls.death_datetime >= v[0],
-                                cls.death_datetime <= v[1], )
+                    filters += (
+                        cls.death_datetime >= v[0],
+                        cls.death_datetime <= v[1],
+                    )
                 elif k == 'grave_id':
                     if findall(r'^\w+ \w+$', v, flags=DOTALL):
                         v = v.split()
-                        filters += (Grave.street.ilike('%' + v[0] + '%'),
-                                    Grave.number.ilike('%' + v[1] + '%'), )
+                        filters += (
+                            Grave.street.ilike('%' + v[0] + '%'),
+                            Grave.number.ilike('%' + v[1] + '%'),
+                        )
                     else:
                         filters += (Grave.street.ilike('%' + v + '%'), )
                     items.append(k)
                 elif k == 'zone_id':
                     if findall(r'^\w+ \w+$', v, flags=DOTALL):
                         v = v.split()
-                        filters += (Zone.description.ilike('%' + v[0] + '%'),
-                                    Zone.complement.ilike('%' + v[1] + '%'), )
+                        filters += (
+                            Zone.description.ilike('%' + v[0] + '%'),
+                            Zone.complement.ilike('%' + v[1] + '%'),
+                        )
                     else:
                         filters += (Zone.description.ilike('%' + v + '%'), )
                     items.append(k)
@@ -112,6 +120,43 @@ class Deceased(CRUDMixin, db.Model):
             *orders).paginate(page,
                               per_page=current_app.config['PER_PAGE'],
                               error_out=False)
+
+    @staticmethod
+    def dump(pagination):
+        headers = iter([
+            ('NOME', 'MATRÍCULA DO ÓBITO', 'GENÊRO', 'ETNIA', 'ESTADO CIVIL',
+             'DATA DE NASCIMENTO', 'IDADE', 'NATURALIDADE', 'FILIAÇÃO',
+             'ENDEREÇO RESIDENCIAL', 'DATA DE FALECIMENTO',
+             'ENDEREÇO DE FALECIMENTO', 'CAUSA DA MORTE', 'REGIÃO', 'TÚMULO',
+             'MÉDICO', 'CARTÓRIO', 'OBSERVAÇÕES')
+        ])
+        data = ((d.name, d.registration, d.gender, d.ethnicity.description,
+                 d.civil_states.description, d.birth_date, d.age,
+                 d.city.serialize().get('name'), d.filiations,
+                 ', '.join(list(filter(None, (
+                     d.address_home.serialize().get('name')
+                     if d.address_home else '',
+                     ' - '.join(list(filter(None, (
+                         d.home_address_number,
+                         d.home_address_complement)))),
+                     d.address_home.city.serialize().get('name')
+                     if d.address_home else '')))),
+                 d.death_datetime,
+                 ', '.join(list(filter(None, (
+                     d.address_death.serialize().get('name')
+                     if d.address_death else '',
+                     ' - '.join(list(filter(None, (
+                         d.death_address_number,
+                         d.death_address_complement)))),
+                     d.address_death.city.serialize().get('name')
+                     if d.address_death else '')))),
+                 d.cause,
+                 d.grave.zone.serialize().get('name') if d.grave else '',
+                 d.grave.serialize().get('name') if d.grave else '',
+                 d.doctor.serialize().get('name') if d.doctor else '',
+                 d.registry.serialize().get('name') if d.registry else '',
+                 d.annotation) for d in pagination.query.all())
+        return chain(headers, data)
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.name)

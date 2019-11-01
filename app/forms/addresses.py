@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import (IntegerField, FormField, SelectField,
-                     StringField, SubmitField)
+from wtforms import (FormField, IntegerField, SelectField, StringField,
+                     SubmitField)
 from wtforms.validators import InputRequired, Length
 
 from ..models.cities import City
-from ..utils.forms import get_fields, ORDERS
+from ..utils.forms import ORDERS, get_fields
 
 
 class AddressForm(FlaskForm):

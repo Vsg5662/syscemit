@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from itertools import chain
+
 from flask import current_app
 
 from ..extensions import db
@@ -47,6 +49,13 @@ class Registry(CRUDMixin, db.Model):
     def serialize(self):
         name = ', '.join([self.name, self.city.serialize().get('name')])
         return {'id': self.id, 'name': name}
+
+    @staticmethod
+    def dump(pagination):
+        headers = iter([('NOME', 'CIDADE')])
+        data = ((r.name, r.city.serialize().get('name') if r.city else '')
+                for r in pagination.query.all())
+        return chain(headers, data)
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.name)

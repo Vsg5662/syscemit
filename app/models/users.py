@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from itertools import chain
+
 from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -48,6 +50,13 @@ class User(CRUDMixin, UserMixin, db.Model):
             *orders).paginate(page,
                               per_page=current_app.config['PER_PAGE'],
                               error_out=False)
+
+    @staticmethod
+    def dump(pagination):
+        headers = iter([('NOME', 'LOGIN', 'TIPO')])
+        data = ((u.name, u.login, u.user_type.description)
+                for u in pagination.query.all())
+        return chain(headers, data)
 
     @property
     def password(self):
