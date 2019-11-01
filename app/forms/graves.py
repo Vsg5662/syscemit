@@ -11,10 +11,10 @@ from ..utils.forms import ORDERS, get_fields
 
 class GraveForm(FlaskForm):
     street = StringField(
-        'Rua', [InputRequired(message='Insira a rua!'),
+        'Rua', [InputRequired(message='Insira a rua do túmulo!'),
                 Length(1, 255)])
     number = StringField(
-        'Número', [InputRequired(message='Insira o Número!'),
+        'Número', [InputRequired(message='Insira o número do túmulo!'),
                    Length(1, 255)])
     zone_id = SelectField('Região',
                           [InputRequired(message='Selecione uma região!')],

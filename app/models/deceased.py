@@ -124,7 +124,7 @@ class Deceased(CRUDMixin, db.Model):
     @staticmethod
     def dump(pagination):
         headers = iter([
-            ('NOME', 'MATRÍCULA DO ÓBITO', 'GENÊRO', 'ETNIA', 'ESTADO CIVIL',
+            ('NOME', 'MATRÍCULA DO ÓBITO', 'GÊNERO', 'ETNIA', 'ESTADO CIVIL',
              'DATA DE NASCIMENTO', 'IDADE', 'NATURALIDADE', 'FILIAÇÃO',
              'ENDEREÇO RESIDENCIAL', 'DATA DE FALECIMENTO',
              'ENDEREÇO DE FALECIMENTO', 'CAUSA DA MORTE', 'REGIÃO', 'TÚMULO',

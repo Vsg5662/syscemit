@@ -10,7 +10,7 @@ from ..utils.forms import ORDERS, get_fields
 
 class ZoneForm(FlaskForm):
     description = StringField(
-        'Descricao',
+        'Descrição',
         [InputRequired(message='Insira o nome da região!'),
          Length(1, 255)])
     complement = StringField('Complemento', [Optional(), Length(1, 20)])

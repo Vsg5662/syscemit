@@ -15,7 +15,8 @@ class RegistryForm(FlaskForm):
         [InputRequired(message='Insira o nome do cartório!'),
          Length(1, 255)])
     city_id = SelectField('Cidade',
-                          [InputRequired(message='Selecione uma cidade!')],
+                          [InputRequired(
+                              message='Selecione a cidade do cartório!')],
                           choices=(),
                           coerce=int)
     submit = SubmitField('Salvar')

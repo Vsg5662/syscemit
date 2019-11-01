@@ -21,12 +21,12 @@ class DeceasedForm(FlaskForm):
     name = StringField('Nome', [Optional(), Length(1, 255)])
     registration = StringField(
         'Matrícula do Óbito',
-        [InputRequired(message='Insira a Matrícula!'),
+        [InputRequired(message='Insira a matrícula!'),
          Length(1, 40)])
-    gender = RadioField('Genêro', [InputRequired(message='Insira o Genêro!')],
+    gender = RadioField('Gênero', [InputRequired(message='Insira o gênero!')],
                         choices=[('M', 'Masculino'), ('F', 'Feminino')])
     ethnicity_id = SelectField('Etnia',
-                               [InputRequired(message='Insira a Etnia!')],
+                               [InputRequired(message='Insira a etnia!')],
                                choices=(),
                                coerce=int)
     civil_state_id = SelectField('Estado Civil', [Optional()],
@@ -48,12 +48,12 @@ class DeceasedForm(FlaskForm):
         'Complemento', [Optional(), Length(1, 255)])
     death_datetime = DateTimeField(
         'Data de Falecimento',
-        [InputRequired(message='Insira a Data de Falecimento!')],
+        [InputRequired(message='Insira a data de falecimento!')],
         format='%d/%m/%Y %H:%M')
     death_city_id = SelectField('Cidade', [Optional()], choices=(), coerce=int)
     death_address_id = SelectField(
         'Endereço de Falecimento',
-        [InputRequired('Selecione o Endereço de Falecimento')],
+        [InputRequired('Selecione o endereço de falecimento')],
         choices=(),
         coerce=int)
     death_address_number = StringField('Número', [Optional(), Length(1, 5)])
@@ -61,22 +61,22 @@ class DeceasedForm(FlaskForm):
         'Complemento', [Optional(), Length(1, 255)])
     cause = StringField(
         'Causa da Morte',
-        [InputRequired(message='Insira a Causa da Morte!'),
+        [InputRequired(message='Insira a causa da morte!'),
          Length(1, 1500)],
         widget=TextArea())
     zone_id = SelectField('Região', [InputRequired('Insira a região')],
                           choices=(),
                           coerce=int)
     grave_id = SelectField('Túmulo',
-                           [InputRequired(message='Insira o Tumulo!')],
+                           [InputRequired(message='Insira o túmulo!')],
                            choices=(),
                            coerce=int)
     doctor_id = SelectField(
-        'Médico', [InputRequired(message='Insira o nome do Médico!')],
+        'Médico', [InputRequired(message='Insira o nome do médico!')],
         choices=(),
         coerce=int)
     registry_id = SelectField('Cartório',
-                              [InputRequired(message='Insira o Cartório!')],
+                              [InputRequired(message='Insira o cartório!')],
                               choices=(),
                               coerce=int)
     annotation = StringField('Observações / Averbações',

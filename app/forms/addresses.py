@@ -11,17 +11,18 @@ from ..utils.forms import ORDERS, get_fields
 
 class AddressForm(FlaskForm):
     street = StringField(
-        'Rua', [InputRequired(message='Insira a Rua!'),
+        'Rua', [InputRequired(message='Insira a rua do endereço!'),
                 Length(1, 255)])
     district = StringField(
-        'Bairro', [InputRequired(message='Insira a Bairro!'),
+        'Bairro', [InputRequired(message='Insira o bairro do endereço!'),
                    Length(1, 255)])
     city_id = SelectField('Cidade',
-                          [InputRequired(message='Selecione uma cidade!')],
+                          [InputRequired(
+                              message='Selecione a cidade do endereço!')],
                           choices=(),
                           coerce=int)
     cep = StringField('CEP',
-                      [InputRequired(message='Insira a CEP!'),
+                      [InputRequired(message='Insira o CEP do endereço!'),
                        Length(1, 255)])
     submit = SubmitField('Salvar')
 
