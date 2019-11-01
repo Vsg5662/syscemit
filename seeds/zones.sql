@@ -1,11 +1,14 @@
 INSERT INTO zones (description, complement) VALUES
+('Cemitério São João Batista','Novo'),
+('Cemitério São João Batista','Antigo'),
+('Cruzeiro',''),
 ('Ala','1'),
 ('Ala','2'),
-('Cemitério do Santissimo Sacramento','1'),
-('Cemitério do Santissimo Sacramento','2'),
-('Cruzeiro',''),
 ('Quadra','A'),
 ('Quadra','B'),
 ('Quadra','C'),
 ('Quadra','D'),
-('São joao Batista','');
+('Valas',''),
+('Valinha',''),
+('Cemitério Santíssimo Sacramento','1'),
+('Cemitério Santíssimo Sacramento','2');
