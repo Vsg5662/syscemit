@@ -130,8 +130,12 @@ class Deceased(CRUDMixin, db.Model):
              'ENDEREÇO DE FALECIMENTO', 'CAUSA DA MORTE', 'REGIÃO', 'TÚMULO',
              'MÉDICO', 'CARTÓRIO', 'OBSERVAÇÕES')
         ])
-        data = ((d.name, d.registration, d.gender, d.ethnicity.description,
-                 d.civil_states.description, d.birth_date, d.age,
+        data = ((d.name, d.registration, d.gender,
+                 d.ethnicity.description
+                 if d.ethnicity else '',
+                 d.civil_states.description
+                 if d.civil_states else '',
+                 d.birth_date, d.age,
                  d.city.serialize().get('name'), d.filiations,
                  ', '.join(list(filter(None, (
                      d.address_home.serialize().get('name')
