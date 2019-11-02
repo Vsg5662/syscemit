@@ -1,9 +1,9 @@
-INSERT INTO doctors (name, crm) VALUES
-('Dr. Angelo Scaldini Salomão','134.764'),
-('Dra Areana Diogo N. Mendonça','104176'),
-('Dra. Christiane Akemi Kojima','134.804'),
-('Dr. Fabio Henrique Mendonça','91.596'),
-('Dr. Fernando José Secanho','142.066'),
-('Dra. Marcelle Gattass Ayub Antunes','130.619'),
-('Dr. Murilo Gattass Ayub','108.323'),
-('Dr. Rafael Miranda Silvestre','125.381');
+INSERT INTO	doctors (name, crm) VALUES 
+	('DR. ANGELO SCALDINI SALOMÃO','134764'),
+	('DRA AREANA DIOGO N. MENDONÇA','104176'),
+	('DRA. CHRISTIANE AKEMI KOJIMA','134804'),
+	('DR. FABIO HENRIQUE MENDONÇA','91596'),
+	('DR. FERNANDO JOSÉ SECANHO','142066'),
+	('DRA. MARCELLE GATTASS AYUB ANTUNES','130619'),
+	('DR. MURILO GATTASS AYUB','108323'),
+	('DR. RAFAEL MIRANDA SILVESTRE','125381');
