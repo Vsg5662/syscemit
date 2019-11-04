@@ -33,7 +33,7 @@ pip install -r dev-requirements.txt
 ```bash
 ./console db migrate
 ```
-### Aplica as mudanças. 
+### Aplica as mudanças.
 ```bash
 ./console db upgrade
 ```
@@ -46,6 +46,18 @@ pip install -r dev-requirements.txt
 ## Criando um usuário funcionário
 ```bash
 ./console user create -n user -l user -t 2
+```
+
+## Backup e restauração do banco de dados de desenvolvimento
+### Realizando o backup do banco de dados de desenvolvimento para um arquivo.
+```bash
+./seeds/utils/litedump backup seeds/dev-dump storage-dev.db
+
+```
+
+### Recuperando o banco de dados desenvolvimento a partir de um arquivo.
+```bash
+./seeds/utils/litedump restore seeds/dev-dump.gz storage-dev.db
 ```
 
 ## Rodando servidor e aplicação
