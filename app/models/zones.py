@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import csv
+import os
+
 from itertools import chain
 from re import DOTALL, findall
 
 from flask import current_app
 
+from config import basedir
 from ..extensions import db
 from ..mixins import CRUDMixin
 
@@ -44,6 +48,19 @@ class Zone(CRUDMixin, db.Model):
         if self.complement:
             name.append(self.complement)
         return {'id': self.id, 'name': ' - '.join(name)}
+
+    @classmethod
+    def populate(cls):
+        path = os.path.join(basedir, 'seeds', 'zones.tsv')
+        with open(path) as f:
+            reader = csv.DictReader(f, delimiter='\t')
+            zones = [
+                cls(description=row['DESCRIÇÃO'],
+                    complement=row['COMPLEMENTO'])
+                for row in reader
+            ]
+        db.session.bulk_save_objects(zones)
+        db.session.commit()
 
     @staticmethod
     def dump(pagination):

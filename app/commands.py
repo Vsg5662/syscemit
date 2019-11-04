@@ -40,6 +40,8 @@ def init_app(app):
         Address.populate()
         CivilState.populate()
         Ethnicity.populate()
+        Zone.populate()
+        Grave.populate()
 
     @user_cli.command()
     @click.option('-n', '--name', 'name', required=True, help='Your name')

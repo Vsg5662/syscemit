@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import csv
+import os
+
 from itertools import chain
 from re import DOTALL, findall
 
 from flask import current_app
 
+from config import basedir
 from ..extensions import db
 from ..mixins import CRUDMixin
 from .zones import Zone
@@ -71,6 +75,24 @@ class Grave(CRUDMixin, db.Model):
             name.append('Túmulo ' + self.number)
 
         return {'id': self.id, 'name': ' - '.join(name)}
+
+    @classmethod
+    def populate(cls):
+        zones = {
+            z.description + '-' + z.complement: int(z.id)
+            for z in Zone.query.all()
+        }
+        path = os.path.join(basedir, 'seeds', 'graves.tsv')
+        with open(path) as f:
+            reader = csv.DictReader(f, delimiter='\t')
+            graves = [
+                cls(street=row['RUA'],
+                    number=row['NÚMERO'],
+                    zone_id=zones[row['REGIÃO'] + '-' + row['COMPLEMENTO']])
+                for row in reader
+            ]
+        db.session.bulk_save_objects(graves)
+        db.session.commit()
 
     @staticmethod
     def dump(pagination):

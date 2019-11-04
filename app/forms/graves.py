@@ -24,10 +24,8 @@ class GraveForm(FlaskForm):
 
     def refill(cls):
         if cls.zone_id.data:
-            zone = Zone.get(cls.zone_id.data)
-            cls.zone_id.choices = [
-                (zone.id, '{z.description} - {z.complement}'.format(z=zone))
-            ]
+            zone = Zone.get_or_404(cls.zone_id.data)
+            cls.zone_id.choices = [tuple(zone.serialize().values())]
 
 
 class GraveHeadersForm(FlaskForm):

@@ -65,7 +65,7 @@ class Address(CRUDMixin, db.Model):
     @classmethod
     def populate(cls):
         cities = {
-            c.name + ' - ' + c.state.uf: int(c.id)
+            c.name + '-' + c.state.uf: int(c.id)
             for c in City.query.all()
         }
         path = os.path.join(basedir, 'seeds', 'streets.tsv')
@@ -75,7 +75,7 @@ class Address(CRUDMixin, db.Model):
                 cls(street=row['RUA'],
                     district=row['BAIRRO'],
                     cep=row['CEP'],
-                    city_id=cities[row['CIDADE'] + ' - ' + row['ESTADO']])
+                    city_id=cities[row['CIDADE'] + '-' + row['ESTADO']])
                 for row in reader
             ]
         db.session.bulk_save_objects(cities)

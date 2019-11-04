@@ -1,0 +1,47 @@
+#!/bin/bash
+# Create or restore a sqlite backup.
+
+usage() {
+    printf "\e[31m${0}\e[0m [ \e[32mbackup\e[0m | \e[32mrestore\e[0m | \e[32mshow\e[0m | \e[32mhelp\e[0m ] \e[33m<BACKUP NAME>\e[0m \e[33m<DATABASE FILE>\e[0m\n\n"
+    printf "OPTIONS\n"
+    printf "\t\e[32mbackup\e[0m \e[33m<BACKUP NAME>\e[0m \e[33m<DATABASE FILE>\e[0m\n"
+    printf "\t\tCreate a backup file from a sqlite3 database.\n"
+    printf "\t\e[32mrestore\e[0m \e[33m<BACKUP NAME>\e[0m \e[33m<DATABASE FILE>\e[0m\n"
+    printf "\t\tRestore a sqlite3 database from a backup file.\n"
+    printf "\t\e[32mshow\e[0m \e[33m<BACKUP NAME>\e[0m\n"
+    printf "\t\tShow the backup file content.\n"
+    printf "\t\e[32mhelp\e[0m\n"
+    printf "\t\tShow this help message.\n"
+    printf "EXAMPLES\n"
+    printf "\t${0} backup seed ../storage-dev.db\n"
+    printf "\t${0} show seed.gz\n"
+    exit ${1:-0}
+}
+
+case "${1}" in
+    backup )
+        if [[ -e "${3}" && -n "${2}" ]]; then
+            sqlite3 "${3}" ".dump" | gzip --best > "${2}".gz
+        else
+            usage 1
+        fi
+        ;;
+    restore )
+        if [[ -n "${3}" && -e "${2}" ]]; then
+            rm -i "${3}"
+            zcat "${2}" | sqlite3 "${3}" ".read /dev/stdin"
+        else
+            usage 1
+        fi
+        ;;
+    show )
+        if [[ -e "${2}" ]]; then
+            zcat "${2}"
+        else
+            usage 1
+        fi
+        ;;
+    * | help)
+        usage
+        ;;
+esac
