@@ -56,7 +56,8 @@ class Grave(CRUDMixin, db.Model):
                 orders = (getattr(Zone.description, order)(), )
                 items.append(criteria)
             else:
-                orders = (getattr(getattr(cls, criteria), order)(), )
+                orders = (db.func.length(getattr(cls, criteria)), )
+                orders += (getattr(getattr(cls, criteria), order)(), )
 
         if 'zone_id' in items:
             joins += (Zone, )

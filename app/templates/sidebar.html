@@ -1,8 +1,7 @@
 {% set navbar = [
-  (0, 'main', 'fa-tasks-alt', 'Painel'),
+  (0, 'deceased', 'fa-coffin', 'Falecidos'),
   (0, 'registries', 'fa-books', 'Cartórios'),
   (0, 'addresses', 'fa-map-signs', 'Endereços'),
-  (0, 'deceased', 'fa-coffin', 'Falecidos'),
   (0, 'doctors', 'fa-user-md', 'Médicos'),
   (0, 'zones', 'fa-map-marked-alt', 'Regiões'),
   (0, 'graves', 'fa-tombstone', 'Túmulos'),
@@ -11,8 +10,8 @@
 <div class="col-lg-auto col-xs-12 pr-0">
   <div class="list-group border shadow-sm py-0">
     {% for admin, view, icon, label in navbar %}
-    <a class="list-group-item list-group-item-action {% if request.blueprint == view %}bg-dark active{% endif %}{% if admin and not current_user.is_admin() %}d-none{% endif %}" href="{{ url_for(view + '.index') }}">
-      <i class="fas {{ icon }} {% if request.blueprint != view %}text-primary{% else %}text-info{% endif %}"></i> {{ label }}
+    <a class="list-group-item list-group-item-action{% if loop.first %} border-bottom{% endif %}{% if request.blueprint == view %} bg-dark active{% endif %}{% if admin and not current_user.is_admin() %} d-none{% endif %}" href="{{ url_for(view + '.index') }}">
+      <i class="fas {{ icon }} {% if request.blueprint != view and not loop.first %}text-primary{% else %}text-info{% endif %}"></i> {{ label }}
     </a>
     {% endfor %}
   </div>
