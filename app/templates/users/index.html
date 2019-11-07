@@ -4,8 +4,8 @@
 {% block results %}
   {% for u in users %}
     <tr>
-      <td>{{ u.name }}</td>
       <td>{{ u.login }}</td>
+      <td>{{ u.name }}</td>
       <td>{{ u.user_type.description }}</td>
       <td>
         <a href="{{ url_for('users.edit', id=u.id, format='view') }}" class="btn btn-raised btn-info" title="Visualizar">
