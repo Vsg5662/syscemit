@@ -3,9 +3,14 @@ Description=Graveyard Management System
 After=Network.target
 
 [Service]
+Type=simple
+User=syscemit
+Group=daemon
 WorkingDirectory=/srv/syscemit
+EnvironmentFile=/etc/default/syscemit
 ExecStart=/srv/syscemit/.env/bin/python3 /srv/syscemit/run.py
 Restart=always
+AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 [Install]
 WantedBy=multi-user.target

@@ -13,6 +13,7 @@
 .pydevproject
 
 # Folders
+.cache
 __pycache__/
 migrations
 node_modules
